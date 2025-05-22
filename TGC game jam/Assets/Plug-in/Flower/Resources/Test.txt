@@ -1,8 +1,0 @@
-[show]
-[audio,bgm,TestMusic,true,1]
-[image,player,TestPlayer3,-550,10,0]
-你好～，我是主角，按空格继续对话。[w]
-按住WASD，可以上下左右移动。[w]
-[remove,player]
-[remove,bgm]
-[hide]
