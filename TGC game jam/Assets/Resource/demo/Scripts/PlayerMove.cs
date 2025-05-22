@@ -8,7 +8,7 @@ public class PlayerMove : MonoBehaviour
     private static readonly int Vertical = Animator.StringToHash("Vertical");
     private static readonly int Speed = Animator.StringToHash("Speed");
 
-    public static event Action<GameObject> OnPlayerInitialized;
+    public static GameObject CurrentPlayer { get; private set; }
     
     private Animator animator;
     private Rigidbody2D rigbody2D;
@@ -22,10 +22,9 @@ public class PlayerMove : MonoBehaviour
         rigbody2D = GetComponent<Rigidbody2D>();
         inputActions = new InputActions();
         
-        OnPlayerInitialized?.Invoke(gameObject);
-
+        CurrentPlayer =  gameObject;
     }
-
+    
     private void OnEnable()
     {
         inputActions.Enable();
