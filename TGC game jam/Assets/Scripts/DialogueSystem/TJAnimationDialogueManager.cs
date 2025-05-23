@@ -7,12 +7,12 @@ using Febucci.UI.Core;
 using Febucci.UI.Core.Parsing;
 using UnityEngine.Events;
 
-[DisallowMultipleComponent] // 通常一个NPC上只需要一个此管理器
+[DisallowMultipleComponent]
 public class TJAnimationDialogueManager : MonoBehaviour
 {
     [Header("必要组件引用")]
-    [SerializeField] private TypewriterCore typewriter; // 拖拽场景中的 Text Animator TypewriterCore 组件到这里
-    [SerializeField] private GameObject continuePromptUI; // 可选：用于提示玩家继续对话的UI元素（例如一个"按E继续"的图标）
+    [SerializeField] private TypewriterCore typewriter;
+    [SerializeField] private GameObject continuePromptUI; // 可选，用于提示继续
 
     [Header("对话配置")]
     [Tooltip("该NPC持有的所有对话序列")]
@@ -23,99 +23,104 @@ public class TJAnimationDialogueManager : MonoBehaviour
     [SerializeField] private List<TJEventMapping> eventMappings = new List<TJEventMapping>();
 
     // 内部状态变量
-    private bool _isDisplayingText = false;
-    private bool _isTextPausedForEvent = false; // 文本是否因为触发了需要暂停的事件而暂停
-    private DialogueSequence _currentDialogueSequence;
-    private int _currentPageIndex;
-    private string _initiatingDialogueTag; // 记录当前是由哪个tag启动的对话
+    private bool _isDisplayingText = false;           // 是否有任何对话序列正在激活（包括打字、暂停、等待继续）
+    private bool _isTextPausedForEvent = false;       // 当前文本是否因内联事件而暂停
+    private bool _isWaitingForPlayerToContinuePage = false; // 当前页面是否已完全打出，并等待玩家输入以继续
+
+    private DialogueSequence _currentDialogueSequence; // 当前正在播放的对话序列
+    private int _currentPageIndex;                   // 当前对话序列的页面索引
+    private string _initiatingDialogueTag;           // 当前激活的对话序列的标签
+
+    // --- “出”事件：对话序列完成 ---
+    /// <summary>
+    /// 当一个完整的对话序列（所有页面）播放完毕后触发。
+    /// 参数1: 对话发起者 (NPC GameObject)
+    /// 参数2: 完成的对话序列的标签
+    /// </summary>
+    public static event System.Action<GameObject, string> OnDialogueSequenceCompleted;
 
     // --- Unity 生命周期方法 ---
-    void Awake()
+    private void Awake()
     {
-        if (typewriter == null)
+        if (!typewriter)
         {
             Debug.LogError($"TJAnimationDialogueManager on {gameObject.name}: TypewriterCore 未分配!", this);
-            enabled = false; // 禁用脚本如果核心组件缺失
+            enabled = false;
             return;
         }
 
-        if (continuePromptUI != null)
+        if (continuePromptUI)
         {
             continuePromptUI.SetActive(false);
         }
 
-        // 订阅 Text Animator 的事件
-        typewriter.onMessage.AddListener(HandleTypewriterInlineEvent); // 处理 <event=TAG>
-        typewriter.onTextShowed.AddListener(OnTypewriterPageShowed);   // 处理当前页面文本完全显示后的逻辑
+        typewriter.onMessage.AddListener(HandleTypewriterInlineEvent);    // 处理 <event=TAG>
+        typewriter.onTextShowed.AddListener(OnTypewriterPageFullyDisplayed); // 处理当前页面文本完全显示后的逻辑
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
-        // 取消订阅，防止内存泄漏
-        if (typewriter != null)
+        if (!typewriter) return;
+        typewriter.onMessage.RemoveListener(HandleTypewriterInlineEvent);
+        typewriter.onTextShowed.RemoveListener(OnTypewriterPageFullyDisplayed);
+    }
+
+    // --- 公共 “进” API ---
+
+    /// <summary>
+    /// 外部系统调用此方法来请求与NPC进行特定主题的对话。
+    /// 内部会自动处理是开启新对话还是继续当前对话。
+    /// </summary>
+    /// <param name="dialogueTag">要发起或继续的对话的主题标签。</param>
+    /// <returns>如果请求被处理（开始新对话或成功翻页）则返回true，否则返回false (例如NPC忙于其他不同对话，或标签无效)。</returns>
+    public bool RequestDialogueInteraction(string dialogueTag)
+    {
+        if (string.IsNullOrEmpty(dialogueTag))
         {
-            typewriter.onMessage.RemoveListener(HandleTypewriterInlineEvent);
-            typewriter.onTextShowed.RemoveListener(OnTypewriterPageShowed);
+            Debug.LogWarning($"TJAnimationDialogueManager on {gameObject.name}: RequestDialogueInteraction 收到空的 dialogueTag。", this);
+            return false;
         }
-    }
 
-    void Update()
-    {
-        // 处理玩家继续对话的输入 (示例：按E键)
-        // 这个输入逻辑可以根据你的游戏输入管理器进行调整
-        if (_isDisplayingText && !_isTextPausedForEvent && continuePromptUI != null && continuePromptUI.activeSelf)
+        // 情况 1: 当前没有任何对话在进行 (_isDisplayingText 为 false)
+        if (!_isDisplayingText)
         {
-            // 在这里检查你的游戏设定的“互动/继续”按键
-            if (Input.GetKeyDown(KeyCode.E)) // 示例按键
+            return StartNewDialogueSequence(dialogueTag);
+        }
+        // 情况 2: 当前有对话正在进行 (_isDisplayingText 为 true)
+        else
+        {
+            // 检查是否是针对当前正在进行的同一对话主题的“继续”请求
+            if (_initiatingDialogueTag == dialogueTag)
             {
-                AdvanceToNextPage();
+                if (_isTextPausedForEvent) // 如果因事件暂停
+                {
+                    // Debug.Log($"TJAnimationDialogueManager on {gameObject.name}: 对话 '{_initiatingDialogueTag}' 因事件暂停中。请先调用 ResumePausedDialogue() 或等待事件自动完成。");
+                    return false; // 不能通过此API恢复事件暂停，或在事件暂停时翻页
+                }
+
+                if (_isWaitingForPlayerToContinuePage) // 如果当前页面已显示完毕，等待玩家继续
+                {
+                    // Debug.Log($"TJAnimationDialogueManager on {gameObject.name}: 继续对话 '{_initiatingDialogueTag}'，前往下一页。");
+                    AdvanceToNextPage();
+                    return true; // 成功继续/翻页
+                }
+                else // 当前页面正在打字，或处于其他非“等待继续”的状态
+                {
+                    // Debug.Log($"TJAnimationDialogueManager on {gameObject.name}: 对话 '{_initiatingDialogueTag}' 页面正在打字或处理中，请稍候。");
+                    // 未来可考虑实现“快进当前页”的逻辑，但目前按“不打断”原则，忽略此“继续”请求，让其自然完成打字
+                    return false; // 表示请求已收到，但当前无法执行翻页 (可能正在打字)
+                }
+            }
+            else // 请求的是一个不同的对话主题，但当前NPC正忙于另一个主题
+            {
+                Debug.LogWarning($"TJAnimationDialogueManager on {gameObject.name}: NPC 正忙于对话 '{_initiatingDialogueTag}'。无法开始新的对话主题 '{dialogueTag}'。", this);
+                return false; // 忽略不同主题的请求，保证当前对话连贯性
             }
         }
     }
 
-    // --- 公共 API (供外部 DialogueLogicManager 调用) ---
-
     /// <summary>
-    /// 检查当前NPC是否可以开始一段新的对话。
-    /// </summary>
-    public bool CanStartDialogue()
-    {
-        return !_isDisplayingText;
-    }
-
-    /// <summary>
-    /// 根据提供的对话标签开始显示对话序列。
-    /// </summary>
-    /// <param name="dialogueTag">要显示的对话序列的唯一标签。</param>
-    /// <returns>如果成功开始对话则返回true，否则返回false (例如NPC正忙或标签无效)。</returns>
-    public bool RequestShowDialogue(string dialogueTag)
-    {
-        if (!CanStartDialogue())
-        {
-            Debug.LogWarning($"TJAnimationDialogueManager on {gameObject.name}: 尝试在播放对话时开始新的对话 '{dialogueTag}'。请求被忽略。", this);
-            return false;
-        }
-
-        DialogueSequence sequenceToPlay = FindDialogueSequenceByTag(dialogueTag);
-        if (sequenceToPlay == null || sequenceToPlay.pages.Count == 0)
-        {
-            Debug.LogError($"TJAnimationDialogueManager on {gameObject.name}: 未找到标签为 '{dialogueTag}' 的对话序列，或者该序列没有页面。", this);
-            return false;
-        }
-
-        _isDisplayingText = true;
-        _isTextPausedForEvent = false; // 重置暂停状态
-        _currentDialogueSequence = sequenceToPlay;
-        _currentPageIndex = 0;
-        _initiatingDialogueTag = dialogueTag; // 记录
-
-        Debug.Log($"TJAnimationDialogueManager on {gameObject.name}: 开始播放对话 '{dialogueTag}'.");
-        DisplayCurrentPage();
-        return true;
-    }
-
-    /// <summary>
-    /// 如果文本因事件而暂停，则调用此方法来继续播放。
+    /// 如果文本因<event>标签中配置的事件而暂停，则调用此方法来继续播放。
     /// </summary>
     public void ResumePausedDialogue()
     {
@@ -126,28 +131,49 @@ public class TJAnimationDialogueManager : MonoBehaviour
         }
 
         _isTextPausedForEvent = false;
-        Debug.Log($"TJAnimationDialogueManager on {gameObject.name}: 从事件暂停中恢复对话 '{_initiatingDialogueTag}'，页面 {_currentPageIndex + 1}。");
+        // Debug.Log($"TJAnimationDialogueManager on {gameObject.name}: 从事件暂停中恢复对话 '{_initiatingDialogueTag}'，页面 {_currentPageIndex + 1}。");
 
-        // 检查当前页面是否已经完全打出来了 (因为Typewriter可能在设置暂停标志后仍然完成了当前页的打印)
-        // 如果TypewriterCore有IsDone()之类的状态，可以用它判断。
-        // 简单起见，我们假设当Resume被调用时，应该表现得像刚打完字一样，准备显示“继续”提示或进入下一页。
-        OnTypewriterPageShowedLogic(); // 手动触发页面显示完成的逻辑
+        // 事件暂停解除后，我们认为当前页面逻辑上已“显示完毕”，进入等待玩家继续的状态
+        // (因为Typewriter可能在事件触发、我们设置暂停标志后，仍然完成了当前页面的剩余打印)
+        ProcessPageFullyDisplayedLogic();
     }
-
 
     // --- 内部对话流程控制方法 ---
 
+    private bool StartNewDialogueSequence(string dialogueTag)
+    {
+        DialogueSequence sequenceToPlay = FindDialogueSequenceByTag(dialogueTag);
+        if (sequenceToPlay == null || sequenceToPlay.pages.Count == 0)
+        {
+            Debug.LogError($"TJAnimationDialogueManager on {gameObject.name}: 未找到标签为 '{dialogueTag}' 的对话序列，或者该序列没有页面。", this);
+            return false;
+        }
+
+        _isDisplayingText = true;
+        _isTextPausedForEvent = false;
+        _isWaitingForPlayerToContinuePage = false; // 新对话的第一页开始时不等待
+        _currentDialogueSequence = sequenceToPlay;
+        _currentPageIndex = 0;
+        _initiatingDialogueTag = dialogueTag;
+
+        // Debug.Log($"TJAnimationDialogueManager on {gameObject.name}: 开始新对话 '{_initiatingDialogueTag}'.");
+        DisplayCurrentPage();
+        return true;
+    }
+
     private void DisplayCurrentPage()
     {
+        // 检查是否所有页面都已显示完毕
         if (_currentDialogueSequence == null || _currentPageIndex >= _currentDialogueSequence.pages.Count)
         {
             EndDialogueSequence();
             return;
         }
 
-        if (continuePromptUI != null)
+        _isWaitingForPlayerToContinuePage = false; // 新页面开始显示时，重置“等待继续”状态
+        if (continuePromptUI)
         {
-            continuePromptUI.SetActive(false); // 在新页面开始显示时隐藏“继续”提示
+            continuePromptUI.SetActive(false); // 隐藏“继续”提示，直到页面显示完毕
         }
 
         string textToShow = _currentDialogueSequence.pages[_currentPageIndex].textContent;
@@ -156,106 +182,87 @@ public class TJAnimationDialogueManager : MonoBehaviour
 
     private void AdvanceToNextPage()
     {
+        // 由 RequestDialogueInteraction (当判断为继续当前对话时) 调用
         _currentPageIndex++;
-        DisplayCurrentPage(); // 显示下一页，如果已经是最后一页，DisplayCurrentPage内部会调用EndDialogueSequence
+        // DisplayCurrentPage 内部会检查 _currentPageIndex 是否越界，并相应地调用 EndDialogueSequence
+        DisplayCurrentPage();
     }
 
     private void EndDialogueSequence()
     {
-        Debug.Log($"TJAnimationDialogueManager on {gameObject.name}: 对话 '{_initiatingDialogueTag}' 结束。");
-        if (continuePromptUI != null)
+        string completedTag = _initiatingDialogueTag;
+        GameObject npcObject = this.gameObject;
+
+        if (continuePromptUI)
         {
             continuePromptUI.SetActive(false);
         }
-        // typewriter.StartDisappearingText(); // 如果需要文本消失效果，可以在这里调用
-        // 或者直接清除文本: typewriter.ShowText(""); // 但这会触发onTextShowed，可能需要额外处理
 
+        // 重置所有状态
         _isDisplayingText = false;
         _isTextPausedForEvent = false;
+        _isWaitingForPlayerToContinuePage = false;
         _currentDialogueSequence = null;
         _currentPageIndex = 0;
         _initiatingDialogueTag = null;
 
-        // 可选：在这里通知外部 DialogueLogicManager 对话已结束
-        // DialogueEvents.OnDialogueEnded?.Invoke(gameObject, _initiatingDialogueTag);
+        Debug.Log($"TJAnimationDialogueManager on {npcObject.name}: 对话 '{completedTag}' 结束。");
+        OnDialogueSequenceCompleted?.Invoke(npcObject, completedTag); // 触发“出”事件
     }
 
     // --- Text Animator 事件回调处理 ---
 
     // 当 TypewriterCore 完成显示当前页面所有文本后调用
-    private void OnTypewriterPageShowed()
+    private void OnTypewriterPageFullyDisplayed()
     {
-        if (!_isDisplayingText) return; // 如果对话中途被某种方式结束了，则不处理
+        // Debug.Log("Finished typewriter page");
+        
+        if (!_isDisplayingText) return; // 如果对话在打字过程中被意外结束，则不处理
 
-        OnTypewriterPageShowedLogic();
+        ProcessPageFullyDisplayedLogic();
     }
 
-    private void OnTypewriterPageShowedLogic() // 提取公共逻辑，方便Resume调用
+    // 当页面显示完毕 或 从事件暂停中恢复时，调用此逻辑
+    private void ProcessPageFullyDisplayedLogic()
     {
         if (_isTextPausedForEvent)
         {
-            // 文本已显示完毕，但我们正因事件而“暂停”，等待外部Resume。
-            // 不显示“继续”提示。
-            Debug.Log($"TJAnimationDialogueManager on {gameObject.name}: 页面 {_currentPageIndex + 1} 显示完毕，但因事件暂停。");
+            // 如果当前是因事件而暂停的状态，则不进入“等待玩家继续”
+            // Debug.Log($"TJAnimationDialogueManager on {gameObject.name}: 页面技术上显示完毕，但当前因事件 '{_initiatingDialogueTag}' 暂停。");
             return;
         }
 
-        // 检查是否是对话序列的最后一页
-        bool isLastPage = (_currentDialogueSequence != null && _currentPageIndex >= _currentDialogueSequence.pages.Count - 1);
+        // Debug.Log("_isWaitingForPlayerToContinuePage");
+        
+        // 当前页面已完整显示，并且没有因事件暂停 -> 进入“等待玩家继续”状态
+        _isWaitingForPlayerToContinuePage = true;
 
-        if (isLastPage)
+        if (continuePromptUI)
         {
-            // 如果是最后一页，并且有continuePromptUI，也显示它，让玩家按键来最终结束对话。
-            // 或者，你可以设计成最后一页自动结束，不显示提示。取决于你的设计。
-            if (continuePromptUI != null)
-            {
-                continuePromptUI.SetActive(true);
-            }
-            else
-            {
-                // 如果没有继续提示，并且是最后一页，那么可以认为对话在此处自然结束
-                // 但我们的 AdvanceToNextPage 会在 Update 中由玩家输入触发，所以这里通常还是等待玩家输入
-                // 如果需要最后一页自动结束，需要修改 AdvanceToNextPage 和这里的逻辑
-            }
-            Debug.Log($"TJAnimationDialogueManager on {gameObject.name}: 对话 '{_initiatingDialogueTag}' 的最后一页 ({_currentPageIndex + 1}) 显示完毕。");
+            continuePromptUI.SetActive(true); // 显示“继续”提示
         }
-        else
-        {
-            // 如果不是最后一页，显示“继续”提示 (如果配置了)
-            if (continuePromptUI != null)
-            {
-                continuePromptUI.SetActive(true);
-            }
-             Debug.Log($"TJAnimationDialogueManager on {gameObject.name}: 对话 '{_initiatingDialogueTag}' 的页面 {_currentPageIndex + 1} 显示完毕。");
-        }
+        // Debug.Log($"TJAnimationDialogueManager on {gameObject.name}: 对话 '{_initiatingDialogueTag}' 的页面 {_currentPageIndex + 1} 显示完毕，等待玩家通过 RequestDialogueInteraction 继续。");
     }
-
 
     // 当 TypewriterCore 遇到文本中的 <event=TAG_NAME:param1:param2> 标签时调用
     private void HandleTypewriterInlineEvent(EventMarker eventData)
     {
         if (!_isDisplayingText) return;
 
-        Debug.Log($"TJAnimationDialogueManager on {gameObject.name}: 收到内联事件: '{eventData.name}' 带参数: [{string.Join(", ", eventData.parameters)}]");
+        // Debug.Log($"TJAnimationDialogueManager on {gameObject.name}: 收到内联事件: '{eventData.name}' 带参数: [{string.Join(", ", eventData.parameters)}]");
 
         TJEventMapping mapping = FindEventMappingByTag(eventData.name);
         if (mapping != null)
         {
-            // 触发关联的 UnityEvent
             mapping.onTriggered?.Invoke(eventData.parameters); // 传递解析出的参数
 
             if (mapping.pauseTextOnTrigger)
             {
                 _isTextPausedForEvent = true;
-                // 注意：Text Animator 的 TypewriterCore 本身可能没有一个显式的 PauseTyping() 方法
-                // 我们的“暂停”逻辑是：设置 _isTextPausedForEvent = true;
-                // 然后 OnTypewriterPageShowed 回调会检查这个标志，如果不为true，则不显示“继续”提示，
-                // 从而达到“暂停”等待外部 ResumePausedDialogue() 调用的效果。
-                // Typewriter 会继续完成当前页的打印，但流程会在此“卡住”直到Resume。
-                Debug.Log($"TJAnimationDialogueManager on {gameObject.name}: 事件 '{eventData.name}' 触发，文本播放已暂停。等待 ResumePausedDialogue() 调用。");
+                _isWaitingForPlayerToContinuePage = false; // 事件暂停时，不响应“继续”请求
 
-                // 如果有 "继续" UI，此时也应该隐藏它，因为是事件暂停，不是等待玩家继续页面
-                if(continuePromptUI != null) continuePromptUI.SetActive(false);
+                if (continuePromptUI) continuePromptUI.SetActive(false); // 隐藏可能存在的“继续”提示
+                // Debug.Log($"TJAnimationDialogueManager on {gameObject.name}: 事件 '{eventData.name}' 触发，文本播放已暂停。等待 ResumePausedDialogue() 调用。");
             }
         }
         else
@@ -263,7 +270,6 @@ public class TJAnimationDialogueManager : MonoBehaviour
             Debug.LogWarning($"TJAnimationDialogueManager on {gameObject.name}: 在对话 '{_initiatingDialogueTag}' 中收到未配置的事件标签: '{eventData.name}'", this);
         }
     }
-
 
     // --- 辅助方法 ---
     private DialogueSequence FindDialogueSequenceByTag(string tag)
@@ -274,5 +280,10 @@ public class TJAnimationDialogueManager : MonoBehaviour
     private TJEventMapping FindEventMappingByTag(string tag)
     {
         return eventMappings.Find(mapping => mapping.eventTagInText == tag);
+    }
+
+    public bool IsCompletelyIdle()
+    {
+        return !_isDisplayingText;
     }
 }

@@ -210,7 +210,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ' '
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -796,7 +796,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  playerTransform: {fileID: 0}
 --- !u!1 &840809322
 GameObject:
   m_ObjectHideFlags: 0
@@ -1069,6 +1068,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetNpcDialogueManager: {fileID: 840809330}
   dialogueTagToTest: test
+  cameraTarget: {fileID: 1638415384}
 --- !u!1 &920973317
 GameObject:
   m_ObjectHideFlags: 0
@@ -1110,7 +1110,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1036741578}
   m_Layer: 0
-  m_Name: Point
+  m_Name: InteractPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
