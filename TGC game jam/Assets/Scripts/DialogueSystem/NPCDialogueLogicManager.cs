@@ -45,22 +45,22 @@ public class NPCDialogueLogicManager : MonoBehaviour
     /// </summary>
     private void OnInteractInputPerformed(InputAction.CallbackContext context)
     {
-        // if (!targetNpcDialogueManager)
-        // {
-        //     Debug.LogError("NPCDialogueLogicManager: 无法发起对话，因为 targetNpcDialogueManager 未设置！", this);
-        //     return;
-        // }
-        //
-        //
-        // var success = targetNpcDialogueManager.RequestDialogueInteraction(dialogueTagToTest);
-        // if (success)
-        // {
-        //     Debug.Log($"对话 '{dialogueTagToTest}' 成功开始。");
-        // }
-        // else
-        // {
-        //     Debug.LogWarning($"对话 '{dialogueTagToTest}' 未能开始 (可能是标签无效或NPC内部逻辑问题)。");
-        // }
+        if (!targetNpcDialogueManager)
+        {
+            Debug.LogError("NPCDialogueLogicManager: 无法发起对话，因为 targetNpcDialogueManager 未设置！", this);
+            return;
+        }
+        
+        
+        var success = targetNpcDialogueManager.RequestDialogueInteraction(dialogueTagToTest);
+        if (success)
+        {
+            Debug.Log($"对话 '{dialogueTagToTest}' 成功开始。");
+        }
+        else
+        {
+            Debug.LogWarning($"对话 '{dialogueTagToTest}' 未能开始 (可能是标签无效或NPC内部逻辑问题)。");
+        }
         //
         // CameraSystem.SetCameraTarget(cameraTarget);
 
