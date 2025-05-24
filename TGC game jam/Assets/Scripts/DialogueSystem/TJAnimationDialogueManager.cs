@@ -12,7 +12,7 @@ public class TJAnimationDialogueManager : MonoBehaviour
 {
     [Header("必要组件引用")]
     [SerializeField] private TypewriterCore typewriter;
-    [SerializeField] private GameObject continuePromptUI; // 可选，用于提示继续
+    [SerializeField] private GameObject continuePromptUI;
 
     [Header("对话配置")]
     [Tooltip("该NPC持有的所有对话序列")]
@@ -30,6 +30,8 @@ public class TJAnimationDialogueManager : MonoBehaviour
     private DialogueSequence currentDialogueSequence; // 当前正在播放的对话序列
     private int currentPageIndex;                   // 当前对话序列的页面索引
     private string initiatingDialogueTag;           // 当前激活的对话序列的标签
+    
+    private GameObject continueUI; // 可选，用于提示继续
 
     // --- “出”事件：对话序列完成 ---
     /// <summary>
@@ -51,7 +53,8 @@ public class TJAnimationDialogueManager : MonoBehaviour
 
         if (continuePromptUI)
         {
-            continuePromptUI.SetActive(false);
+            continueUI = Instantiate(continuePromptUI);
+            continueUI.SetActive(false);
         }
 
         typewriter.onMessage.AddListener(HandleTypewriterInlineEvent);    // 处理 <event=TAG>
@@ -142,7 +145,7 @@ public class TJAnimationDialogueManager : MonoBehaviour
 
     private bool StartNewDialogueSequence(string dialogueTag)
     {
-        DialogueSequence sequenceToPlay = FindDialogueSequenceByTag(dialogueTag);
+        var sequenceToPlay = FindDialogueSequenceByTag(dialogueTag);
         if (sequenceToPlay == null || sequenceToPlay.pages.Count == 0)
         {
             Debug.LogError($"TJAnimationDialogueManager on {gameObject.name}: 未找到标签为 '{dialogueTag}' 的对话序列，或者该序列没有页面。", this);
@@ -171,12 +174,12 @@ public class TJAnimationDialogueManager : MonoBehaviour
         }
 
         isWaitingForPlayerToContinuePage = false; // 新页面开始显示时，重置“等待继续”状态
-        if (continuePromptUI)
+        if (continueUI)
         {
-            continuePromptUI.SetActive(false); // 隐藏“继续”提示，直到页面显示完毕
+            continueUI.SetActive(false); // 隐藏“继续”提示，直到页面显示完毕
         }
 
-        string textToShow = currentDialogueSequence.pages[currentPageIndex].textContent;
+        var textToShow = currentDialogueSequence.pages[currentPageIndex].textContent;
         typewriter.ShowText(textToShow); // Text Animator 开始播放当前页的文本
     }
 
@@ -190,12 +193,12 @@ public class TJAnimationDialogueManager : MonoBehaviour
 
     private void EndDialogueSequence()
     {
-        string completedTag = initiatingDialogueTag;
-        GameObject npcObject = this.gameObject;
+        var completedTag = initiatingDialogueTag;
+        var npcObject = this.gameObject;
 
-        if (continuePromptUI)
+        if (continueUI)
         {
-            continuePromptUI.SetActive(false);
+            continueUI.SetActive(false);
         }
 
         // 重置所有状态
@@ -237,9 +240,9 @@ public class TJAnimationDialogueManager : MonoBehaviour
         // 当前页面已完整显示，并且没有因事件暂停 -> 进入“等待玩家继续”状态
         isWaitingForPlayerToContinuePage = true;
 
-        if (continuePromptUI)
+        if (continueUI)
         {
-            continuePromptUI.SetActive(true); // 显示“继续”提示
+            continueUI.SetActive(true); // 显示“继续”提示
         }
         // Debug.Log($"TJAnimationDialogueManager on {gameObject.name}: 对话 '{_initiatingDialogueTag}' 的页面 {_currentPageIndex + 1} 显示完毕，等待玩家通过 RequestDialogueInteraction 继续。");
     }
@@ -251,19 +254,17 @@ public class TJAnimationDialogueManager : MonoBehaviour
 
         // Debug.Log($"TJAnimationDialogueManager on {gameObject.name}: 收到内联事件: '{eventData.name}' 带参数: [{string.Join(", ", eventData.parameters)}]");
 
-        TJEventMapping mapping = FindEventMappingByTag(eventData.name);
+        var mapping = FindEventMappingByTag(eventData.name);
         if (mapping != null)
         {
             mapping.onTriggered?.Invoke(eventData.parameters); // 传递解析出的参数
 
-            if (mapping.pauseTextOnTrigger)
-            {
-                isTextPausedForEvent = true;
-                isWaitingForPlayerToContinuePage = false; // 事件暂停时，不响应“继续”请求
+            if (!mapping.pauseTextOnTrigger) return;
+            isTextPausedForEvent = true;
+            isWaitingForPlayerToContinuePage = false; // 事件暂停时，不响应“继续”请求
 
-                if (continuePromptUI) continuePromptUI.SetActive(false); // 隐藏可能存在的“继续”提示
-                // Debug.Log($"TJAnimationDialogueManager on {gameObject.name}: 事件 '{eventData.name}' 触发，文本播放已暂停。等待 ResumePausedDialogue() 调用。");
-            }
+            if (continuePromptUI) continuePromptUI.SetActive(false); // 隐藏可能存在的“继续”提示
+            // Debug.Log($"TJAnimationDialogueManager on {gameObject.name}: 事件 '{eventData.name}' 触发，文本播放已暂停。等待 ResumePausedDialogue() 调用。");
         }
         else
         {

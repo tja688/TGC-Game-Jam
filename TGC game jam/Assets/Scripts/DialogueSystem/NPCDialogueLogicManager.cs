@@ -1,6 +1,6 @@
 // NPCDialogueLogicManager.cs
 using UnityEngine;
-using UnityEngine.InputSystem; // 引入新的输入系统命名空间
+using UnityEngine.InputSystem; 
 
 public class NPCDialogueLogicManager : MonoBehaviour
 {
@@ -61,7 +61,7 @@ public class NPCDialogueLogicManager : MonoBehaviour
         {
             Debug.LogWarning($"对话 '{dialogueTagToTest}' 未能开始 (可能是标签无效或NPC内部逻辑问题)。");
         }
-        //
+        
         // CameraSystem.SetCameraTarget(cameraTarget);
 
     }
