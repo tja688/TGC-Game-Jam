@@ -12,6 +12,7 @@ public class InteractiveObject : MonoBehaviour, IInteractable
     private GameObject instantiatedPromptInstance;
 
     public Transform PromptAnchor => customPromptAnchor ? customPromptAnchor : transform;
+    public GameObject InteractNotice { get; }
 
     public void ShowInteractionPrompt(GameObject instigator)
     {

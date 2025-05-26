@@ -57,5 +57,5 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  totalScriptsScanned: 5
-  scanTime: 0.9598412
+  totalScriptsScanned: 68
+  scanTime: 1.0155462

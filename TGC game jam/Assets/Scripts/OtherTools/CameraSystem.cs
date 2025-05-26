@@ -10,7 +10,7 @@ public class CameraSystem : MonoBehaviour
     
     private void OnEnable()
     {
-        SetTarget(PlayerMove.CurrentPlayer.transform);
+        SetTarget(PlayerMove.CurrentPlayer?.transform);
         
         OnSetCameraTarget += SetTarget;
     }
