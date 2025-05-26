@@ -417,6 +417,7 @@ GameObject:
   - component: {fileID: 740993485}
   - component: {fileID: 740993484}
   - component: {fileID: 740993483}
+  - component: {fileID: 740993486}
   m_Layer: 0
   m_Name: "\u751F\u6210\u6E38\u620F\u7535\u6C60\u5305 (1)"
   m_TagString: Untagged
@@ -506,6 +507,41 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!70 &740993486
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740993482}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -2.49}
+  m_Size: {x: 7.7, y: 8.9}
+  m_Direction: 0
 --- !u!1 &742776661 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 435109031438445353, guid: 134711e209cf3f241a5114d75241c8ad, type: 3}

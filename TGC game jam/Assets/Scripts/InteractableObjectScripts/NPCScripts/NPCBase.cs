@@ -27,9 +27,10 @@ public abstract class NPCBase : InteractableObjectBase
         InitiateDialogue();
     }
 
-    protected void Update()
+    protected override void FixedUpdate()
     {
-        InteractNotice.SetActive(!DialogueManager.Instance.isDialogueProcessActive);
+        base.FixedUpdate();
+        InstantiatedPromptInstance.SetActive(!DialogueManager.Instance.isDialogueProcessActive);
     }
 
     /// <summary>
