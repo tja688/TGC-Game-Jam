@@ -18,9 +18,7 @@ public class BackpackManager : MonoBehaviour
             return _instance;
         }
     }
-
-    [Header("Backpack Settings")]
-    [SerializeField] private string backpackObjectName = "Backpack"; // 背包游戏对象的名称
+    
     private Transform backpackTransform;
     public static Transform BackpackObject => Instance.backpackTransform; // 静态属性公开背包对象
 

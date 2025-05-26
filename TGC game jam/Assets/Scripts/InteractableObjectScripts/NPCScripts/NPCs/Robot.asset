@@ -16,3 +16,8 @@ MonoBehaviour:
   dialogueEntries:
   - dialogueID: meet1
     dialogueText: Hello, I am a testing prompt robot.
+  - dialogueID: meet2
+    dialogueText: You can find a <rainb>battery</rainb> here and take it.
+  - dialogueID: meet3
+    dialogueText: '{offset} Install the battery on the platform to activate it, <wave>pay
+      attention to safety.</wave>'
