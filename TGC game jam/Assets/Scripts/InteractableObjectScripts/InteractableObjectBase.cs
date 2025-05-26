@@ -6,6 +6,8 @@ using UnityEngine.Serialization;
 
 public abstract class InteractableObjectBase : MonoBehaviour , IInteractable
 {
+    [SerializeField] protected string objectName = "Eco"; 
+
     public Transform PromptAnchor => promptAnchorTransform;
     [SerializeField] protected Transform promptAnchorTransform;
     

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class NPCRobot_Test : NPCBase
 {
-    protected override void InitiateDialogue()
+    public override void InitiateDialogue()
     {
         if (Camera1) 
             PromptAnchorScreenPoint = Camera1.WorldToScreenPoint(promptAnchorTransform.position);

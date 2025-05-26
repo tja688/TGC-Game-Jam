@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public abstract class NPCBase : InteractableObjectBase
+public abstract class NPCBase : InteractableObjectBase , IChattable
 {
     [SerializeField] protected NPCDialogue dialogueData;
+    
     protected override void Start()
     {
         base.Start();
@@ -30,21 +31,23 @@ public abstract class NPCBase : InteractableObjectBase
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
-        InstantiatedPromptInstance.SetActive(!DialogueManager.Instance.isDialogueProcessActive);
+        
+        if(InstantiatedPromptInstance)
+            InstantiatedPromptInstance.SetActive(!DialogueManager.Instance.isDialogueProcessActive);
     }
 
     /// <summary>
     /// 抽象方法，由子类实现具体的对话发起逻辑。
     /// </summary>
     /// <param name="instigator">交互的发起者</param>
-    protected abstract void InitiateDialogue();
+    public abstract void InitiateDialogue();
 
     /// <summary>
     /// 辅助方法，用于NPC发送对话内容。
     /// </summary>
     /// <param name="dialogueID">要发送的对话ID。</param>
     /// <param name="customPosition">可选的自定义对话框位置。</param>
-    protected void SendDialogueLine( Vector2 customPosition, string dialogueID)
+    public void SendDialogueLine( Vector2 customPosition, string dialogueID)
     {
         var textToSend = dialogueData.GetDialogueTextByID(dialogueID);
         if (string.IsNullOrEmpty(textToSend))

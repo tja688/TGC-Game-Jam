@@ -18,8 +18,8 @@ public interface IInteractable
     /// <summary>
     /// 当玩家进入交互范围时调用，显示交互提示
     /// </summary>
-    /// <param name="instigator">发起交互的对象 (通常是玩家)</param>
-    void ShowInteractionPrompt(GameObject instigator);
+    /// <param name="player">发起交互的对象 (通常是玩家)</param>
+    void ShowInteractionPrompt(GameObject player);
 
     /// <summary>
     /// 当玩家离开交互范围时调用，隐藏交互提示
@@ -29,6 +29,6 @@ public interface IInteractable
     /// <summary>
     /// 当玩家按下交互键时调用，执行具体交互逻辑
     /// </summary>
-    /// <param name="instigator">发起交互的对象 (通常是玩家)</param>
-    void Interact(GameObject instigator);
+    /// <param name="player">发起交互的对象 (通常是玩家)</param>
+    void Interact(GameObject player);
 }
