@@ -135,5 +135,28 @@ public class BackpackManager : MonoBehaviour
     {
         return itemNamesInBackpack.Contains(itemName);
     }
+    
+    
+    /// <summary>
+    /// 从背包中销毁指定名称的物品
+    /// </summary>
+    /// <param name="itemName">要销毁的物品名称</param>
+    /// <returns>如果成功找到并计划销毁则返回true，否则返回false</returns>
+    public bool DestroyItem(string itemName)
+    {
+        for (var i = itemsInBackpack.Count - 1; i >= 0; i--)
+        {
+            var storable = itemsInBackpack[i].GetComponent<IStorable>();
+            if (storable == null || storable.ItemName != itemName) continue;
+            var itemToDestroy = itemsInBackpack[i];
+            itemsInBackpack.RemoveAt(i);
+            itemNamesInBackpack.Remove(itemName); 
+
+            Destroy(itemToDestroy); 
+            return true;
+        }
+        Debug.LogWarning($"Item with name '{itemName}' not found in backpack to destroy.");
+        return false;
+    }
 
 }

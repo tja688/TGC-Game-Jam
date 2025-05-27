@@ -8,6 +8,8 @@ public class PlayerMove : MonoBehaviour
     private static readonly int Vertical = Animator.StringToHash("Vertical");
     private static readonly int Speed = Animator.StringToHash("Speed");
     public static GameObject CurrentPlayer { get; private set; }
+
+    public static bool CanPlayerMove { get; set; }
     
     private Animator animator;
     private Rigidbody2D rigidbody2d;
@@ -18,10 +20,14 @@ public class PlayerMove : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        
         rigidbody2d = GetComponent<Rigidbody2D>();
+        
         inputActions = new InputActions();
         
         CurrentPlayer =  gameObject;
+        
+        CanPlayerMove =  true;
     }
     
     private void OnEnable()
@@ -36,6 +42,8 @@ public class PlayerMove : MonoBehaviour
 
     private void Update()
     {
+        if (!CanPlayerMove) return;
+        
         var inputVector = inputActions.PlayerControl.Move.ReadValue<Vector2>();
         var horizontal = inputVector.x;
         var vertical = inputVector.y;
