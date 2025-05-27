@@ -11,7 +11,9 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private TypewriterCore typewriter;
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] public bool isDialogueProcessActive;
-    
+
+    public TypewriterCore Typewriter => typewriter;
+
     public static DialogueManager Instance { get; private set; }
 
     private void Awake()

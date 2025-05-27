@@ -1,80 +1,141 @@
-using System;
 using UnityEngine;
+using System;
 
 public class CameraSystem : MonoBehaviour
 {
+    [Header("Settings")]
     [SerializeField] private float moveSpeed = 5f;
-    private Transform currentTarget; 
-    private bool isMovingToTarget = false; // 标记是否正在移动到目标
+    [Tooltip("How close the camera needs to be to a special target to be considered 'arrived'.")]
+    [SerializeField] private float arrivalThreshold = 0.1f;
 
-    public static event Action<Transform> OnSetCameraTarget;
-    public static event Action OnCameraArrived;
+
+    [Header("References")]
+    // 尝试在 Start 中自动获取，或者允许外部拖拽赋值
+    [SerializeField] private Transform initialPlayerTransform;
+
+
+    private Transform currentPlayerToFollow;      // 当前应该跟随的玩家对象
+    private Transform activeSpecialTarget;        // 当前激活的特殊目标点
+    private bool hasFiredArrivalForThisSpecialTarget; // 标记当前特殊目标的抵达事件是否已触发
+
+    /// <summary>
+    /// 当相机抵达一个通过 SetSpecialCameraTarget 设置的特殊目标时触发。
+    /// </summary>
+    public static event Action OnCameraArrivedAtSpecialTarget;
     
-    private void OnEnable()
+    public static CameraSystem Instance { get; private set; }
+
+    private void Awake()
     {
-        SetTarget(PlayerMove.CurrentPlayer?.transform);
-        OnSetCameraTarget += HandleSetCameraTarget;
+        if (Instance && Instance != this)
+        {
+            Debug.LogWarning("Another instance of CameraSystem found, destroying this one.");
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
     }
 
-    private void OnDisable()
+    private void Start()
     {
-        OnSetCameraTarget -= HandleSetCameraTarget;
+        if (initialPlayerTransform)
+        {
+            SetPlayerToFollow(initialPlayerTransform);
+        }
+        else if (PlayerMove.CurrentPlayer) // 尝试从 PlayerMove 获取
+        {
+            SetPlayerToFollow(PlayerMove.CurrentPlayer.transform);
+        }
+        else
+        {
+            Debug.LogWarning("CameraSystem: No initial player transform set and PlayerMove.CurrentPlayer is null. Camera might not follow player initially.");
+        }
     }
 
     private void LateUpdate()
     {
-        if (!currentTarget)
+        if (!currentPlayerToFollow && PlayerMove.CurrentPlayer)
         {
-            // 如果没有目标，尝试设置玩家为目标
-            SetTarget(PlayerMove.CurrentPlayer?.transform);
+            SetPlayerToFollow(PlayerMove.CurrentPlayer.transform);
+        }
+
+        var targetToTrack = activeSpecialTarget ?? currentPlayerToFollow;
+
+        if (!targetToTrack)
+        {
             return;
         }
 
-        if (!isMovingToTarget && Vector3.Distance(transform.position, currentTarget.position) > 0.1f)
+        var desiredCameraPosition = new Vector3(
+            targetToTrack.position.x,
+            targetToTrack.position.y,
+            transform.position.z
+        );
+
+        // --- 相机移动逻辑 (已修复平滑性) ---
+        var distanceToTarget = Vector3.Distance(transform.position, desiredCameraPosition);
+
+        if (distanceToTarget > 0.001f) // 可以根据需要调整这个 epsilon 值
         {
-            isMovingToTarget = true;
+            transform.position = Vector3.Lerp(
+                transform.position,
+                desiredCameraPosition,
+                moveSpeed * Time.deltaTime);
         }
 
-        if (!isMovingToTarget) return;
-        transform.position = Vector3.Lerp(
-            transform.position,
-            new Vector3(
-                currentTarget.position.x,
-                currentTarget.position.y,
-                transform.position.z),
-            moveSpeed * Time.deltaTime);
+        if (!activeSpecialTarget || hasFiredArrivalForThisSpecialTarget) return;
+        // 检查的是到 desiredCameraPosition 的距离，因为当 activeSpecialTarget 不为null时,
+        // targetToTrack 就是 activeSpecialTarget, 所以 desiredCameraPosition 就是根据 activeSpecialTarget 计算的。
+        if (!(Vector3.Distance(transform.position, desiredCameraPosition) < arrivalThreshold)) return;
+        // 为了调试，可以取消下面的注释
+        // Debug.Log($"CameraSystem: Arrived at special target: {activeSpecialTarget.name}");
+        OnCameraArrivedAtSpecialTarget?.Invoke();
+        hasFiredArrivalForThisSpecialTarget = true;
+    }
 
-        if (Vector3.Distance(transform.position, currentTarget.position) < 0.1f)
+
+    /// <summary>
+    /// 供外部调用，设置一个临时的特殊相机目标点。
+    /// 当相机抵达此目标时，OnCameraArrivedAtSpecialTarget 事件会触发一次。
+    /// 若要相机重新检测并为同一目标再次触发事件，需再次调用此方法设置该目标。
+    /// </summary>
+    /// <param name="specialTarget">要临时看向的目标 Transform。传入 null 则清除特殊目标，恢复默认跟随玩家。</param>
+    public static void SetSpecialCameraTarget(Transform specialTarget)
+    {
+        if (!Instance)
         {
-            OnCameraArrivedOnce();
+            Debug.LogError("CameraSystem.Instance is null. Cannot set special camera target. Ensure a CameraSystem object exists in the scene.");
+            return;
         }
+        Instance.ProcessSpecialTargetSetting(specialTarget);
     }
 
-    private void HandleSetCameraTarget(Transform newTarget)
+    private void ProcessSpecialTargetSetting(Transform newSpecialTarget)
     {
-        SetTarget(newTarget);
-    }
-
-    // 动态设置新目标（如果设置为空则默认回位玩家位置）
-    private void SetTarget(Transform newTarget)
-    {
-        currentTarget = newTarget;
-        
-        if (newTarget)
+        if (activeSpecialTarget == newSpecialTarget)
         {
-            isMovingToTarget = false;
+            if (!newSpecialTarget || !hasFiredArrivalForThisSpecialTarget) return;
         }
+        else
+        {
+            activeSpecialTarget = newSpecialTarget;
+        }
+
+        hasFiredArrivalForThisSpecialTarget = false;
     }
 
-    public static void SetCameraTarget(Transform obj)
+    /// <summary>
+    /// 设置或更新相机默认跟随的玩家对象。
+    /// </summary>
+    public void SetPlayerToFollow(Transform playerTransform)
     {
-        OnSetCameraTarget?.Invoke(obj);
-    }
-
-    private void OnCameraArrivedOnce()
-    {
-        if (!currentTarget) return;
-        OnCameraArrived?.Invoke();
-        isMovingToTarget = false; // 重置状态，防止重复触发
+        currentPlayerToFollow = playerTransform ? playerTransform : null;
+        // 当切换玩家时，如果当前没有特殊目标，确保特殊目标抵达逻辑不会干扰
+        if (!activeSpecialTarget)
+        {
+            hasFiredArrivalForThisSpecialTarget = true; // 对于玩家跟随，事件触发标记应视为“已处理”
+        }
     }
 }

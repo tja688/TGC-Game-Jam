@@ -6,10 +6,10 @@ using UnityEngine;
 public class TestItem : ItemBase
 {
     
-    public static GameObject testItem {get;set;}
+    public static Transform ShowPointTrans {get;set;}
 
     private void Awake()
     {
-        testItem =  this.gameObject;
+        ShowPointTrans =  promptAnchorTransform;
     }
 }
