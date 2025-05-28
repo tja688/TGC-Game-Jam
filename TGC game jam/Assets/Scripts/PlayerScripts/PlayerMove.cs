@@ -11,6 +11,8 @@ public class PlayerMove : MonoBehaviour
 
     public static bool CanPlayerMove { get; set; }
     
+    public static Rigidbody2D PlayerRigidbody2d {get; set;}
+    
     private Animator animator;
     private Rigidbody2D rigidbody2d;
     private InputActions inputActions;
@@ -22,6 +24,8 @@ public class PlayerMove : MonoBehaviour
         animator = GetComponent<Animator>();
         
         rigidbody2d = GetComponent<Rigidbody2D>();
+
+        PlayerRigidbody2d = rigidbody2d;
         
         inputActions = new InputActions();
         
@@ -66,4 +70,5 @@ public class PlayerMove : MonoBehaviour
         animator.SetFloat(Speed, dir.magnitude);
         rigidbody2d.velocity = dir * 0.5f;
     }
+    
 }

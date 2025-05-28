@@ -169,12 +169,14 @@ public class LiftItem : ItemBase // 假设 ItemBase 是你已有的基类
     {
         PlayerMove.CanPlayerMove = false;
         
+        PlayerMove.PlayerRigidbody2d.velocity = Vector2.zero;
+        
         PlayerMove.CurrentPlayer.transform.position = transform.position;
 
         PlayerMove.CurrentPlayer.transform.SetParent(transform);
     }
     
-    private void PlayerRelease()
+    private static void PlayerRelease()
     {
         PlayerMove.CurrentPlayer.transform.SetParent(null);
         
