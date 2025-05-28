@@ -24,6 +24,8 @@ public class LiftItem : ItemBase // 假设 ItemBase 是你已有的基类
     private bool isAtUpperLevel = false;
     private bool isBusy = false; // 防止重复触发协程
 
+    private Rigidbody2D playerRigidbody;
+    
     protected override void Start()
     {
         base.Start();
@@ -169,14 +171,12 @@ public class LiftItem : ItemBase // 假设 ItemBase 是你已有的基类
     {
         PlayerMove.CanPlayerMove = false;
         
-        PlayerMove.PlayerRigidbody2d.velocity = Vector2.zero;
-        
         PlayerMove.CurrentPlayer.transform.position = transform.position;
 
         PlayerMove.CurrentPlayer.transform.SetParent(transform);
     }
     
-    private static void PlayerRelease()
+    private void PlayerRelease()
     {
         PlayerMove.CurrentPlayer.transform.SetParent(null);
         
