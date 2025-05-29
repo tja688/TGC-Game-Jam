@@ -30,7 +30,7 @@ public class PlayerInteraction : MonoBehaviour
         interactActions.Disable();
 
         if (currentInteractable == null) return;
-        currentInteractable.HideInteractionPrompt();
+        currentInteractable.DestroyInteractionPrompt();
         ClearCurrentInteractable();
     }
 
@@ -57,7 +57,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         var interactableComponent = other.GetComponent<IInteractable>();
         if (interactableComponent == null || interactableComponent != currentInteractable) return;
-        currentInteractable.HideInteractionPrompt();
+        currentInteractable.DestroyInteractionPrompt();
         ClearCurrentInteractable();
         
         isInteracting  = false;   

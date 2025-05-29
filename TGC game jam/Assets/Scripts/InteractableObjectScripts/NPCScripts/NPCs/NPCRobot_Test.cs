@@ -75,6 +75,6 @@ public class NPCRobot_Test : NPCBase
     {
         SendDialogueLine( new Vector2(PromptAnchorScreenPoint.x,PromptAnchorScreenPoint.y), "meet3");
         
-        HideInteractionPrompt();
+        DestroyInteractionPrompt();
     }
 }

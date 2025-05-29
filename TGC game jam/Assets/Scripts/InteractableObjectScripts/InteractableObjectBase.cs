@@ -47,7 +47,7 @@ public abstract class InteractableObjectBase : MonoBehaviour , IInteractable
         
     }
 
-    public void HideInteractionPrompt()
+    public void DestroyInteractionPrompt()
     {
         if (!InstantiatedPromptInstance ) return;
 

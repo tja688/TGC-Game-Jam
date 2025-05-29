@@ -24,7 +24,7 @@ public interface IInteractable
     /// <summary>
     /// 当玩家离开交互范围时调用，隐藏交互提示
     /// </summary>
-    void HideInteractionPrompt();
+    void DestroyInteractionPrompt();
 
     /// <summary>
     /// 当玩家按下交互键时调用，执行具体交互逻辑

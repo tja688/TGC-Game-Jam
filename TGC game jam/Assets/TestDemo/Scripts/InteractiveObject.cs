@@ -22,7 +22,7 @@ public class InteractiveObject : MonoBehaviour, IInteractable
         
     }
 
-    public void HideInteractionPrompt()
+    public void DestroyInteractionPrompt()
     {
         if (!promptPrefab ) return;
 
@@ -36,11 +36,11 @@ public class InteractiveObject : MonoBehaviour, IInteractable
 
     private void OnDisable()
     {
-        HideInteractionPrompt();
+        DestroyInteractionPrompt();
     }
 
     private void OnDestroy()
     {
-        HideInteractionPrompt();
+        DestroyInteractionPrompt();
     }
 }

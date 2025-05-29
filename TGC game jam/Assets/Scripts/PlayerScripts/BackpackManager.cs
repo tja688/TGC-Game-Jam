@@ -63,7 +63,6 @@ public class BackpackManager : MonoBehaviour
         if (itemsInBackpack.Contains(itemObject)) return true;
         itemsInBackpack.Add(itemObject);
         itemNamesInBackpack.Add(storableItem.ItemName);
-        Debug.Log($"Added {storableItem.ItemName} to backpack. Current items: {string.Join(", ", itemNamesInBackpack)}");
         return true;
         
     }

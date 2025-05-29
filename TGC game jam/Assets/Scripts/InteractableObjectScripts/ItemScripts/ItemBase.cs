@@ -25,16 +25,11 @@ public abstract class ItemBase : InteractableObjectBase, IStorable
 
     public override void Interact(GameObject player)
     {
-        Debug.Log($"Interacted with {ItemName} by {player.name}");
-        
-        // 之后可以调用背包管理器的拾取方法
         BackpackManager.Instance.StoreItem(this.gameObject);
     }
 
     public virtual void OnStored(BackpackManager backpackManager)
     {
-        Debug.Log($"{ItemName} was stored in the backpack.");
-
         var col = GetComponent<Collider>();
         if (col)
         {
@@ -54,7 +49,7 @@ public abstract class ItemBase : InteractableObjectBase, IStorable
         transform.localPosition = Vector3.zero; // 可以根据需要调整在背包内的位置
 
         // 隐藏交互提示 (如果它还显示的话)
-        HideInteractionPrompt();
+        DestroyInteractionPrompt();
         
         // 禁用此脚本，因为物品在背包中时不应再被交互
         this.enabled = false;
