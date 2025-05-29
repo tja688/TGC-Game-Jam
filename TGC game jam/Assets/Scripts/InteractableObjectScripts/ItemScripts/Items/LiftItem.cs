@@ -94,6 +94,8 @@ public class LiftItem : ItemBase // 假设 ItemBase 是你已有的基类
 
         isPoweredUp = true;
         isBusy = false;
+        
+        StartCoroutine(GoUpSequence());
     }
 
     private IEnumerator GoUpSequence()

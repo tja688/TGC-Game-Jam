@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using TMPro;
 using System.Collections;
@@ -15,7 +16,7 @@ public class DialogueManager : MonoBehaviour
     public TypewriterCore Typewriter => typewriter;
 
     public static DialogueManager Instance { get; private set; }
-
+    
     private void Awake()
     {
         if (!dialogueText)
@@ -41,6 +42,7 @@ public class DialogueManager : MonoBehaviour
         }
         Instance = this;
     }
+    
 
     private void OnEnable()
     {
@@ -95,6 +97,7 @@ public class DialogueManager : MonoBehaviour
     public void StartDialogueProcess()
     {
         isDialogueProcessActive =  true;
+        PlayerMove.CanPlayerMove = false;
     }
 
     /// <summary>
@@ -103,6 +106,7 @@ public class DialogueManager : MonoBehaviour
     public void EndDialogueProcess()
     {
         isDialogueProcessActive = false;
+        PlayerMove.CanPlayerMove = true;
     }
     
 }

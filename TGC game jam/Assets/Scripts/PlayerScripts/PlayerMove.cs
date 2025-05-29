@@ -56,29 +56,28 @@ public class PlayerMove : MonoBehaviour
 
     private void Update()
     {
-        Vector2 inputVector = Vector2.zero;
+        var inputVector = Vector2.zero;
+        
         if (CanPlayerMove)
         {
             inputVector = inputActions.PlayerControl.Move.ReadValue<Vector2>();
         }
 
-        float horizontalInput = inputVector.x;
-        float verticalInput = inputVector.y;
+        var horizontalInput = inputVector.x;
+        var verticalInput = inputVector.y;
 
-        float clampedHorizontal = Mathf.Abs(horizontalInput) < stopThreshold ? 0 : horizontalInput;
-        float clampedVertical = Mathf.Abs(verticalInput) < stopThreshold ? 0 : verticalInput;
+        var clampedHorizontal = Mathf.Abs(horizontalInput) < stopThreshold ? 0 : horizontalInput;
+        var clampedVertical = Mathf.Abs(verticalInput) < stopThreshold ? 0 : verticalInput;
 
-        Vector2 currentRawInputDirection = new Vector2(clampedHorizontal, clampedVertical);
-        // 注意：如果 clampedHorizontal 和 clampedVertical 都为0，currentRawInputDirection.magnitude 会是0。
-        // 如果它们有值，currentRawInputDirection.normalized 会得到单位向量。
-        // currentRawSpeed 用于动画，表示移动意图的强度。
-        float currentRawSpeed = currentRawInputDirection.magnitude;
+        var currentRawInputDirection = new Vector2(clampedHorizontal, clampedVertical);
+
+        var currentRawSpeed = currentRawInputDirection.magnitude;
 
 
         // 1. 确定目标动画方向 (Target Animation Direction)
-        if (currentRawSpeed > stopThreshold) // 如果有有效输入 (这里用 currentRawSpeed 更直接)
+        if (currentRawSpeed > stopThreshold) 
         {
-            targetAnimationDirection = currentRawInputDirection.normalized; // 使用归一化的原始输入作为目标
+            targetAnimationDirection = currentRawInputDirection.normalized; 
             lastValidInputX = targetAnimationDirection.x;
             lastValidInputY = targetAnimationDirection.y;
         }
@@ -91,24 +90,16 @@ public class PlayerMove : MonoBehaviour
         if (targetAnimationDirection.sqrMagnitude > 0.001f)
         {
             currentAnimationDirection = Vector2.SmoothDamp(currentAnimationDirection, targetAnimationDirection, ref turnAnimationVelocity, turnSmoothTime);
-            // 可选的额外归一化，通常SmoothDamp对方向处理得不错
-            // if (currentAnimationDirection.sqrMagnitude > 0.001f) currentAnimationDirection.Normalize();
         }
 
-        // 3. 更新 Animator 参数
-        // Speed 参数使用 currentRawSpeed，它反映了输入的大小/强度
         UpdateAnimatorParameters(currentAnimationDirection, currentRawSpeed);
 
-        // 4. 准备移动的速度向量给 FixedUpdate
         if (!CanPlayerMove)
         {
             movementVelocityForFixedUpdate = Vector2.zero;
         }
         else
         {
-            // 速度向量 = 方向 * 速度值。
-            // 如果 currentRawSpeed > 0, currentRawInputDirection.normalized * currentRawSpeed == currentRawInputDirection
-            // 所以可以直接用 currentRawInputDirection * moveSpeed
             movementVelocityForFixedUpdate = currentRawInputDirection * moveSpeed;
         }
     }
