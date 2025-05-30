@@ -37,13 +37,24 @@ public class PlayerInterfaceOpenerButton : MonoBehaviour
         {
             Debug.LogError($"PlayerInterfaceOpenerButton: UIAnimationManager.Instance 为空！无法显示UI组 '{targetUIGroupName}'。", this);
         }
-        
+    
+        // 2. 通知 BackpackUIManager 准备并显示背包内容
+        if (BackpackUIManager.Instance)
+        {
+            BackpackUIManager.Instance.RefreshContentView(); 
+        }
+        else
+        {
+            Debug.LogError("PlayerInterfaceOpenerButton: BackpackUIManager.Instance 为空！无法更新背包UI。", this);
+        }
+    
         PlayerInputController.Instance?.ActivateUIControls();
-        
-        OnOpenUI =  true;
+    
+        OnOpenUI = true;
 
-        this.gameObject.SetActive(false);
+        this.gameObject.SetActive(false); // 按钮自身隐藏
     }
+
 
     /// <summary>
     /// 公开接口：用于从外部重新显示并激活此按钮。

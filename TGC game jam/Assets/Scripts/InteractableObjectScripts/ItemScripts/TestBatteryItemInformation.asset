@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a056262781e36354a9f1b7d7e307d063, type: 3}
+  m_Name: TestBatteryItemInformation
+  m_EditorClassIdentifier: 
+  itemName: battery
+  itemIcon: {fileID: 2800000, guid: e6a8630b9cb687641bd10d8576317610, type: 3}
+  itemDescription: Battery, can be used for charging
+  button: {fileID: 158104279655659741, guid: 766028fb00bfc7c42abdcc4ffc68316b, type: 3}

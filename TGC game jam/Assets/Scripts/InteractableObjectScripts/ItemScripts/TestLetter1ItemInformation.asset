@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a056262781e36354a9f1b7d7e307d063, type: 3}
-  m_Name: TestItem
+  m_Name: TestLetter1ItemInformation
   m_EditorClassIdentifier: 
-  itemName: battery
-  itemIcon: {fileID: 2800000, guid: e6a8630b9cb687641bd10d8576317610, type: 3}
-  itemDescription: Battery, can be used for charging
+  itemName: TestLetter1
+  itemIcon: {fileID: 2800000, guid: b3911505517514242831fc890f0fdfd3, type: 3}
+  itemDescription: Test Letter 1
+  button: {fileID: 158104279655659741, guid: 3c6a0e62ad2ccf74c831ccfe2deffca9, type: 3}
