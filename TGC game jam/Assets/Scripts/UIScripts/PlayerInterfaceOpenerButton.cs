@@ -11,6 +11,8 @@ public class PlayerInterfaceOpenerButton : MonoBehaviour
 
     private Button button;
     
+    public static bool OnOpenUI { get; private set; }
+    
     private void Awake()
     {
         button = GetComponent<Button>();
@@ -37,6 +39,8 @@ public class PlayerInterfaceOpenerButton : MonoBehaviour
         }
         
         PlayerInputController.Instance?.ActivateUIControls();
+        
+        OnOpenUI =  true;
 
         this.gameObject.SetActive(false);
     }
@@ -48,6 +52,8 @@ public class PlayerInterfaceOpenerButton : MonoBehaviour
     {
         this.gameObject.SetActive(true);
 
+        OnOpenUI = false;
+        
         PlayerInputController.Instance?.ActivatePlayerControls();
     }
 

@@ -5,12 +5,6 @@ public abstract class ItemBase : InteractableObjectBase, IStorable
 {
     private bool originalColliderState;
     private bool originalRendererState;
-    
-    [SerializeField] private Texture2D itemImage;
-
-    public string itemDescribe;
-    
-    public Texture2D ItemImage => itemImage;
 
     public string ItemName => objectName;
 
