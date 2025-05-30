@@ -101,27 +101,33 @@ public class LiftItem : ItemBase // 假设 ItemBase 是你已有的基类
     private IEnumerator GoUpSequence()
     {
         isBusy = true;
-        
-        InstantiatedPromptInstance.SetActive(false);
-        
+    
+        if (InstantiatedPromptInstance)
+        {
+            InstantiatedPromptInstance.SetActive(false);
+        }
+    
         PlayerControl();
-        
+    
         // 1. 触发 UP 动画
         animator.SetTrigger(upAnimationTrigger);
 
         // 2. 平滑改变灯颜色至 3BB600
         yield return StartCoroutine(SmoothColorChange(lightSprite, movingColor, colorChangeDuration));
-        
+    
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(upStateName) && 
-                                       animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f);
+                                         animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f);
 
         yield return StartCoroutine(SmoothColorChange(lightSprite, poweredColor, colorChangeDuration));
 
         isAtUpperLevel = true;
 
         PlayerRelease();
-            
-        InstantiatedPromptInstance.SetActive(true);
+        
+        if (InstantiatedPromptInstance != null)
+        {
+            InstantiatedPromptInstance.SetActive(true);
+        }
 
         isBusy = false;
     }
@@ -129,27 +135,33 @@ public class LiftItem : ItemBase // 假设 ItemBase 是你已有的基类
     private IEnumerator GoDownSequence()
     {
         isBusy = true;
-        
-        InstantiatedPromptInstance.SetActive(false);
-        
+    
+        if (InstantiatedPromptInstance != null)
+        {
+            InstantiatedPromptInstance.SetActive(false);
+        }
+    
         PlayerControl();
 
         animator.SetTrigger(downAnimationTrigger);
 
         yield return StartCoroutine(SmoothColorChange(lightSprite, movingColor, colorChangeDuration));
-        
+    
         yield return null; 
-        
+    
         yield return new WaitUntil(() => !animator.GetCurrentAnimatorStateInfo(0).IsName(downStateName));
-        
+    
         yield return StartCoroutine(SmoothColorChange(lightSprite, poweredColor, colorChangeDuration));
-        
+    
         isAtUpperLevel = false;
-        
+    
         PlayerRelease();
-        
-        InstantiatedPromptInstance.SetActive(true);
-        
+    
+        if (InstantiatedPromptInstance)
+        {
+            InstantiatedPromptInstance.SetActive(true);
+        }
+    
         isBusy = false;
     }
 
@@ -171,21 +183,20 @@ public class LiftItem : ItemBase // 假设 ItemBase 是你已有的基类
 
     private void PlayerControl()
     {
+        if (!PlayerMove.CurrentPlayer) return;
+    
         PlayerMove.CanPlayerMove = false;
-        
         PlayerMove.CurrentPlayer.transform.position = transform.position;
-
         PlayerMove.CurrentPlayer.transform.SetParent(transform);
     }
-    
+
     private void PlayerRelease()
     {
-        PlayerMove.CurrentPlayer.transform.SetParent(null);
-        
-        PlayerMove.CanPlayerMove = true;
-
-    }
+        if (!PlayerMove.CurrentPlayer) return;
     
+        PlayerMove.CurrentPlayer.transform.SetParent(null);
+        PlayerMove.CanPlayerMove = true;
+    }
     protected void OnDestroy() 
     {
         if (!lightSprite) return;
