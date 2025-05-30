@@ -10,15 +10,11 @@ public class UIAnimationManager : MonoBehaviour
     {
         get
         {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<UIAnimationManager>();
-                if (_instance == null)
-                {
-                    GameObject singletonObject = new GameObject(typeof(UIAnimationManager).Name);
-                    _instance = singletonObject.AddComponent<UIAnimationManager>();
-                }
-            }
+            if (_instance) return _instance;
+            _instance = FindObjectOfType<UIAnimationManager>();
+            if (_instance) return _instance;
+            var singletonObject = new GameObject(nameof(UIAnimationManager));
+            _instance = singletonObject.AddComponent<UIAnimationManager>();
             return _instance;
         }
     }
@@ -28,12 +24,12 @@ public class UIAnimationManager : MonoBehaviour
     public List<UIPanelGroup> inspectorDefinedGroups = new List<UIPanelGroup>();
 
     // 运行时用于高效管理组的字典
-    private Dictionary<string, List<UIFlyInOut>> managedGroups = new Dictionary<string, List<UIFlyInOut>>();
+    private readonly Dictionary<string, List<UIFlyInOut>> managedGroups = new Dictionary<string, List<UIFlyInOut>>();
 
-    void Awake()
+    private void Awake()
     {
         // 标准的单例模式 Awake 处理
-        if (_instance == null)
+        if (!_instance)
         {
             _instance = this;
             // 可选：如果希望此管理器在加载新场景时不被销毁
@@ -55,7 +51,7 @@ public class UIAnimationManager : MonoBehaviour
     private void InitializeGroupsFromInspector()
     {
         managedGroups.Clear();
-        foreach (UIPanelGroup groupSetup in inspectorDefinedGroups)
+        foreach (var groupSetup in inspectorDefinedGroups)
         {
             if (string.IsNullOrEmpty(groupSetup.groupName))
             {
@@ -76,15 +72,14 @@ public class UIAnimationManager : MonoBehaviour
             }
 
             // 将 Inspector 中配置的面板添加到对应的运行时组列表中
-            if (groupSetup.panelsInGroup != null)
+            if (groupSetup.panelsInGroup == null) continue;
+            for (var index = 0; index < groupSetup.panelsInGroup.Count; index++)
             {
-                foreach (UIFlyInOut panel in groupSetup.panelsInGroup)
+                var panel = groupSetup.panelsInGroup[index];
+                if (panel)
                 {
-                    if (panel != null)
-                    {
-                        // 使用内部方法添加，避免在同一个组内重复添加
-                        AddPanelToRuntimeGroupList(panel, groupSetup.groupName, false);
-                    }
+                    // 使用内部方法添加，避免在同一个组内重复添加
+                    AddPanelToRuntimeGroupList(panel, groupSetup.groupName, false);
                 }
             }
         }
@@ -100,7 +95,7 @@ public class UIAnimationManager : MonoBehaviour
             managedGroups[groupName] = new List<UIFlyInOut>();
         }
 
-        List<UIFlyInOut> groupList = managedGroups[groupName];
+        var groupList = managedGroups[groupName];
         if (!groupList.Contains(panel))
         {
             groupList.Add(panel);
@@ -139,7 +134,7 @@ public class UIAnimationManager : MonoBehaviour
     /// </summary>
     public void RegisterPanelToGroup(UIFlyInOut panel, string groupName)
     {
-        if (panel == null)
+        if (!panel)
         {
             Debug.LogWarning("UIAnimationManager: 尝试向组注册一个空的UI面板引用。");
             return;
@@ -151,7 +146,6 @@ public class UIAnimationManager : MonoBehaviour
         }
 
         AddPanelToRuntimeGroupList(panel, groupName);
-        // Debug.Log($"UIAnimationManager: 面板 '{panel.name}' 已注册到组 '{groupName}'。");
     }
 
     /// <summary>
@@ -159,14 +153,14 @@ public class UIAnimationManager : MonoBehaviour
     /// </summary>
     public void UnregisterPanelFromGroup(UIFlyInOut panel, string groupName)
     {
-        if (panel == null || string.IsNullOrEmpty(groupName))
+        if (!panel || string.IsNullOrEmpty(groupName))
         {
-            if(panel == null) Debug.LogWarning("UIAnimationManager: 尝试注销一个空的UI面板引用。");
+            if(!panel) Debug.LogWarning("UIAnimationManager: 尝试注销一个空的UI面板引用。");
             if(string.IsNullOrEmpty(groupName)) Debug.LogWarning("UIAnimationManager: 尝试从一个未命名的组注销面板。");
             return;
         }
 
-        if (managedGroups.TryGetValue(groupName, out List<UIFlyInOut> groupList))
+        if (managedGroups.TryGetValue(groupName, out var groupList))
         {
             if (groupList.Remove(panel))
             {
@@ -190,7 +184,7 @@ public class UIAnimationManager : MonoBehaviour
     /// </summary>
     public void UnregisterPanelFromAllGroups(UIFlyInOut panel)
     {
-        if (panel == null)
+        if (!panel)
         {
             Debug.LogWarning("UIAnimationManager: 尝试从所有组注销一个空的UI面板引用。");
             return;
@@ -198,13 +192,10 @@ public class UIAnimationManager : MonoBehaviour
 
         // string panelNameForLog = panel.name; // 避免panel在过程中被销毁导致name访问问题
         // bool removed = false;
-        foreach (KeyValuePair<string, List<UIFlyInOut>> groupPair in managedGroups)
+        foreach (var groupPair in managedGroups.Where(groupPair => groupPair.Value.Remove(panel)))
         {
-            if (groupPair.Value.Remove(panel))
-            {
-                // removed = true;
-                // Debug.Log($"UIAnimationManager: 面板 '{panelNameForLog}' 已从组 '{groupPair.Key}' 注销。");
-            }
+            // removed = true;
+            // Debug.Log($"UIAnimationManager: 面板 '{panelNameForLog}' 已从组 '{groupPair.Key}' 注销。");
         }
         // if(!removed) Debug.LogWarning($"UIAnimationManager: 面板 '{panelNameForLog}' 未在任何管理的组中找到。");
     }
@@ -227,10 +218,10 @@ public class UIAnimationManager : MonoBehaviour
         {
             // Debug.Log($"UIAnimationManager: 准备显示组 '{groupName}' 中的 {groupList.Count} 个面板。");
             // 从后往前遍历，以便在找到null时安全地从列表中移除
-            for (int i = groupList.Count - 1; i >= 0; i--)
+            for (var i = groupList.Count - 1; i >= 0; i--)
             {
-                UIFlyInOut panel = groupList[i];
-                if (panel != null)
+                var panel = groupList[i];
+                if (panel)
                 {
                     panel.Show();
                 }
@@ -261,10 +252,10 @@ public class UIAnimationManager : MonoBehaviour
         if (managedGroups.TryGetValue(groupName, out List<UIFlyInOut> groupList))
         {
             // Debug.Log($"UIAnimationManager: 准备隐藏组 '{groupName}' 中的 {groupList.Count} 个面板。");
-            for (int i = groupList.Count - 1; i >= 0; i--)
+            for (var i = groupList.Count - 1; i >= 0; i--)
             {
-                UIFlyInOut panel = groupList[i];
-                if (panel != null)
+                var panel = groupList[i];
+                if (panel)
                 {
                     panel.Hide();
                 }

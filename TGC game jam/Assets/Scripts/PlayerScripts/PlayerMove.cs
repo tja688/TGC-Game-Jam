@@ -35,7 +35,6 @@ public class PlayerMove : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         rigidbody2d = GetComponent<Rigidbody2D>();
-        inputActions = PlayerInputController.Instance.InputActions;
         CurrentPlayer = gameObject;
         CanPlayerMove = true;
 
@@ -43,7 +42,14 @@ public class PlayerMove : MonoBehaviour
         currentAnimationDirection = targetAnimationDirection;
         UpdateAnimatorParameters(currentAnimationDirection, 0f); // 初始设置动画
     }
-    
+
+    private void Start()
+    {
+        inputActions = PlayerInputController.Instance.InputActions;
+        if (inputActions == null)
+            Debug.LogError("PlayerMove : inputActions null");
+    }
+
     private void Update()
     {
         var inputVector = Vector2.zero;

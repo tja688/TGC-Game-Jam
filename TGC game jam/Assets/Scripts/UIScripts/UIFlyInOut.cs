@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using DG.Tweening; // 确保你已经导入了 DOTween 插件
 
@@ -49,21 +50,21 @@ public class UIFlyInOut : MonoBehaviour
 
     private bool isInitialized = false;
     private bool isVisible = false;    // 标记UI当前是否在屏幕上（动画完成后）
-    private Tweener currentTweener;    // 当前活动的Tweener
+    private Tweener currentTweeter;    // 当前活动的Tweener
 
-    void Awake()
+    private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
 
         // 获取根Canvas，它用于精确计算屏幕边界
         // 通常，UI元素是某个Canvas的子对象
-        Canvas canvasInParent = GetComponentInParent<Canvas>();
-        if (canvasInParent != null)
+        var canvasInParent = GetComponentInParent<Canvas>();
+        if (canvasInParent)
         {
             rootCanvas = canvasInParent.rootCanvas;
         }
 
-        if (rootCanvas == null)
+        if (!rootCanvas)
         {
             Debug.LogError("UIFlyInOut: 未找到根Canvas! 离屏位置计算可能不准确。请确保此UI元素在Canvas下。", this);
             // 如果找不到，可以尝试用Screen.width/height做后备，但这对于不同Canvas设置可能不准
@@ -86,21 +87,21 @@ public class UIFlyInOut : MonoBehaviour
         }
     }
 
-    void InitializePositions()
+    private void InitializePositions()
     {
         if (isInitialized) return;
 
         onScreenPosition = rectTransform.anchoredPosition;
 
-        Rect canvasRect = rootCanvas != null ? rootCanvas.GetComponent<RectTransform>().rect : new Rect(0, 0, Screen.width, Screen.height);
-        Vector2 panelSize = rectTransform.rect.size;
-        Vector2 panelPivot = rectTransform.pivot;
+        var canvasRect = rootCanvas ? rootCanvas.GetComponent<RectTransform>().rect : new Rect(0, 0, Screen.width, Screen.height);
+        var panelSize = rectTransform.rect.size;
+        var panelPivot = rectTransform.pivot;
 
-        float calculatedOffX = onScreenPosition.x;
-        float calculatedOffY = onScreenPosition.y;
+        var calculatedOffX = onScreenPosition.x;
+        var calculatedOffY = onScreenPosition.y;
 
-        float canvasHalfWidth = canvasRect.width / 2f;
-        float canvasHalfHeight = canvasRect.height / 2f;
+        var canvasHalfWidth = canvasRect.width / 2f;
+        var canvasHalfHeight = canvasRect.height / 2f;
 
         switch (entryDirection)
         {
@@ -138,12 +139,12 @@ public class UIFlyInOut : MonoBehaviour
 
 
         // 如果当前面板正在隐藏（或者已经隐藏但动画可能还在队列里），先杀死旧动画
-        if (currentTweener != null && currentTweener.IsActive())
+        if (currentTweeter != null && currentTweeter.IsActive())
         {
             // 如果目标是offScreenPosition，说明是正在隐藏或已隐藏，可以打断
-            if ((Vector2)currentTweener.PathGetPoint(1f) == offScreenPosition)
+            if ((Vector2)currentTweeter.PathGetPoint(1f) == offScreenPosition)
             {
-                 currentTweener.Kill();
+                 currentTweeter.Kill();
             }
             else if (rectTransform.anchoredPosition == onScreenPosition && isVisible) // 已经在屏幕上且可见
             {
@@ -155,12 +156,12 @@ public class UIFlyInOut : MonoBehaviour
         gameObject.SetActive(true); // 确保GameObject是激活的才能播放动画
 
         // Debug.Log($"Show: Animating from {rectTransform.anchoredPosition} to {onScreenPosition}");
-        currentTweener = rectTransform.DOAnchorPos(onScreenPosition, entryDuration)
+        currentTweeter = rectTransform.DOAnchorPos(onScreenPosition, entryDuration)
             .SetEase(entryEase)
             .SetDelay(entryDelay)
             .OnComplete(() => {
                 isVisible = true;
-                currentTweener = null;
+                currentTweeter = null;
                 // Debug.Log("Show Complete. Now at: " + rectTransform.anchoredPosition);
             });
     }
@@ -176,12 +177,12 @@ public class UIFlyInOut : MonoBehaviour
         }
 
         // 如果当前面板正在显示（或者已经显示但动画可能还在队列里），先杀死旧动画
-        if (currentTweener != null && currentTweener.IsActive())
+        if (currentTweeter != null && currentTweeter.IsActive())
         {
              // 如果目标是onScreenPosition，说明是正在显示或已显示，可以打断
-            if((Vector2)currentTweener.PathGetPoint(1f) == onScreenPosition)
+            if((Vector2)currentTweeter.PathGetPoint(1f) == onScreenPosition)
             {
-                currentTweener.Kill();
+                currentTweeter.Kill();
             }
             else if (rectTransform.anchoredPosition == offScreenPosition && !isVisible) // 已经在屏幕外且不可见
             {
@@ -191,12 +192,12 @@ public class UIFlyInOut : MonoBehaviour
         }
 
         // Debug.Log($"Hide: Animating from {rectTransform.anchoredPosition} to {offScreenPosition}");
-        currentTweener = rectTransform.DOAnchorPos(offScreenPosition, exitDuration)
+        currentTweeter = rectTransform.DOAnchorPos(offScreenPosition, exitDuration)
             .SetEase(exitEase)
             .SetDelay(exitDelay)
             .OnComplete(() => {
                 isVisible = false;
-                currentTweener = null;
+                currentTweeter = null;
                 // Debug.Log("Hide Complete. Now at: " + rectTransform.anchoredPosition);
                 // 根据需求，可以选择在隐藏动画完成后禁用GameObject
                 // if (initializeOffScreen) // 或者根据其他逻辑
@@ -214,15 +215,15 @@ public class UIFlyInOut : MonoBehaviour
         // 一个更稳健的判断方法是检查目标位置或当前是否真的在屏幕上
         // isVisible只在动画完成后更新，所以动画过程中它可能不准确
         // 因此我们主要判断动画的目标或者最终的静止状态
-        if (currentTweener != null && currentTweener.IsActive())
+        if (currentTweeter != null && currentTweeter.IsActive())
         {
             // 如果正在飞入，则反向飞出
-            if ((Vector2)currentTweener.PathGetPoint(1f) == onScreenPosition)
+            if ((Vector2)currentTweeter.PathGetPoint(1f) == onScreenPosition)
             {
                 Hide();
             }
             // 如果正在飞出，则反向飞入
-            else if ((Vector2)currentTweener.PathGetPoint(1f) == offScreenPosition)
+            else if ((Vector2)currentTweeter.PathGetPoint(1f) == offScreenPosition)
             {
                 Show();
             }
@@ -257,13 +258,4 @@ public class UIFlyInOut : MonoBehaviour
         Debug.Log("Positions reinitialized. Off-screen: " + offScreenPosition + ", On-screen: " + onScreenPosition);
     }
 
-
-    // 可选：当脚本被禁用又启用时，如果希望保持在屏幕外的状态
-    // void OnEnable()
-    // {
-    //     if (isInitialized && initializeOffScreen && !isVisible)
-    //     {
-    //         rectTransform.anchoredPosition = offScreenPosition;
-    //     }
-    // }
 }

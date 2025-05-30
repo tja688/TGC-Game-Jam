@@ -10,8 +10,7 @@ public class PlayerInterfaceOpenerButton : MonoBehaviour
     public string targetUIGroupName = "PlayerPanel";
 
     private Button button;
-
-
+    
     private void Awake()
     {
         button = GetComponent<Button>();
