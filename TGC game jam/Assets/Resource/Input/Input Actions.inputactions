@@ -147,6 +147,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "UIControl",
+            "id": "86316b40-b286-4d4e-9d71-4ed4571a48cb",
+            "actions": [
+                {
+                    "name": "Exit",
+                    "type": "Button",
+                    "id": "674bd209-4b4d-4b23-a8c9-87d41d3579da",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "c5acc9a1-0a5a-4858-ac83-88836d744a7f",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Exit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

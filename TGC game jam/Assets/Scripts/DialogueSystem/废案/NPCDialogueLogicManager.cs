@@ -18,7 +18,7 @@ public class NPCDialogueLogicManager : MonoBehaviour
 
     private void Awake()
     {
-        inputActions = new InputActions(); 
+        inputActions = PlayerInputController.Instance.InputActions; 
         
         if (!targetNpcDialogueManager)
         {
@@ -28,8 +28,6 @@ public class NPCDialogueLogicManager : MonoBehaviour
 
     private void OnEnable()
     {
-        inputActions.PlayerControl.Enable(); // 假设你的Action Map名为 "PlayerControl"
-
         inputActions.PlayerControl.Interact.performed += OnInteractInputPerformed;
     }
 

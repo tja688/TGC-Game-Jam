@@ -35,7 +35,7 @@ public class PlayerMove : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         rigidbody2d = GetComponent<Rigidbody2D>();
-        inputActions = new InputActions();
+        inputActions = PlayerInputController.Instance.InputActions;
         CurrentPlayer = gameObject;
         CanPlayerMove = true;
 
@@ -43,17 +43,7 @@ public class PlayerMove : MonoBehaviour
         currentAnimationDirection = targetAnimationDirection;
         UpdateAnimatorParameters(currentAnimationDirection, 0f); // 初始设置动画
     }
-
-    private void OnEnable()
-    {
-        inputActions.Enable();
-    }
-
-    private void OnDisable()
-    {
-        inputActions.Disable();
-    }
-
+    
     private void Update()
     {
         var inputVector = Vector2.zero;
@@ -74,19 +64,17 @@ public class PlayerMove : MonoBehaviour
         var currentRawSpeed = currentRawInputDirection.magnitude;
 
 
-        // 1. 确定目标动画方向 (Target Animation Direction)
         if (currentRawSpeed > stopThreshold) 
         {
             targetAnimationDirection = currentRawInputDirection.normalized; 
             lastValidInputX = targetAnimationDirection.x;
             lastValidInputY = targetAnimationDirection.y;
         }
-        else // 如果没有有效输入 (停止移动)
+        else 
         {
             targetAnimationDirection = new Vector2(lastValidInputX, lastValidInputY).normalized;
         }
 
-        // 2. 平滑地更新当前动画方向 (Current Animation Direction)
         if (targetAnimationDirection.sqrMagnitude > 0.001f)
         {
             currentAnimationDirection = Vector2.SmoothDamp(currentAnimationDirection, targetAnimationDirection, ref turnAnimationVelocity, turnSmoothTime);
@@ -112,7 +100,6 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    // 辅助方法，用于更新Animator的参数
     private void UpdateAnimatorParameters(Vector2 direction, float speed)
     {
         animator.SetFloat(HorizontalAnimHash, direction.x);
