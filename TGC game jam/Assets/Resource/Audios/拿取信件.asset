@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d31b723d397291b42ab7fc53086ea5ab, type: 3}
+  m_Name: "\u62FF\u53D6\u4FE1\u4EF6"
+  m_EditorClassIdentifier: 
+  clip: {fileID: 8300000, guid: 052bc80e56c9da54794f5a0ee5e71b75, type: 3}
+  volume: 0.2
+  pitch: 0.9
+  loop: 0
+  outputAudioMixerGroup: {fileID: 0}
+  cooldown: 0
+  loopFadeInTime: 0.1
+  loopFadeOutTime: 0.1
+  isRandomPool: 0
+  audioClipPool: []
+  randomVolumeMultiplierRange: {x: 1, y: 1}
+  randomPitchMultiplierRange: {x: 1, y: 1}

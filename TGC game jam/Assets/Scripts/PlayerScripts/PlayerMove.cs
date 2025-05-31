@@ -8,7 +8,13 @@ public class PlayerMove : MonoBehaviour
     private static readonly int SpeedAnimHash = Animator.StringToHash("Speed");
     public static GameObject CurrentPlayer { get; private set; }
 
+    // [SerializeField] private SoundEffect playerMoveSound; // <-- 移除此行
+    
     public static bool CanPlayerMove { get; set; }
+
+    // --- 新增：公开玩家是否正在行走的属性 ---
+    public bool IsWalking { get; private set; }
+    // --- 结束新增 ---
 
     private Animator animator;
     private Rigidbody2D rigidbody2d;
@@ -17,19 +23,15 @@ public class PlayerMove : MonoBehaviour
     public float stopThreshold = 0.1f;
     public float moveSpeed = 1f;
 
-    // --- 变量用于平滑转向 ---
     private Vector2 currentAnimationDirection;
     private Vector2 targetAnimationDirection;
-    public float turnSmoothTime = 0.05f; // 显著减小此值以加快转向响应 (例如 0.05f)
-    private Vector2 turnAnimationVelocity; // 用于 SmoothDamp
-    // --- End 变量用于平滑转向 ---
+    public float turnSmoothTime = 0.05f; 
+    private Vector2 turnAnimationVelocity; 
 
     private float lastValidInputX = 0f;
     private float lastValidInputY = -1f;
 
-    // --- 变量用于FixedUpdate移动 ---
     private Vector2 movementVelocityForFixedUpdate;
-    // --- End 变量用于FixedUpdate移动 ---
 
     private void Awake()
     {
@@ -37,10 +39,11 @@ public class PlayerMove : MonoBehaviour
         rigidbody2d = GetComponent<Rigidbody2D>();
         CurrentPlayer = gameObject;
         CanPlayerMove = true;
+        IsWalking = false; // 初始状态为未行走
 
         targetAnimationDirection = new Vector2(lastValidInputX, lastValidInputY).normalized;
         currentAnimationDirection = targetAnimationDirection;
-        UpdateAnimatorParameters(currentAnimationDirection, 0f); // 初始设置动画
+        UpdateAnimatorParameters(currentAnimationDirection, 0f); 
     }
 
     private void Start()
@@ -66,15 +69,18 @@ public class PlayerMove : MonoBehaviour
         var clampedVertical = Mathf.Abs(verticalInput) < stopThreshold ? 0 : verticalInput;
 
         var currentRawInputDirection = new Vector2(clampedHorizontal, clampedVertical);
-
         var currentRawSpeed = currentRawInputDirection.magnitude;
 
+        // --- 更新 IsWalking 状态 ---
+        IsWalking = currentRawSpeed > stopThreshold;
+        // --- 结束更新 ---
 
-        if (currentRawSpeed > stopThreshold) 
+        if (IsWalking) // 原来的 currentRawSpeed > stopThreshold
         {
             targetAnimationDirection = currentRawInputDirection.normalized; 
             lastValidInputX = targetAnimationDirection.x;
             lastValidInputY = targetAnimationDirection.y;
+            // AudioManager.Instance.Play(playerMoveSound); // <-- 移除此处的音效播放调用
         }
         else 
         {
@@ -88,9 +94,10 @@ public class PlayerMove : MonoBehaviour
 
         UpdateAnimatorParameters(currentAnimationDirection, currentRawSpeed);
 
-        if (!CanPlayerMove)
+        if (!CanPlayerMove) // 如果不能移动，确保速度为0
         {
             movementVelocityForFixedUpdate = Vector2.zero;
+             IsWalking = false; // 确保在这种情况下 IsWalking 也为 false
         }
         else
         {

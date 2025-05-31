@@ -3,9 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Audio;
 
-/// <summary>
-/// 音频管理器单例，负责播放音效和管理 AudioSource 池。
-/// </summary>
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance { get; private set; }
@@ -14,19 +11,27 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private int initialPoolSize = 10;
 
     private List<AudioSource> _audioSourcePool;
-    private Dictionary<SoundEffect, AudioSource> _activeLoopingSounds; // 存储正在播放的循环音效
+    
+    private class ActiveLoopingSound
+    {
+        public AudioSource Source;
+        public Coroutine FadeCoroutine;
+        public SoundEffect SfxAsset; 
+    }
+    private Dictionary<SoundEffect, ActiveLoopingSound> _activeLoopingSounds;
+    private Dictionary<SoundEffect, float> _soundEffectNextPlayTime;
 
     void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // 确保 AudioManager 在场景切换时不被销毁
+            DontDestroyOnLoad(gameObject);
             InitializeManager();
         }
         else
         {
-            Destroy(gameObject); // 如果已存在实例，则销毁当前这个重复的
+            Destroy(gameObject);
             return;
         }
     }
@@ -34,135 +39,183 @@ public class AudioManager : MonoBehaviour
     private void InitializeManager()
     {
         _audioSourcePool = new List<AudioSource>(initialPoolSize);
-        _activeLoopingSounds = new Dictionary<SoundEffect, AudioSource>();
+        _activeLoopingSounds = new Dictionary<SoundEffect, ActiveLoopingSound>();
+        _soundEffectNextPlayTime = new Dictionary<SoundEffect, float>();
 
-        // 创建并初始化 AudioSource 池
         for (int i = 0; i < initialPoolSize; i++)
         {
             CreateAndPoolAudioSource();
         }
     }
 
-    /// <summary>
-    /// 创建一个新的 AudioSource 并将其添加到对象池中。
-    /// </summary>
     private AudioSource CreateAndPoolAudioSource()
     {
         GameObject soundGameObject = new GameObject("PooledAudioSource_" + _audioSourcePool.Count);
-        soundGameObject.transform.SetParent(transform); // 将 AudioSource GameObject 作为 AudioManager 的子对象，保持层级整洁
+        soundGameObject.transform.SetParent(transform);
         AudioSource audioSource = soundGameObject.AddComponent<AudioSource>();
-        audioSource.playOnAwake = false; // 禁止在唤醒时自动播放
-        soundGameObject.SetActive(false); // 初始状态设置为非激活，表示可用
+        audioSource.playOnAwake = false;
+        soundGameObject.SetActive(false);
         _audioSourcePool.Add(audioSource);
         return audioSource;
     }
 
-    /// <summary>
-    /// 从对象池中获取一个可用的 AudioSource。
-    /// </summary>
     private AudioSource GetAvailableAudioSource()
     {
-        // 查找池中是否有未激活的 AudioSource
         foreach (AudioSource source in _audioSourcePool)
         {
-            if (!source.gameObject.activeInHierarchy) // GameObject 非激活表示 AudioSource 可用
+            if (!source.gameObject.activeInHierarchy)
             {
+                source.gameObject.SetActive(true);
                 return source;
             }
         }
-
-        // 如果池中所有 AudioSource 都在使用中，则创建一个新的并添加到池中
         Debug.LogWarning("AudioManager: AudioSource 池已耗尽，正在创建新的 AudioSource。可以考虑增加 Initial Pool Size。");
-        return CreateAndPoolAudioSource();
+        AudioSource newSource = CreateAndPoolAudioSource();
+        newSource.gameObject.SetActive(true);
+        return newSource;
+    }
+    
+    private void ReturnAudioSourceToPool(AudioSource source)
+    {
+        if (source != null)
+        {
+            source.Stop();
+            source.clip = null;
+            source.loop = false;
+            source.volume = 1f; 
+            source.pitch = 1f;  
+            source.gameObject.SetActive(false);
+        }
     }
 
-    /// <summary>
-    /// 播放指定的音效。
-    /// </summary>
-    /// <param name="sfx">要播放的 SoundEffect 资产。</param>
     public void Play(SoundEffect sfx)
     {
-        if (sfx == null || sfx.clip == null)
+        if (sfx == null)
         {
-            Debug.LogError("AudioManager: 尝试播放的 SoundEffect 或其 AudioClip 为空。");
+            Debug.LogError("AudioManager: 尝试播放的 SoundEffect 为空。");
             return;
         }
 
+        AudioClip clipToPlay = sfx.clip; // 默认或备用
+        float finalVolume = sfx.volume;
+        float finalPitch = sfx.pitch;
+
+        // --- 处理随机池逻辑 ---
+        if (sfx.isRandomPool && sfx.audioClipPool != null && sfx.audioClipPool.Count > 0)
+        {
+            // 过滤掉列表中可能的 null 元素
+            List<AudioClip> validClips = new List<AudioClip>();
+            for(int i=0; i < sfx.audioClipPool.Count; i++) {
+                if (sfx.audioClipPool[i] != null) {
+                    validClips.Add(sfx.audioClipPool[i]);
+                } else {
+                    Debug.LogWarning($"AudioManager: SoundEffect '{sfx.name}' 的随机池中索引 {i} 处的 AudioClip 为空，已跳过。");
+                }
+            }
+
+            if (validClips.Count > 0)
+            {
+                clipToPlay = validClips[Random.Range(0, validClips.Count)];
+                finalVolume = sfx.volume * Random.Range(sfx.randomVolumeMultiplierRange.x, sfx.randomVolumeMultiplierRange.y);
+                finalPitch = sfx.pitch * Random.Range(sfx.randomPitchMultiplierRange.x, sfx.randomPitchMultiplierRange.y);
+            }
+            else if (sfx.clip == null) // 随机池为空或无效，且默认clip也为空
+            {
+                 Debug.LogError($"AudioManager: SoundEffect '{sfx.name}' 配置为随机池但池为空/无效，且没有设置默认的 AudioClip。无法播放。");
+                 return;
+            }
+            // 如果随机池无效但 sfx.clip 有值，则会自动使用 sfx.clip (clipToPlay 的初始值)
+        }
+        else if (sfx.clip == null) // 非随机池模式，但默认clip为空
+        {
+            Debug.LogError($"AudioManager: SoundEffect '{sfx.name}' 的 AudioClip 为空。无法播放。");
+            return;
+        }
+        // --- 结束随机池逻辑 ---
+        
+        // 最终检查 clipToPlay 是否有效
+        if (clipToPlay == null) {
+            Debug.LogError($"AudioManager: 无法为 SoundEffect '{sfx.name}' 确定有效的 AudioClip 进行播放。");
+            return;
+        }
+
+
+        // --- 冷却时间检查 (作用于整个 SoundEffect 资产，无论是否随机池) ---
+        if (!sfx.loop && sfx.cooldown > 0.0f)
+        {
+            if (_soundEffectNextPlayTime.TryGetValue(sfx, out float nextPlayTime))
+            {
+                if (Time.time < nextPlayTime)
+                {
+                    // Debug.Log($"AudioManager: SoundEffect {sfx.name} 尚在冷却中，跳过播放。");
+                    return; 
+                }
+            }
+            _soundEffectNextPlayTime[sfx] = Time.time + sfx.cooldown;
+        }
+        
         AudioSource sourceToPlay;
 
         if (sfx.loop)
         {
-            // 如果是循环音效
-            if (_activeLoopingSounds.TryGetValue(sfx, out AudioSource existingSource))
+            if (_activeLoopingSounds.TryGetValue(sfx, out ActiveLoopingSound existingLoop))
             {
-                // 如果这个循环音效已在播放列表中，则使用现有的 AudioSource 并重新开始播放
-                sourceToPlay = existingSource;
-                sourceToPlay.Stop(); // 先停止当前的播放
+                // 如果同一个SoundEffect资产的循环已在播放
+                if (existingLoop.FadeCoroutine != null) StopCoroutine(existingLoop.FadeCoroutine);
+
+                // 检查当前播放的片段是否与新选中的片段不同 (主要针对随机池循环)
+                // 或者音源是否已停止 (例如完全淡出后)
+                bool needsRestartOrReconfigure = existingLoop.Source.clip != clipToPlay || !existingLoop.Source.isPlaying;
+
+                if (needsRestartOrReconfigure) {
+                    // 如果需要重新配置（例如随机到了不同的片段），则重新设置音源
+                    ConfigureAudioSource(existingLoop.Source, sfx, clipToPlay, 0f, finalPitch); // 音量从0开始淡入
+                    existingLoop.Source.Play();
+                }
+                // 总是启动/更新淡入到计算出的最终音量
+                existingLoop.FadeCoroutine = StartCoroutine(FadeVolume(existingLoop.Source, sfx.loopFadeInTime, finalVolume, true));
             }
             else
             {
-                // 否则，从池中获取一个新的 AudioSource，并将其添加到循环音效的跟踪列表
                 sourceToPlay = GetAvailableAudioSource();
-                _activeLoopingSounds[sfx] = sourceToPlay;
+                if (sourceToPlay == null) return;
+                
+                ConfigureAudioSource(sourceToPlay, sfx, clipToPlay, 0f, finalPitch); // 音量从0开始淡入
+                sourceToPlay.Play();
+
+                ActiveLoopingSound newLoop = new ActiveLoopingSound
+                {
+                    Source = sourceToPlay,
+                    SfxAsset = sfx
+                };
+                newLoop.FadeCoroutine = StartCoroutine(FadeVolume(sourceToPlay, sfx.loopFadeInTime, finalVolume, true));
+                _activeLoopingSounds[sfx] = newLoop;
             }
         }
-        else
+        else // 非循环音效 (一次性播放)
         {
-            // 如果是一次性音效，直接从池中获取 AudioSource
             sourceToPlay = GetAvailableAudioSource();
-        }
+            if (sourceToPlay == null) return;
 
-        if (sourceToPlay == null) {
-             Debug.LogError("AudioManager: 无法获取 AudioSource 来播放声音。");
-             return;
-        }
-
-        // 配置并播放 AudioSource
-        ConfigureAndPlay(sourceToPlay, sfx);
-
-        // 如果不是循环音效，则在播放完毕后将其返回对象池
-        if (!sfx.loop)
-        {
-            float duration = sfx.clip.length / (sfx.pitch <= 0.01f ? 0.01f : sfx.pitch); // 防止 pitch 为0或过小导致除零
-            StartCoroutine(ReturnToPoolAfterDuration(sourceToPlay, sfx.clip, duration));
+            ConfigureAudioSource(sourceToPlay, sfx, clipToPlay, finalVolume, finalPitch);
+            sourceToPlay.Play();
+            // 注意：这里的 duration 是基于实际播放的 clipToPlay
+            float duration = clipToPlay.length / Mathf.Max(0.01f, finalPitch); 
+            StartCoroutine(ReturnToPoolAfterDuration(sourceToPlay, clipToPlay, duration));
         }
     }
 
-    /// <summary>
-    /// 配置 AudioSource 并播放音效。
-    /// </summary>
-    private void ConfigureAndPlay(AudioSource source, SoundEffect sfx)
+    // ConfigureAudioSource 方法需要接收实际要播放的 clip, volume, 和 pitch
+    private void ConfigureAudioSource(AudioSource source, SoundEffect sfx, AudioClip clip, float volume, float pitch)
     {
-        source.gameObject.SetActive(true); // 激活 AudioSource 所在的 GameObject
-        source.clip = sfx.clip;
-        source.volume = sfx.volume;
-        source.pitch = sfx.pitch;
-        source.loop = sfx.loop;
-        source.outputAudioMixerGroup = sfx.outputAudioMixerGroup; // 设置混音器组
-        source.Play();
+        source.clip = clip;
+        source.volume = volume; // 应用计算后的最终音量
+        source.pitch = pitch;   // 应用计算后的最终音高
+        source.loop = sfx.loop; // loop 属性直接来自 SoundEffect 资产
+        source.outputAudioMixerGroup = sfx.outputAudioMixerGroup;
     }
 
-    /// <summary>
-    /// 协程：在音效播放完毕后，将其关联的 AudioSource 返回到对象池。
-    /// </summary>
-    private IEnumerator ReturnToPoolAfterDuration(AudioSource source, AudioClip playedClip, float duration)
-    {
-        yield return new WaitForSeconds(duration);
-
-        // 确保 AudioSource 仍然存在，并且播放的是同一个片段，且未被转为循环音效
-        if (source != null && source.gameObject.activeInHierarchy && source.clip == playedClip && !source.loop)
-        {
-            source.Stop(); // 确保停止
-            source.clip = null; // 清除 AudioClip 引用
-            source.gameObject.SetActive(false); // 将 GameObject 设置为非激活，表示 AudioSource 可用
-        }
-        // 如果在此期间 source 被用于播放其他循环音效，则 Stop(SoundEffect) 方法会处理其停用。
-    }
-
-    /// <summary>
-    /// 停止指定的循环音效。
-    /// </summary>
-    /// <param name="sfx">要停止的 SoundEffect 资产 (必须是循环音效)。</param>
+    // Stop 方法基本保持不变，它通过 SoundEffect 资产来管理循环音效的停止
     public void Stop(SoundEffect sfx)
     {
         if (sfx == null)
@@ -171,35 +224,88 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        if (!sfx.loop)
+        if (sfx.loop)
         {
-            // 对于非循环音效，它们会自动播放完毕并返回池中。
-            // 如果需要停止特定的非循环音效实例，系统需要更复杂的跟踪机制。
-            Debug.LogWarning($"AudioManager.Stop() 被调用于非循环音效: {sfx.name}。非循环音效通常会自动播放完毕。");
-            return;
-        }
-
-        if (_activeLoopingSounds.TryGetValue(sfx, out AudioSource sourceToStop))
-        {
-            sourceToStop.Stop();
-            sourceToStop.clip = null;
-            sourceToStop.gameObject.SetActive(false); // 停用并返回池中
-            _activeLoopingSounds.Remove(sfx); // 从活动循环音效列表中移除
+            if (_activeLoopingSounds.TryGetValue(sfx, out ActiveLoopingSound activeLoop))
+            {
+                if (activeLoop.FadeCoroutine != null)
+                {
+                    StopCoroutine(activeLoop.FadeCoroutine);
+                }
+                // 启动淡出，完成后回收
+                activeLoop.FadeCoroutine = StartCoroutine(FadeVolume(activeLoop.Source, sfx.loopFadeOutTime, 0f, false, () => {
+                    ReturnAudioSourceToPool(activeLoop.Source);
+                    _activeLoopingSounds.Remove(sfx); // 确保在回调中移除
+                }));
+            }
         }
         else
         {
-            Debug.LogWarning($"AudioManager.Stop(): 音效 {sfx.name} 未在活动的循环音效中找到。");
+            Debug.LogWarning($"AudioManager.Stop() 被调用于非循环音效: {sfx.name}。非循环音效通常会自动播放完毕。");
         }
     }
 
-    // --- 可选的扩展功能 ---
+    // FadeVolume 协程保持不变
+    private IEnumerator FadeVolume(AudioSource audioSource, float duration, float targetVolume, bool isFadingIn, System.Action onComplete = null)
+    {
+        if (audioSource == null || !audioSource.gameObject.activeInHierarchy || audioSource.clip == null)
+        {
+            onComplete?.Invoke();
+            yield break;
+        }
+        
+        float startVolume = audioSource.volume;
+        float time = 0;
 
-    /// <summary>
-    /// (可选) 通过代码设置 AudioMixer 中暴露的参数值（例如总音量、音乐音量等）。
-    /// </summary>
-    /// <param name="mixer">目标 AudioMixer。</param>
-    /// <param name="exposedParamName">在 AudioMixer 中暴露的参数名称。</param>
-    /// <param name="value">要设置的值 (通常为 0.0 到 1.0，会被转换为分贝)。</param>
+        if (duration <= 0)
+        {
+            audioSource.volume = targetVolume;
+            if (targetVolume == 0 && !isFadingIn) audioSource.Stop();
+            onComplete?.Invoke();
+            yield break;
+        }
+
+        while (time < duration)
+        {
+             if (audioSource == null || !audioSource.gameObject.activeInHierarchy || audioSource.clip == null)
+            {
+                 onComplete?.Invoke();
+                 yield break;
+            }
+            time += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(startVolume, targetVolume, time / duration);
+            yield return null;
+        }
+
+        if (audioSource != null && audioSource.gameObject.activeInHierarchy) // 再次检查，因为协程可能在对象销毁后继续一帧
+        {
+            audioSource.volume = targetVolume;
+            if (targetVolume == 0 && !isFadingIn) audioSource.Stop();
+        }
+        onComplete?.Invoke();
+    }
+
+    // ReturnToPoolAfterDuration 协程需要接收 AudioClip playedClip
+    private IEnumerator ReturnToPoolAfterDuration(AudioSource source, AudioClip playedClip, float duration)
+    {
+        float timeElapsed = 0f;
+        while (timeElapsed < duration)
+        {
+            if (source == null || !source.gameObject.activeInHierarchy || !source.isPlaying)
+            {
+                ReturnAudioSourceToPool(source); // 如果源在中途失效或停止，也尝试回收
+                yield break;
+            }
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        
+        if (source != null && source.gameObject.activeInHierarchy && source.clip == playedClip && !source.loop) 
+        {
+            ReturnAudioSourceToPool(source);
+        }
+    }
+    
     public void SetMixerVolume(AudioMixer mixer, string exposedParamName, float value)
     {
         if (mixer == null)
@@ -207,8 +313,6 @@ public class AudioManager : MonoBehaviour
             Debug.LogError("AudioManager: AudioMixer 为空。");
             return;
         }
-        // 将线性值 (0-1) 转换为分贝 (-80dB 到 0dB)
-        // Mathf.Log10(0) 是负无穷，所以用 Mathf.Clamp 避免错误
         float decibels = Mathf.Log10(Mathf.Clamp(value, 0.0001f, 1f)) * 20f;
         mixer.SetFloat(exposedParamName, decibels);
     }

@@ -146,6 +146,8 @@ GameObject:
   - component: {fileID: 7264485193535951432}
   - component: {fileID: 2228356522349855554}
   - component: {fileID: 158104279655659741}
+  - component: {fileID: 6051113560630811758}
+  - component: {fileID: -6693767021920491517}
   m_Layer: 5
   m_Name: TestLetter1ItemButton
   m_TagString: Untagged
@@ -255,3 +257,29 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6051113560630811758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6698387482476449702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 878dbaae2d95c4f4bb562257a77bae2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverEnterSound: {fileID: 11400000, guid: 85507c914f636c04a80f35991949baa3, type: 2}
+--- !u!114 &-6693767021920491517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6698387482476449702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7f9620ed752aac44b31199560d89827, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickSound: {fileID: 11400000, guid: f53595127f84c25459c2e99ed3cc03be, type: 2}

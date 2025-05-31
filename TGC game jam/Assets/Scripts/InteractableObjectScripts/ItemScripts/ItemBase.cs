@@ -6,6 +6,8 @@ public abstract class ItemBase : InteractableObjectBase, IStorable
     private bool originalColliderState;
     private bool originalRendererState;
 
+    [SerializeField] private SoundEffect grabSound;
+    
     public string ItemName => objectName;
 
     protected override void Start()
@@ -27,6 +29,8 @@ public abstract class ItemBase : InteractableObjectBase, IStorable
     public override void Interact(GameObject player)
     {
         BackpackManager.Instance.StoreItem(this.gameObject);
+        if (grabSound)
+            AudioManager.Instance.Play(grabSound);
     }
 
     public virtual void OnStored(BackpackManager backpackManager)
