@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Audio;
+using UnityEngine.Audio; // 确保引入
 
 public class AudioManager : MonoBehaviour
 {
@@ -11,15 +11,44 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private int initialPoolSize = 10;
 
     private List<AudioSource> _audioSourcePool;
-    
+
     private class ActiveLoopingSound
     {
         public AudioSource Source;
         public Coroutine FadeCoroutine;
-        public SoundEffect SfxAsset; 
+        public SoundEffect SfxAsset;
     }
     private Dictionary<SoundEffect, ActiveLoopingSound> _activeLoopingSounds;
     private Dictionary<SoundEffect, float> _soundEffectNextPlayTime;
+
+    // --- 新增：Audio Mixer 控制相关 ---
+    [Header("Audio Mixer Settings")]
+    [Tooltip("在此处指定场景中的主 Audio Mixer")]
+    public AudioMixer masterMixer; // 将你的 Audio Mixer 资源拖拽到 Inspector 中
+
+    // Audio Mixer 中暴露的参数名称 (根据你的描述)
+    private const string BACKGROUND_MIXER_PARAM = "BackGround";
+    private const string SFX_MIXER_PARAM = "SFX";
+    private const string UI_MIXER_PARAM = "UI";
+
+    // PlayerPrefs 的键名
+    private const string PREFS_BG_VOL = "AudioManager_BackgroundVolume";
+    private const string PREFS_BG_MUTE = "AudioManager_BackgroundMute";
+    private const string PREFS_SFX_VOL = "AudioManager_SFXVolume";
+    private const string PREFS_SFX_MUTE = "AudioManager_SFXMute";
+    private const string PREFS_UI_VOL = "AudioManager_UIVolume";
+    private const string PREFS_UI_MUTE = "AudioManager_UIMute";
+
+    // 存储各个通道的静音状态和静音前的线性音量值 (0.0001f - 1f)
+    private bool _isBackgroundMuted = false;
+    private float _lastBackgroundVolumeLinear = 0.75f; // 默认音量
+
+    private bool _isSFXMuted = false;
+    private float _lastSFXVolumeLinear = 0.75f;
+
+    private bool _isUIMuted = false;
+    private float _lastUIVolumeLinear = 0.75f;
+    // --- 结束新增：Audio Mixer 控制相关 ---
 
     void Awake()
     {
@@ -46,6 +75,17 @@ public class AudioManager : MonoBehaviour
         {
             CreateAndPoolAudioSource();
         }
+
+        // --- 新增：加载并应用 Mixer 音量设置 ---
+        if (masterMixer == null)
+        {
+            Debug.LogWarning("AudioManager: Master AudioMixer 未在 Inspector 中指定。音量控制功能将不可用。");
+        }
+        else
+        {
+            LoadAndApplyMixerSettings();
+        }
+        // --- 结束新增 ---
     }
 
     private AudioSource CreateAndPoolAudioSource()
@@ -54,7 +94,7 @@ public class AudioManager : MonoBehaviour
         soundGameObject.transform.SetParent(transform);
         AudioSource audioSource = soundGameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
-        soundGameObject.SetActive(false);
+        soundGameObject.SetActive(false); // Start inactive
         _audioSourcePool.Add(audioSource);
         return audioSource;
     }
@@ -74,7 +114,7 @@ public class AudioManager : MonoBehaviour
         newSource.gameObject.SetActive(true);
         return newSource;
     }
-    
+
     private void ReturnAudioSourceToPool(AudioSource source)
     {
         if (source != null)
@@ -82,8 +122,9 @@ public class AudioManager : MonoBehaviour
             source.Stop();
             source.clip = null;
             source.loop = false;
-            source.volume = 1f; 
-            source.pitch = 1f;  
+            source.volume = 1f;
+            source.pitch = 1f;
+            source.outputAudioMixerGroup = null; // 重置 Mixer Group
             source.gameObject.SetActive(false);
         }
     }
@@ -96,20 +137,18 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        AudioClip clipToPlay = sfx.clip; // 默认或备用
+        AudioClip clipToPlay = sfx.clip;
         float finalVolume = sfx.volume;
         float finalPitch = sfx.pitch;
 
-        // --- 处理随机池逻辑 ---
         if (sfx.isRandomPool && sfx.audioClipPool != null && sfx.audioClipPool.Count > 0)
         {
-            // 过滤掉列表中可能的 null 元素
             List<AudioClip> validClips = new List<AudioClip>();
             for(int i=0; i < sfx.audioClipPool.Count; i++) {
                 if (sfx.audioClipPool[i] != null) {
                     validClips.Add(sfx.audioClipPool[i]);
                 } else {
-                    Debug.LogWarning($"AudioManager: SoundEffect '{sfx.name}' 的随机池中索引 {i} 处的 AudioClip 为空，已跳过。");
+                     Debug.LogWarning($"AudioManager: SoundEffect '{sfx.name}' 的随机池中索引 {i} 处的 AudioClip 为空，已跳过。");
                 }
             }
 
@@ -119,68 +158,57 @@ public class AudioManager : MonoBehaviour
                 finalVolume = sfx.volume * Random.Range(sfx.randomVolumeMultiplierRange.x, sfx.randomVolumeMultiplierRange.y);
                 finalPitch = sfx.pitch * Random.Range(sfx.randomPitchMultiplierRange.x, sfx.randomPitchMultiplierRange.y);
             }
-            else if (sfx.clip == null) // 随机池为空或无效，且默认clip也为空
+            else if (sfx.clip == null)
             {
                  Debug.LogError($"AudioManager: SoundEffect '{sfx.name}' 配置为随机池但池为空/无效，且没有设置默认的 AudioClip。无法播放。");
                  return;
             }
-            // 如果随机池无效但 sfx.clip 有值，则会自动使用 sfx.clip (clipToPlay 的初始值)
         }
-        else if (sfx.clip == null) // 非随机池模式，但默认clip为空
+        else if (sfx.clip == null)
         {
             Debug.LogError($"AudioManager: SoundEffect '{sfx.name}' 的 AudioClip 为空。无法播放。");
             return;
         }
-        // --- 结束随机池逻辑 ---
         
-        // 最终检查 clipToPlay 是否有效
         if (clipToPlay == null) {
             Debug.LogError($"AudioManager: 无法为 SoundEffect '{sfx.name}' 确定有效的 AudioClip 进行播放。");
             return;
         }
 
-
-        // --- 冷却时间检查 (作用于整个 SoundEffect 资产，无论是否随机池) ---
         if (!sfx.loop && sfx.cooldown > 0.0f)
         {
             if (_soundEffectNextPlayTime.TryGetValue(sfx, out float nextPlayTime))
             {
                 if (Time.time < nextPlayTime)
                 {
-                    // Debug.Log($"AudioManager: SoundEffect {sfx.name} 尚在冷却中，跳过播放。");
-                    return; 
+                    return;
                 }
             }
             _soundEffectNextPlayTime[sfx] = Time.time + sfx.cooldown;
         }
-        
+
         AudioSource sourceToPlay;
 
         if (sfx.loop)
         {
             if (_activeLoopingSounds.TryGetValue(sfx, out ActiveLoopingSound existingLoop))
             {
-                // 如果同一个SoundEffect资产的循环已在播放
                 if (existingLoop.FadeCoroutine != null) StopCoroutine(existingLoop.FadeCoroutine);
-
-                // 检查当前播放的片段是否与新选中的片段不同 (主要针对随机池循环)
-                // 或者音源是否已停止 (例如完全淡出后)
+                
                 bool needsRestartOrReconfigure = existingLoop.Source.clip != clipToPlay || !existingLoop.Source.isPlaying;
 
                 if (needsRestartOrReconfigure) {
-                    // 如果需要重新配置（例如随机到了不同的片段），则重新设置音源
-                    ConfigureAudioSource(existingLoop.Source, sfx, clipToPlay, 0f, finalPitch); // 音量从0开始淡入
+                    ConfigureAudioSource(existingLoop.Source, sfx, clipToPlay, 0f, finalPitch);
                     existingLoop.Source.Play();
                 }
-                // 总是启动/更新淡入到计算出的最终音量
                 existingLoop.FadeCoroutine = StartCoroutine(FadeVolume(existingLoop.Source, sfx.loopFadeInTime, finalVolume, true));
             }
             else
             {
                 sourceToPlay = GetAvailableAudioSource();
                 if (sourceToPlay == null) return;
-                
-                ConfigureAudioSource(sourceToPlay, sfx, clipToPlay, 0f, finalPitch); // 音量从0开始淡入
+
+                ConfigureAudioSource(sourceToPlay, sfx, clipToPlay, 0f, finalPitch);
                 sourceToPlay.Play();
 
                 ActiveLoopingSound newLoop = new ActiveLoopingSound
@@ -192,30 +220,27 @@ public class AudioManager : MonoBehaviour
                 _activeLoopingSounds[sfx] = newLoop;
             }
         }
-        else // 非循环音效 (一次性播放)
+        else
         {
             sourceToPlay = GetAvailableAudioSource();
             if (sourceToPlay == null) return;
 
             ConfigureAudioSource(sourceToPlay, sfx, clipToPlay, finalVolume, finalPitch);
             sourceToPlay.Play();
-            // 注意：这里的 duration 是基于实际播放的 clipToPlay
-            float duration = clipToPlay.length / Mathf.Max(0.01f, finalPitch); 
+            float duration = clipToPlay.length / Mathf.Max(0.01f, finalPitch);
             StartCoroutine(ReturnToPoolAfterDuration(sourceToPlay, clipToPlay, duration));
         }
     }
 
-    // ConfigureAudioSource 方法需要接收实际要播放的 clip, volume, 和 pitch
     private void ConfigureAudioSource(AudioSource source, SoundEffect sfx, AudioClip clip, float volume, float pitch)
     {
         source.clip = clip;
-        source.volume = volume; // 应用计算后的最终音量
-        source.pitch = pitch;   // 应用计算后的最终音高
-        source.loop = sfx.loop; // loop 属性直接来自 SoundEffect 资产
+        source.volume = volume;
+        source.pitch = pitch;
+        source.loop = sfx.loop;
         source.outputAudioMixerGroup = sfx.outputAudioMixerGroup;
     }
 
-    // Stop 方法基本保持不变，它通过 SoundEffect 资产来管理循环音效的停止
     public void Stop(SoundEffect sfx)
     {
         if (sfx == null)
@@ -232,10 +257,9 @@ public class AudioManager : MonoBehaviour
                 {
                     StopCoroutine(activeLoop.FadeCoroutine);
                 }
-                // 启动淡出，完成后回收
                 activeLoop.FadeCoroutine = StartCoroutine(FadeVolume(activeLoop.Source, sfx.loopFadeOutTime, 0f, false, () => {
                     ReturnAudioSourceToPool(activeLoop.Source);
-                    _activeLoopingSounds.Remove(sfx); // 确保在回调中移除
+                    _activeLoopingSounds.Remove(sfx);
                 }));
             }
         }
@@ -245,7 +269,6 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // FadeVolume 协程保持不变
     private IEnumerator FadeVolume(AudioSource audioSource, float duration, float targetVolume, bool isFadingIn, System.Action onComplete = null)
     {
         if (audioSource == null || !audioSource.gameObject.activeInHierarchy || audioSource.clip == null)
@@ -253,39 +276,38 @@ public class AudioManager : MonoBehaviour
             onComplete?.Invoke();
             yield break;
         }
-        
+
         float startVolume = audioSource.volume;
         float time = 0;
 
         if (duration <= 0)
         {
             audioSource.volume = targetVolume;
-            if (targetVolume == 0 && !isFadingIn) audioSource.Stop();
+            if (targetVolume == 0 && !isFadingIn && audioSource.isPlaying) audioSource.Stop(); // 检查 isPlaying
             onComplete?.Invoke();
             yield break;
         }
 
         while (time < duration)
         {
-             if (audioSource == null || !audioSource.gameObject.activeInHierarchy || audioSource.clip == null)
+            if (audioSource == null || !audioSource.gameObject.activeInHierarchy || audioSource.clip == null)
             {
-                 onComplete?.Invoke();
-                 yield break;
+                onComplete?.Invoke();
+                yield break;
             }
             time += Time.deltaTime;
             audioSource.volume = Mathf.Lerp(startVolume, targetVolume, time / duration);
             yield return null;
         }
 
-        if (audioSource != null && audioSource.gameObject.activeInHierarchy) // 再次检查，因为协程可能在对象销毁后继续一帧
+        if (audioSource != null && audioSource.gameObject.activeInHierarchy)
         {
             audioSource.volume = targetVolume;
-            if (targetVolume == 0 && !isFadingIn) audioSource.Stop();
+            if (targetVolume == 0 && !isFadingIn && audioSource.isPlaying) audioSource.Stop(); // 检查 isPlaying
         }
         onComplete?.Invoke();
     }
 
-    // ReturnToPoolAfterDuration 协程需要接收 AudioClip playedClip
     private IEnumerator ReturnToPoolAfterDuration(AudioSource source, AudioClip playedClip, float duration)
     {
         float timeElapsed = 0f;
@@ -293,27 +315,173 @@ public class AudioManager : MonoBehaviour
         {
             if (source == null || !source.gameObject.activeInHierarchy || !source.isPlaying)
             {
-                ReturnAudioSourceToPool(source); // 如果源在中途失效或停止，也尝试回收
+                ReturnAudioSourceToPool(source);
                 yield break;
             }
             timeElapsed += Time.deltaTime;
             yield return null;
         }
-        
-        if (source != null && source.gameObject.activeInHierarchy && source.clip == playedClip && !source.loop) 
+
+        if (source != null && source.gameObject.activeInHierarchy && source.clip == playedClip && !source.loop)
         {
             ReturnAudioSourceToPool(source);
         }
     }
-    
-    public void SetMixerVolume(AudioMixer mixer, string exposedParamName, float value)
+
+    // --- 音量混合器公共方法 ---
+    // 此方法由你的新方法调用，用于设置实际的dB值
+    public void SetMixerVolume(AudioMixer mixer, string exposedParamName, float linearValue)
     {
         if (mixer == null)
         {
-            Debug.LogError("AudioManager: AudioMixer 为空。");
+            // Debug.LogError("AudioManager: AudioMixer 为空。"); // 在调用处处理此问题
             return;
         }
-        float decibels = Mathf.Log10(Mathf.Clamp(value, 0.0001f, 1f)) * 20f;
+        // 确保 linearValue 在0.0001f到1f之间，以避免Log10(0)错误
+        float clampedValue = Mathf.Clamp(linearValue, 0.0001f, 1f);
+        float decibels = Mathf.Log10(clampedValue) * 20f;
         mixer.SetFloat(exposedParamName, decibels);
     }
+
+    // --- 新增：加载并应用 Mixer 音量设置 ---
+    private void LoadAndApplyMixerSettings()
+    {
+        // 背景音量
+        _lastBackgroundVolumeLinear = PlayerPrefs.GetFloat(PREFS_BG_VOL, 0.75f);
+        _isBackgroundMuted = PlayerPrefs.GetInt(PREFS_BG_MUTE, 0) == 1;
+        if (_isBackgroundMuted)
+        {
+            SetMixerVolume(masterMixer, BACKGROUND_MIXER_PARAM, 0.0001f);
+        }
+        else
+        {
+            SetMixerVolume(masterMixer, BACKGROUND_MIXER_PARAM, _lastBackgroundVolumeLinear);
+        }
+
+        // SFX 音量
+        _lastSFXVolumeLinear = PlayerPrefs.GetFloat(PREFS_SFX_VOL, 0.75f);
+        _isSFXMuted = PlayerPrefs.GetInt(PREFS_SFX_MUTE, 0) == 1;
+        if (_isSFXMuted)
+        {
+            SetMixerVolume(masterMixer, SFX_MIXER_PARAM, 0.0001f);
+        }
+        else
+        {
+            SetMixerVolume(masterMixer, SFX_MIXER_PARAM, _lastSFXVolumeLinear);
+        }
+
+        // UI 音量
+        _lastUIVolumeLinear = PlayerPrefs.GetFloat(PREFS_UI_VOL, 0.75f);
+        _isUIMuted = PlayerPrefs.GetInt(PREFS_UI_MUTE, 0) == 1;
+        if (_isUIMuted)
+        {
+            SetMixerVolume(masterMixer, UI_MIXER_PARAM, 0.0001f);
+        }
+        else
+        {
+            SetMixerVolume(masterMixer, UI_MIXER_PARAM, _lastUIVolumeLinear);
+        }
+    }
+
+    // --- 新增：供UI调用的公共方法 ---
+
+    // 获取初始音量值 (用于UI Slider初始化)
+    public float GetInitialBackgroundVolume() => _lastBackgroundVolumeLinear;
+    public float GetInitialSFXVolume() => _lastSFXVolumeLinear;
+    public float GetInitialUIVolume() => _lastUIVolumeLinear;
+
+    // 获取初始静音状态 (用于UI Button初始化)
+    public bool IsBackgroundMuted() => _isBackgroundMuted;
+    public bool IsSFXMuted() => _isSFXMuted;
+    public bool IsUIMuted() => _isUIMuted;
+
+
+    // 背景音量控制 (由UI Slider调用)
+    public void SetBackgroundVolumeSlider(float linearValue)
+    {
+        if (masterMixer == null) return;
+        _lastBackgroundVolumeLinear = Mathf.Clamp(linearValue, 0.0001f, 1f); // 更新期望的音量
+        if (!_isBackgroundMuted) // 如果没有被静音按钮静音，则实际更新Mixer
+        {
+            SetMixerVolume(masterMixer, BACKGROUND_MIXER_PARAM, _lastBackgroundVolumeLinear);
+        }
+        PlayerPrefs.SetFloat(PREFS_BG_VOL, _lastBackgroundVolumeLinear);
+        PlayerPrefs.Save(); // 确保设置被保存
+    }
+
+    // 背景静音切换 (由UI Button调用)
+    public void ToggleBackgroundMute()
+    {
+        if (masterMixer == null) return;
+        _isBackgroundMuted = !_isBackgroundMuted;
+        if (_isBackgroundMuted)
+        {
+            SetMixerVolume(masterMixer, BACKGROUND_MIXER_PARAM, 0.0001f); // 静音
+        }
+        else
+        {
+            SetMixerVolume(masterMixer, BACKGROUND_MIXER_PARAM, _lastBackgroundVolumeLinear); // 取消静音，恢复到滑块期望的音量
+        }
+        PlayerPrefs.SetInt(PREFS_BG_MUTE, _isBackgroundMuted ? 1 : 0);
+        PlayerPrefs.Save();
+    }
+
+    // SFX 音量控制
+    public void SetSFXVolumeSlider(float linearValue)
+    {
+        if (masterMixer == null) return;
+        _lastSFXVolumeLinear = Mathf.Clamp(linearValue, 0.0001f, 1f);
+        if (!_isSFXMuted)
+        {
+            SetMixerVolume(masterMixer, SFX_MIXER_PARAM, _lastSFXVolumeLinear);
+        }
+        PlayerPrefs.SetFloat(PREFS_SFX_VOL, _lastSFXVolumeLinear);
+        PlayerPrefs.Save();
+    }
+
+    public void ToggleSFXMute()
+    {
+        if (masterMixer == null) return;
+        _isSFXMuted = !_isSFXMuted;
+        if (_isSFXMuted)
+        {
+            SetMixerVolume(masterMixer, SFX_MIXER_PARAM, 0.0001f);
+        }
+        else
+        {
+            SetMixerVolume(masterMixer, SFX_MIXER_PARAM, _lastSFXVolumeLinear);
+        }
+        PlayerPrefs.SetInt(PREFS_SFX_MUTE, _isSFXMuted ? 1 : 0);
+        PlayerPrefs.Save();
+    }
+
+    // UI 音量控制
+    public void SetUIVolumeSlider(float linearValue)
+    {
+        if (masterMixer == null) return;
+        _lastUIVolumeLinear = Mathf.Clamp(linearValue, 0.0001f, 1f);
+        if (!_isUIMuted)
+        {
+            SetMixerVolume(masterMixer, UI_MIXER_PARAM, _lastUIVolumeLinear);
+        }
+        PlayerPrefs.SetFloat(PREFS_UI_VOL, _lastUIVolumeLinear);
+        PlayerPrefs.Save();
+    }
+
+    public void ToggleUIMute()
+    {
+        if (masterMixer == null) return;
+        _isUIMuted = !_isUIMuted;
+        if (_isUIMuted)
+        {
+            SetMixerVolume(masterMixer, UI_MIXER_PARAM, 0.0001f);
+        }
+        else
+        {
+            SetMixerVolume(masterMixer, UI_MIXER_PARAM, _lastUIVolumeLinear);
+        }
+        PlayerPrefs.SetInt(PREFS_UI_MUTE, _isUIMuted ? 1 : 0);
+        PlayerPrefs.Save();
+    }
+    // --- 结束新增 ---
 }

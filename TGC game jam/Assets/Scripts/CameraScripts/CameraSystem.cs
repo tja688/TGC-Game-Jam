@@ -13,7 +13,6 @@ public class CameraSystem : MonoBehaviour
     // 尝试在 Start 中自动获取，或者允许外部拖拽赋值
     [SerializeField] private Transform initialPlayerTransform;
 
-
     private Transform currentPlayerToFollow;      // 当前应该跟随的玩家对象
     private Transform activeSpecialTarget;        // 当前激活的特殊目标点
     private bool hasFiredArrivalForThisSpecialTarget; // 标记当前特殊目标的抵达事件是否已触发
@@ -24,6 +23,8 @@ public class CameraSystem : MonoBehaviour
     public static event Action OnCameraArrivedAtSpecialTarget;
     
     public static CameraSystem Instance { get; private set; }
+    
+    public float MoveSpeed { get => moveSpeed;set => moveSpeed = value; }
 
     private void Awake()
     {
@@ -36,6 +37,8 @@ public class CameraSystem : MonoBehaviour
         {
             Instance = this;
         }
+        
+        
     }
 
     private void Start()
@@ -43,10 +46,6 @@ public class CameraSystem : MonoBehaviour
         if (initialPlayerTransform)
         {
             SetPlayerToFollow(initialPlayerTransform);
-        }
-        else if (PlayerMove.CurrentPlayer) // 尝试从 PlayerMove 获取
-        {
-            SetPlayerToFollow(PlayerMove.CurrentPlayer.transform);
         }
         else
         {
@@ -102,6 +101,7 @@ public class CameraSystem : MonoBehaviour
     /// 若要相机重新检测并为同一目标再次触发事件，需再次调用此方法设置该目标。
     /// </summary>
     /// <param name="specialTarget">要临时看向的目标 Transform。传入 null 则清除特殊目标，恢复默认跟随玩家。</param>
+
     public static void SetSpecialCameraTarget(Transform specialTarget)
     {
         if (!Instance)
