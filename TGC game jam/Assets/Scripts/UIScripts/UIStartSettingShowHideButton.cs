@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,11 @@ public class UIStartSettingShowHideButton : MonoBehaviour
 
     private Button button;
     private bool isGroupShown = false; // 用于跟踪当前组的状态
+    
+    public static event Action OpenBeginSettingUI;
+    
+    public static event Action CloseBeginSettingUI;
+
 
     private void Awake()
     {
@@ -44,11 +50,13 @@ public class UIStartSettingShowHideButton : MonoBehaviour
         {
             animationManager.HideGroup(targetGroupName);
             Debug.Log($"UIGroupToggleButton: 已隐藏组 '{targetGroupName}'");
+            CloseBeginSettingUI?.Invoke();
         }
         else
         {
             animationManager.ShowGroup(targetGroupName);
             Debug.Log($"UIGroupToggleButton: 已显示组 '{targetGroupName}'");
+            OpenBeginSettingUI?.Invoke();
         }
 
         // 切换状态

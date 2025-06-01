@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 //不再需要 using System; 因为没有静态事件了
@@ -10,6 +11,10 @@ public class PlayerInterfaceOpenerButton : MonoBehaviour
     public string targetUIGroupName = "PlayerPanel";
 
     private Button button;
+
+    public static event Action OpenPlayerPanelUI;
+    
+    public static event Action ClosePlayerPanelUI;
     
     public static bool OnOpenUI { get; private set; }
     
@@ -32,6 +37,7 @@ public class PlayerInterfaceOpenerButton : MonoBehaviour
         if (UIAnimationManager.Instance)
         {
             UIAnimationManager.Instance.ShowGroup(targetUIGroupName);
+            OpenPlayerPanelUI?.Invoke();
         }
         else
         {
@@ -65,6 +71,8 @@ public class PlayerInterfaceOpenerButton : MonoBehaviour
 
         OnOpenUI = false;
         
+        ClosePlayerPanelUI?.Invoke();
+        
         PlayerInputController.Instance?.ActivatePlayerControls();
     }
 
@@ -75,4 +83,8 @@ public class PlayerInterfaceOpenerButton : MonoBehaviour
             button.onClick.RemoveListener(HandleButtonClick);
         }
     }
+    
+
+    
+    
 }
