@@ -505,7 +505,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 7bf34b5b773e6f64ba4998a2b7a4ea54, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1017,7 +1017,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 7bf34b5b773e6f64ba4998a2b7a4ea54, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1058,7 +1058,7 @@ Transform:
   m_GameObject: {fileID: 740993482}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.11, y: 0.529, z: 0}
+  m_LocalPosition: {x: -3.844, y: -0.616, z: 0}
   m_LocalScale: {x: 0.02, y: 0.02, z: 0.02}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -1115,7 +1115,7 @@ MonoBehaviour:
   objectName: battery
   promptAnchorTransform: {fileID: 773981453}
   interactNotice: {fileID: 6525877164689471132, guid: d63407ed3e071974ba03c8229248e5a2, type: 3}
-  grabSound: {fileID: 11400000, guid: 2c6bb2bed2248de4fae3c056648d669a, type: 2}
+  grabSound: {fileID: 11400000, guid: b1f711de7cc54414d839b8d8e284cc33, type: 2}
 --- !u!1 &773981452
 GameObject:
   m_ObjectHideFlags: 0
