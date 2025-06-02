@@ -15,18 +15,14 @@ MonoBehaviour:
   npcName: Player
   dialogueEntries:
   - dialogueID: initial1
-    dialogueText: Zzi......
+    dialogueText: "Zzi\u2026.Zzi\u2026.Who\u2026am I?"
   - dialogueID: initial2
-    dialogueText: Who......am I?
+    dialogueText: "Where\u2026is this? Accessing memory\u2014\u2014."
   - dialogueID: initial3
-    dialogueText: Where......is this?
-  - dialogueID: initial4
-    dialogueText: "Accessing memory\u2014\u2014"
-  - dialogueID: initial5
     dialogueText: Ah, I am Lake, a mail delivery robot at the post office. Time to
       start working.
-  - dialogueID: initial6
+  - dialogueID: initial4
     dialogueText: The disaster just passed, and it seems many things haven't been
       sorted out yet.
-  - dialogueID: initial7
+  - dialogueID: initial5
     dialogueText: First, let's check the post office situation.

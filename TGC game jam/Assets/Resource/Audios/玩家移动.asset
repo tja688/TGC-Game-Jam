@@ -10,20 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d31b723d397291b42ab7fc53086ea5ab, type: 3}
-  m_Name: "\u673A\u5668\u4EBA\u884C\u8D70\u968F\u673A\u6C60"
+  m_Name: "\u73A9\u5BB6\u79FB\u52A8"
   m_EditorClassIdentifier: 
-  clip: {fileID: 8300000, guid: 9bde856e2c7b8fc4f9960a83e1ba35e0, type: 3}
-  volume: 0.05
+  clip: {fileID: 8300000, guid: 8f631b87c4ed1fd4e8e7a5c620af916b, type: 3}
+  volume: 0.1
   pitch: 0.8
-  loop: 0
+  loop: 1
   outputAudioMixerGroup: {fileID: 746668393167503926, guid: c58cd71f3e91bcb4ba0e64f64091fa80, type: 2}
   cooldown: 0
-  loopFadeInTime: 0.1
-  loopFadeOutTime: 0.1
-  isRandomPool: 1
-  audioClipPool:
-  - {fileID: 8300000, guid: 9bde856e2c7b8fc4f9960a83e1ba35e0, type: 3}
-  - {fileID: 8300000, guid: 7b944fd9ead5aba4ab3c8602dcb9dcb7, type: 3}
-  - {fileID: 8300000, guid: 7b5d59b7fdab6e04db6013008253cf26, type: 3}
-  randomVolumeMultiplierRange: {x: 0.8, y: 1.2}
+  loopFadeInTime: 0.2
+  loopFadeOutTime: 0.2
+  isRandomPool: 0
+  audioClipPool: []
+  randomVolumeMultiplierRange: {x: 1, y: 1}
   randomPitchMultiplierRange: {x: 1, y: 1}

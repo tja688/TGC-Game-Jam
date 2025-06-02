@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Febucci.UI.Core;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerDialogue : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class PlayerDialogue : MonoBehaviour
     
     [SerializeField] private NPCDialogue playerInternalMonologueData;
 
+    public bool debugNoOpener =  false;
+    
     
     private void Start()
     {
@@ -24,9 +27,11 @@ public class PlayerDialogue : MonoBehaviour
 
     private void OnGameStartsPlayerWakesUp()
     {
-        // if (GameVariables.Day != 1) return; // 假设有 GameVariables
+        if (GameVariables.Day != 1) return; 
+        
+        if(debugNoOpener) return;
 
-        var dialogueIDs = new List<string> { "initial1", "initial2", "initial3", "initial4", "initial5" , "initial6", "initial7"};
+        var dialogueIDs = new List<string> { "initial1", "initial2", "initial3", "initial4", "initial5" };
         
         DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerInternalMonologueData, playerTalkTransform, true, () => {
             Debug.Log("玩家初始唤醒对话序列完成!");

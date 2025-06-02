@@ -768,8 +768,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cacde6be02d17164c8a4b81f4e062032, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundMode: 1
-  moveLoopSound: {fileID: 11400000, guid: db560f41b4006374295ff4309680f70e, type: 2}
+  soundMode: 0
+  moveLoopSound: {fileID: 11400000, guid: 25a8b3704b9d07e4899f3fec5f709399, type: 2}
   intervalOneShotSound: {fileID: 11400000, guid: f28490226ee66f942b861b1c569e16a2, type: 2}
   playInterval: 0.6
 --- !u!114 &720362868
@@ -787,6 +787,7 @@ MonoBehaviour:
   gameFlow: {fileID: 1697276108}
   playerTalkTransform: {fileID: 1149528442}
   playerInternalMonologueData: {fileID: 11400000, guid: ab9d487851fe9ee4e9c0cde8b9cd1706, type: 2}
+  debugNoOpener: 1
 --- !u!4 &720362877 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1274648679560235171, guid: 4adc0e67592edb241ae5278f0f1d9ca2, type: 3}
@@ -1256,7 +1257,7 @@ Transform:
   m_GameObject: {fileID: 1149528441}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.72, z: 0}
+  m_LocalPosition: {x: 0, y: 3.48, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1832,9 +1833,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1313408947972617738, guid: 38d6ec0d07a42d94ab91fd9834a08cfd, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1200
+      objectReference: {fileID: 0}
     - target: {fileID: 1718351762919826873, guid: 38d6ec0d07a42d94ab91fd9834a08cfd, type: 3}
       propertyPath: m_Name
       value: Dialogue Manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 2897817867771908675, guid: 38d6ec0d07a42d94ab91fd9834a08cfd, type: 3}
+      propertyPath: defaultDisappearancesTags.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2897817867771908675, guid: 38d6ec0d07a42d94ab91fd9834a08cfd, type: 3}
+      propertyPath: defaultDisappearancesTags.Array.data[0]
+      value: fade d=2
       objectReference: {fileID: 0}
     - target: {fileID: 6134388611637973429, guid: 38d6ec0d07a42d94ab91fd9834a08cfd, type: 3}
       propertyPath: m_Camera
@@ -1884,6 +1897,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6968030699844442441, guid: 38d6ec0d07a42d94ab91fd9834a08cfd, type: 3}
+      propertyPath: minSoundDelay
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8272399813838392850, guid: 38d6ec0d07a42d94ab91fd9834a08cfd, type: 3}
+      propertyPath: waitForNormalChars
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 8272399813838392850, guid: 38d6ec0d07a42d94ab91fd9834a08cfd, type: 3}
+      propertyPath: disappearanceSpeedMultiplier
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8272399813838392850, guid: 38d6ec0d07a42d94ab91fd9834a08cfd, type: 3}
       propertyPath: onTextDisappeared.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -1927,6 +1952,14 @@ PrefabInstance:
     - target: {fileID: 8272399813838392850, guid: 38d6ec0d07a42d94ab91fd9834a08cfd, type: 3}
       propertyPath: onTextDisappeared.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8940666311816156363, guid: 38d6ec0d07a42d94ab91fd9834a08cfd, type: 3}
+      propertyPath: m_fontSize
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 8940666311816156363, guid: 38d6ec0d07a42d94ab91fd9834a08cfd, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 40
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
