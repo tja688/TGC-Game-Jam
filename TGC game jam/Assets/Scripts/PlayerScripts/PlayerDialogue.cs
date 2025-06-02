@@ -11,6 +11,9 @@ public class PlayerDialogue : MonoBehaviour
     
     [SerializeField] private Transform playerTalkTransform;
     
+    [SerializeField] private NPCDialogue playerInternalMonologueData;
+
+    
     private void Start()
     {
         
@@ -21,37 +24,13 @@ public class PlayerDialogue : MonoBehaviour
 
     private void OnGameStartsPlayerWakesUp()
     {
-        if(GameVariables.Day != 1) return;
-        
-        EventCenter.TriggerEvent<Vector2,string>(GameEvents.ShowDialogue,
-            UIUtility.WorldToScreenSpaceOverlayPosition(playerTalkTransform.position),"initial1");
+        // if (GameVariables.Day != 1) return; // 假设有 GameVariables
 
-        DialogueManager.DialogueFinished += NextDialogue;
-
-    }
-
-    private void NextDialogue()
-    {
-        DialogueManager.DialogueFinished -= NextDialogue;
+        var dialogueIDs = new List<string> { "initial1", "initial2", "initial3", "initial4", "initial5" , "initial6", "initial7"};
         
-        EventCenter.TriggerEvent<Vector2,string>(GameEvents.ShowDialogue,
-            UIUtility.WorldToScreenSpaceOverlayPosition(playerTalkTransform.position),"initial2");
-        
-        
-        DialogueManager.DialogueFinished += NextDialogue2;
-        
-    }
-    
-    private void NextDialogue2()
-    {
-        DialogueManager.DialogueFinished -= NextDialogue2;
-        
-        EventCenter.TriggerEvent<Vector2,string>(GameEvents.ShowDialogue,
-            UIUtility.WorldToScreenSpaceOverlayPosition(playerTalkTransform.position),"initial2");
-        
-        
-        DialogueManager.DialogueFinished += NextDialogue3;
-        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerInternalMonologueData, playerTalkTransform, true, () => {
+            Debug.Log("玩家初始唤醒对话序列完成!");
+        });
     }
 
     private void NextDialogue3()

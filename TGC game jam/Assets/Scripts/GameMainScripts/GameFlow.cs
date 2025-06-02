@@ -22,8 +22,6 @@ public class GameFlow : MonoBehaviour
 
     private float originalCameraSpeed; // 用于存储相机原始速度 (如果需要恢复到非固定值)
     
-    [SerializeField] protected NPCDialogue playerDialogueData;
-    
     private void Start()
     {
         if (ScreenFadeController.Instance)

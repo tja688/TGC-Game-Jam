@@ -8,7 +8,7 @@ public class NPCRella : NPCBase
 
     public override void InitiateDialogue()
     {
-        throw new System.NotImplementedException();
+        
     }
 
 

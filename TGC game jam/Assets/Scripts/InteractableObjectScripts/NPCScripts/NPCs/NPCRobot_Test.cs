@@ -1,32 +1,16 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Febucci.UI.Core;
-using Unity.VisualScripting;
 using UnityEngine;
+using System.Collections.Generic;
+using UnityEngine.Serialization; // For List
 
 public class NPCRobot_Test : NPCBase
 {
-
     private int interactCount = 0;
-    
-    private TypewriterCore typewriter;
+    [FormerlySerializedAs("TestItemShowPointTrans")] [SerializeField] private Transform testItemShowPointTrans; // 示例
 
-    protected override void Start()
-    {
-        base.Start();
-        
-        typewriter = DialogueManager.Instance.Typewriter;
-        
-    }
-    
     public override void InitiateDialogue()
     {
         interactCount++;
         
-        if (Camera1) 
-            PromptAnchorScreenPoint = Camera1.WorldToScreenPoint(promptAnchorTransform.position);
-
         switch (interactCount)
         {
             case 1:
@@ -38,43 +22,62 @@ public class NPCRobot_Test : NPCBase
             case 3:
                 ThirdMeet();
                 break;
+            default:
+                interactCount = 0; // 重置计数器
+                break;
         }
     }
 
     private void FirstMeet()
     {
-        SendDialogueLine( new Vector2(PromptAnchorScreenPoint.x,PromptAnchorScreenPoint.y), "meet1");
+        var ids = new List<string> { "meet1" };
+        DialogueManager.Instance.StartDialogueSequence(ids, dialogueData, promptAnchorTransform, false);
     }
 
     private void SecondMeet()
     {
-        CameraSystem.OnCameraArrivedAtSpecialTarget += PlayMeet2;
-        
-        CameraSystem.SetSpecialCameraTarget(TestItem.ShowPointTrans);
+        // 演示：如果第二句对话需要在特定物体处显示，并有后续动作
+        if (!testItemShowPointTrans)
+        {
+            Debug.LogError("TestItemShowPointTrans is not set for NPCRobot_Test.SecondMeet");
+            // Fallback to default anchor or skip
+            List<string> idsFallback = new List<string> { "meet2_fallback" }; // 假设有备用对话
+            DialogueManager.Instance.StartDialogueSequence(idsFallback, dialogueData, promptAnchorTransform, false);
+            return;
+        }
 
+        // 相机移动逻辑（如果需要）
+        CameraSystem.OnCameraArrivedAtSpecialTarget += PlayMeet2DialogueAfterCameraMove;
+        CameraSystem.SetSpecialCameraTarget(testItemShowPointTrans);
     }
 
-    private void PlayMeet2()
+    private void PlayMeet2DialogueAfterCameraMove()
     {
-        CameraSystem.OnCameraArrivedAtSpecialTarget -= PlayMeet2;
+        CameraSystem.OnCameraArrivedAtSpecialTarget -= PlayMeet2DialogueAfterCameraMove;
 
-        SendDialogueLine( Camera1.WorldToScreenPoint(TestItem.ShowPointTrans.position), "meet2");
-
-        typewriter.onTextDisappeared.AddListener(MoveBackCamera);
-
+        List<string> ids = new List<string> { "meet2" };
+        // 对话锚点是TestItemShowPointTrans
+        // false: 等待交互继续
+        // MoveBackCameraAfterDialogue 是整个meet2序列（这里只有一句）完成后执行的回调
+        DialogueManager.Instance.StartDialogueSequence(ids, dialogueData, testItemShowPointTrans, false, MoveBackCameraAfterDialogue);
     }
 
-    private void MoveBackCamera()
+    private void MoveBackCameraAfterDialogue()
     {
-        typewriter.onTextDisappeared.RemoveListener(MoveBackCamera);
-
-        CameraSystem.SetSpecialCameraTarget(null);
+        // 这个方法会在 "meet2" 对话（或序列）结束后被调用
+        CameraSystem.SetSpecialCameraTarget(null); // 将相机移回
+        Debug.Log("SecondMeet dialogue finished, camera moved back.");
     }
 
     private void ThirdMeet()
     {
-        SendDialogueLine( new Vector2(PromptAnchorScreenPoint.x,PromptAnchorScreenPoint.y), "meet3");
-        
-        DestroyInteractionPrompt();
+        List<string> ids = new List<string> { "meet3", "meet3_extra" }; // 示例：第三次交互播放两句话
+        // false: 自动播放这两句话，但整个序列说完后（即meet3_extra说完），会等待下一次交互（如果还有后续交互的话）
+        // 这里最后一个参数是 onComplete 回调
+        DialogueManager.Instance.StartDialogueSequence(ids, dialogueData, promptAnchorTransform, true, () => {
+            Debug.Log("ThirdMeet sequence completed.");
+            if(InstantiatedPromptInstance)
+                DestroyInteractionPrompt(); // 例如，在第三次对话结束后销毁交互提示
+        });
     }
 }
