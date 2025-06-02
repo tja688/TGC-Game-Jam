@@ -86,4 +86,9 @@ public static class GameEvents
     public const string MoveCameraToPos = "MoveCameraToPos";
     #endregion
     
+    #region 游戏剧情事件 (GamePlot Events)
+    /// <summary> 游戏开始，玩家醒来。</summary>
+    public const string GameStartsPlayerWakesUp = "GameStartsPlayerWakesUp";
+    #endregion
+    
 }

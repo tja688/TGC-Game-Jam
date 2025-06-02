@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI; // <--- 确保添加了这一行
 
 public class GameFlow : MonoBehaviour
@@ -16,12 +18,17 @@ public class GameFlow : MonoBehaviour
     [Tooltip("开始游戏按钮")]
     public Button startGameButton;
     [Tooltip("玩家界面按钮")]
-    public GameObject PlayerPanelButton;
+    public GameObject playerPanelButton;
 
     private float originalCameraSpeed; // 用于存储相机原始速度 (如果需要恢复到非固定值)
-
+    
+    [SerializeField] protected NPCDialogue playerDialogueData;
+    
     private void Start()
     {
+        if (ScreenFadeController.Instance)
+            ScreenFadeController.Instance.FadeToClear();
+        
         // 1. 播放背景音乐
         if (!beginPanelMusic) // 修正：变量名应该是 streetMainMusic
         {
@@ -32,7 +39,6 @@ public class GameFlow : MonoBehaviour
             AudioManager.Instance.Play(beginPanelMusic);
         }
 
-        // 2. 激活开始菜单
         if (startMenuPanel)
         {
             startMenuPanel.SetActive(true);
@@ -42,8 +48,7 @@ public class GameFlow : MonoBehaviour
             Debug.LogError("GameFlow: startMenuPanel (开始菜单 GameObject) 未在 Inspector 中指定。");
         }
 
-        // 3. 设置初始输入模式为 UI 控制
-        if (PlayerInputController.Instance != null)
+        if (PlayerInputController.Instance)
         {
             PlayerInputController.Instance.ActivateUIControls();
         }
@@ -53,7 +58,7 @@ public class GameFlow : MonoBehaviour
         }
 
         // 4. 为开始按钮添加监听器
-        if (startGameButton != null)
+        if (startGameButton)
         {
             startGameButton.onClick.AddListener(StartGameSequence);
         }
@@ -63,40 +68,38 @@ public class GameFlow : MonoBehaviour
         }
 
         // (可选) 获取相机初始速度，如果恢复速度不是固定值的话
-        if (CameraSystem.Instance != null)
+        if (CameraSystem.Instance)
         {
             originalCameraSpeed = CameraSystem.Instance.MoveSpeed;
         }
         
-        if(PlayerPanelButton)
-            PlayerPanelButton.SetActive(false);
+        if(playerPanelButton)
+            playerPanelButton.SetActive(false);
     }
 
-    void StartGameSequence()
+    private void StartGameSequence()
     {
-        Debug.Log("GameFlow: StartGameSequence initiated.");
-
         // 0. (可选) 禁用按钮避免重复点击
-        if (startGameButton != null)
+        if (startGameButton)
         {
             startGameButton.interactable = false;
         }
 
         // 1. 失活开始菜单
-        if (startMenuPanel != null)
+        if (startMenuPanel)
         {
             startMenuPanel.SetActive(false);
         }
 
         // 2. 检查 CameraSystem 和 PlayerMove.CurrentPlayer
-        if (CameraSystem.Instance == null)
+        if (!CameraSystem.Instance)
         {
             Debug.LogError("GameFlow: CameraSystem.Instance 为空。无法执行相机移动序列。");
-            if (startGameButton != null) startGameButton.interactable = true; // 发生错误，恢复按钮交互
+            if (startGameButton) startGameButton.interactable = true; // 发生错误，恢复按钮交互
             return;
         }
 
-        if (PlayerMove.CurrentPlayer == null || PlayerMove.CurrentPlayer.transform == null)
+        if (!PlayerMove.CurrentPlayer || PlayerMove.CurrentPlayer.transform == null)
         {
             Debug.LogError("GameFlow: PlayerMove.CurrentPlayer 或其 transform 为空。无法设置相机目标。请确保玩家对象已正确初始化并赋值给 PlayerMove.CurrentPlayer。");
             // 视情况决定是否恢复UI或按钮
@@ -111,7 +114,7 @@ public class GameFlow : MonoBehaviour
         Debug.Log($"GameFlow: Camera speed set to {CameraSystem.Instance.MoveSpeed}");
 
         // 4. 设置相机移动视点到玩家对象
-        Transform playerTransform = PlayerMove.CurrentPlayer.transform;
+        var playerTransform = PlayerMove.CurrentPlayer.transform;
         CameraSystem.SetSpecialCameraTarget(playerTransform); // 使用 CameraSystem 提供的静态方法
         Debug.Log($"GameFlow: Camera special target set to player: {playerTransform.name}");
 
@@ -120,12 +123,11 @@ public class GameFlow : MonoBehaviour
         Debug.Log("GameFlow: Subscribed to OnCameraArrivedAtSpecialTarget event.");
     }
 
-    void HandleCameraArrivedAtPlayer()
+    private void HandleCameraArrivedAtPlayer()
     {
-        Debug.Log("GameFlow: HandleCameraArrivedAtPlayer called (camera arrived at player).");
 
         // 1. 检查 CameraSystem 实例
-        if (CameraSystem.Instance == null)
+        if (!CameraSystem.Instance)
         {
             Debug.LogError("GameFlow: CameraSystem.Instance 为空，在 HandleCameraArrivedAtPlayer 中。无法恢复相机速度。");
             return; // 提前退出，避免后续空指针
@@ -140,7 +142,7 @@ public class GameFlow : MonoBehaviour
         Debug.Log("GameFlow: Unsubscribed from OnCameraArrivedAtSpecialTarget event.");
 
         // 4. 设置游戏控制为玩家控制组
-        if (PlayerInputController.Instance != null)
+        if (PlayerInputController.Instance)
         {
             PlayerInputController.Instance.ActivatePlayerControls();
             Debug.Log("GameFlow: Player controls activated.");
@@ -152,8 +154,10 @@ public class GameFlow : MonoBehaviour
         
         AudioManager.Instance.Stop(beginPanelMusic);
         
-        if(PlayerPanelButton)
-            PlayerPanelButton.SetActive(true);
+        if(playerPanelButton)
+            playerPanelButton.SetActive(true);
+
+        EventCenter.TriggerEvent(GameEvents.GameStartsPlayerWakesUp);
 
     }
 

@@ -49,13 +49,11 @@ public class UIStartSettingShowHideButton : MonoBehaviour
         if (isGroupShown)
         {
             animationManager.HideGroup(targetGroupName);
-            Debug.Log($"UIGroupToggleButton: 已隐藏组 '{targetGroupName}'");
             CloseBeginSettingUI?.Invoke();
         }
         else
         {
             animationManager.ShowGroup(targetGroupName);
-            Debug.Log($"UIGroupToggleButton: 已显示组 '{targetGroupName}'");
             OpenBeginSettingUI?.Invoke();
         }
 

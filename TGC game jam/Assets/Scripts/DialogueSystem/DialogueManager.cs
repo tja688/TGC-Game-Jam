@@ -17,6 +17,8 @@ public class DialogueManager : MonoBehaviour
 
     public static DialogueManager Instance { get; private set; }
     
+    public static event Action DialogueFinished;
+    
     private void Awake()
     {
         if (!dialogueText)
@@ -107,6 +109,7 @@ public class DialogueManager : MonoBehaviour
     {
         isDialogueProcessActive = false;
         PlayerMove.CanPlayerMove = true;
+        DialogueFinished?.Invoke();
     }
-    
+
 }
