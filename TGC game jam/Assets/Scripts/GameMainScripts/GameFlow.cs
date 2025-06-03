@@ -20,12 +20,12 @@ public class GameFlow : MonoBehaviour
     [Tooltip("玩家界面按钮")]
     public GameObject playerPanelButton;
 
-    private float originalCameraSpeed; // 用于存储相机原始速度 (如果需要恢复到非固定值)
+    private float originalCameraSpeed; 
     
     private void Start()
     {
         if (ScreenFadeController.Instance)
-            ScreenFadeController.Instance.FadeToClear();
+            ScreenFadeController.Instance.BeginFadeToClear(2f);
         
         // 1. 播放背景音乐
         if (!beginPanelMusic) // 修正：变量名应该是 streetMainMusic
@@ -75,6 +75,7 @@ public class GameFlow : MonoBehaviour
             playerPanelButton.SetActive(false);
     }
 
+    // 开始场景演出
     private void StartGameSequence()
     {
         // 0. (可选) 禁用按钮避免重复点击
@@ -100,10 +101,6 @@ public class GameFlow : MonoBehaviour
         if (!PlayerMove.CurrentPlayer || PlayerMove.CurrentPlayer.transform == null)
         {
             Debug.LogError("GameFlow: PlayerMove.CurrentPlayer 或其 transform 为空。无法设置相机目标。请确保玩家对象已正确初始化并赋值给 PlayerMove.CurrentPlayer。");
-            // 视情况决定是否恢复UI或按钮
-            // 例如：startMenuPanel?.SetActive(true);
-            // if (startGameButton != null) startGameButton.interactable = true;
-            // PlayerInputController.Instance?.ActivateUIControls(); // 恢复UI控制
             return;
         }
 
@@ -156,6 +153,7 @@ public class GameFlow : MonoBehaviour
             playerPanelButton.SetActive(true);
 
         EventCenter.TriggerEvent(GameEvents.GameStartsPlayerWakesUp);
+
 
     }
 

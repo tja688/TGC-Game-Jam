@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Febucci.UI.Core;
@@ -36,6 +37,7 @@ public class PlayerDialogue : MonoBehaviour
         DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerInternalMonologueData, playerTalkTransform, true, () => {
             Debug.Log("玩家初始唤醒对话序列完成!");
         });
+        
     }
 
     private void NextDialogue3()
@@ -43,5 +45,8 @@ public class PlayerDialogue : MonoBehaviour
         
     }
 
-
+    private void OnDestroy()
+    {
+        EventCenter.RemoveListener(GameEvents.GameStartsPlayerWakesUp,OnGameStartsPlayerWakesUp);
+    }
 }

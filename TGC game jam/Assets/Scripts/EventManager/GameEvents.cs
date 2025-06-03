@@ -84,11 +84,20 @@ public static class GameEvents
     #region 摄像机系统事件 (Camera Events)
     /// <summary> 移动摄像机到目的地。参数: (Vector aimPos) </summary>
     public const string MoveCameraToPos = "MoveCameraToPos";
+    
+    /// <summary> 开始传送。</summary>
+    public const string SwitchScene = "SwitchScene";
+    
     #endregion
     
     #region 游戏剧情事件 (GamePlot Events)
     /// <summary> 游戏开始，玩家醒来。</summary>
     public const string GameStartsPlayerWakesUp = "GameStartsPlayerWakesUp";
+    
+    /// <summary> 玩家休眠。</summary>
+    public const string PlayerSleep = "PlayerSleep";
+
+    
     #endregion
     
 }
