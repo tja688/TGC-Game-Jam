@@ -53,4 +53,7 @@ public class BackgroundBlurController : MonoBehaviour
             depthOfField.active = isActive; 
         }
     }
+    
+    public void CloseDepthOfField() => depthOfField.active = false;
+    public void OpenDepthOfField() => depthOfField.active = true;
 }

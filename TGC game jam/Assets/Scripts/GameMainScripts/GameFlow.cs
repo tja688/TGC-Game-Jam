@@ -148,13 +148,14 @@ public class GameFlow : MonoBehaviour
         }
         
         AudioManager.Instance.Stop(beginPanelMusic);
+
+        GameVariables.Day = 1;
         
         if(playerPanelButton)
             playerPanelButton.SetActive(true);
 
         EventCenter.TriggerEvent(GameEvents.GameStartsPlayerWakesUp);
-
-
+        
     }
 
     public void QuitGame()

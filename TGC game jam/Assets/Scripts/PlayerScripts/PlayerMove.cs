@@ -159,6 +159,9 @@ public class PlayerMove : MonoBehaviour
         animator.SetFloat(SpeedAnimHash, speed);
     }
 
+    public void EnablePlayerMovement() => CanPlayerMove = true;
+    public void DisablePlayerMovement() => CanPlayerMove = false;
+    
     private void OnDestroy()
     {
         // 移除事件监听

@@ -27,6 +27,7 @@ public class DialogueManager : MonoBehaviour
     private Action onSequenceCompleteCallback; // 当前序列完成时的特定回调
     private Transform currentDialogueAnchor; // 当前对话锚点，用于重新计算位置
     private NPCDialogue currentDialogueData; // 当前对话使用的数据源
+    private Camera camera1;
 
     private struct DialogueLineInfo
     {
@@ -34,6 +35,11 @@ public class DialogueManager : MonoBehaviour
         public Vector2 OriginalScreenPosition; // 记录原始计算的屏幕位置
         public Transform WorldAnchor; // 世界坐标锚点，用于动态更新位置
         public string DialogueID; // 对话ID，用于获取文本
+    }
+
+    private void Start()
+    {
+        camera1 = Camera.main;
     }
 
     private void Awake()
@@ -131,13 +137,13 @@ public class DialogueManager : MonoBehaviour
             string textToShow = currentDialogueData.GetDialogueTextByID(lineInfo.DialogueID); // 重新获取，以防万一
 
             Vector2 screenPosition;
-            if (lineInfo.WorldAnchor != null && Camera.main != null) // 确保有锚点和相机
+            if (lineInfo.WorldAnchor && camera1) // 确保有锚点和相机
             {
-                screenPosition = Camera.main.WorldToScreenPoint(lineInfo.WorldAnchor.position);
+                screenPosition = camera1.WorldToScreenPoint(lineInfo.WorldAnchor.position);
             }
-            else if (currentDialogueAnchor != null && Camera.main != null) // Fallback to sequence anchor
+            else if (currentDialogueAnchor && camera1) // Fallback to sequence anchor
             {
-                 screenPosition = Camera.main.WorldToScreenPoint(currentDialogueAnchor.position);
+                 screenPosition = camera1.WorldToScreenPoint(currentDialogueAnchor.position);
             }
             else
             {

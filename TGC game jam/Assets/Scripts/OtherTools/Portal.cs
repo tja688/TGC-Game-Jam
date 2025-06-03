@@ -57,11 +57,10 @@ public class Portal : MonoBehaviour
         }
 
         // 2. 执行传送
-        Debug.Log(gameObject.name + ": Teleporting player.");
         playerTransform.position = teleportTargetPoint.position;
-        Debug.Log(gameObject.name + ": Player teleported to " + teleportTargetPoint.name);
         OnPlayerActuallyTeleported?.Invoke(playerTransform); // 通知：玩家已被传送
-        
+
+        yield return new WaitForSeconds(1f);
 
         var fadeToClearCoroutine = ScreenFadeController.Instance.BeginFadeToClear(2f);
         if (ScreenFadeController.Instance)

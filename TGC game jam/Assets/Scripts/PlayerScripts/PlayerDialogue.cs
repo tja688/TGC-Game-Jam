@@ -14,8 +14,6 @@ public class PlayerDialogue : MonoBehaviour
     [SerializeField] private Transform playerTalkTransform;
     
     [SerializeField] private NPCDialogue playerInternalMonologueData;
-
-    public bool debugNoOpener =  false;
     
     
     private void Start()
@@ -30,7 +28,7 @@ public class PlayerDialogue : MonoBehaviour
     {
         if (GameVariables.Day != 1) return; 
         
-        if(debugNoOpener) return;
+        if(GameVariables.DebugNoOpener) return;
 
         var dialogueIDs = new List<string> { "initial1", "initial2", "initial3", "initial4", "initial5" };
         
