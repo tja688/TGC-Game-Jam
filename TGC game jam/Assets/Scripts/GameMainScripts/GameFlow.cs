@@ -1,9 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Serialization;
-using UnityEngine.UI; // <--- 确保添加了这一行
+using UnityEngine.UI;
+
+using Cysharp.Threading.Tasks;
+
 
 public class GameFlow : MonoBehaviour
 {
@@ -106,57 +110,81 @@ public class GameFlow : MonoBehaviour
 
         // 3. 设置相机移动速度为1
         CameraSystem.Instance.MoveSpeed = 1f;
-        Debug.Log($"GameFlow: Camera speed set to {CameraSystem.Instance.MoveSpeed}");
 
         // 4. 设置相机移动视点到玩家对象
         var playerTransform = PlayerMove.CurrentPlayer.transform;
         CameraSystem.SetSpecialCameraTarget(playerTransform); // 使用 CameraSystem 提供的静态方法
-        Debug.Log($"GameFlow: Camera special target set to player: {playerTransform.name}");
 
         // 5. 监听相机到达目标事件
         CameraSystem.OnCameraArrivedAtSpecialTarget += HandleCameraArrivedAtPlayer;
-        Debug.Log("GameFlow: Subscribed to OnCameraArrivedAtSpecialTarget event.");
     }
 
-    private void HandleCameraArrivedAtPlayer()
+    private async void HandleCameraArrivedAtPlayer() 
     {
-
-        // 1. 检查 CameraSystem 实例
-        if (!CameraSystem.Instance)
-        {
-            Debug.LogError("GameFlow: CameraSystem.Instance 为空，在 HandleCameraArrivedAtPlayer 中。无法恢复相机速度。");
-            return; // 提前退出，避免后续空指针
+        // 1. 恢复相机速度
+        if (CameraSystem.Instance) {
+            CameraSystem.Instance.MoveSpeed = 5f; 
         }
-        
-        // 2. 设置相机移动速度回5 (或原始速度)
-        CameraSystem.Instance.MoveSpeed = 5f; // 或者使用 originalCameraSpeed
-        Debug.Log($"GameFlow: Camera speed restored to {CameraSystem.Instance.MoveSpeed}");
 
-        // 3. 取消监听事件，避免重复执行
+        // 2. 取消事件监听
         CameraSystem.OnCameraArrivedAtSpecialTarget -= HandleCameraArrivedAtPlayer;
-        Debug.Log("GameFlow: Unsubscribed from OnCameraArrivedAtSpecialTarget event.");
 
-        // 4. 设置游戏控制为玩家控制组
-        if (PlayerInputController.Instance)
-        {
+        // 3. 激活玩家控制
+        if (PlayerInputController.Instance) {
             PlayerInputController.Instance.ActivatePlayerControls();
-            Debug.Log("GameFlow: Player controls activated.");
         }
-        else
-        {
-            Debug.LogError("GameFlow: PlayerInputController.Instance 为空。无法激活玩家控制。");
-        }
-        
+    
+        // 4. 停止背景音乐
         AudioManager.Instance.Stop(beginPanelMusic);
 
+        // 5. 设置游戏状态
         GameVariables.Day = 1;
-        
-        if(playerPanelButton)
-            playerPanelButton.SetActive(true);
+        if(playerPanelButton) playerPanelButton.SetActive(true);
 
+        // 6. 触发事件并等待对话
         EventCenter.TriggerEvent(GameEvents.GameStartsPlayerWakesUp);
         
+        await WaitForDialogueAsync(); // 明确等待
     }
+
+    private async UniTask WaitForDialogueAsync() {
+        
+        // 等待对话完成
+        await WaitForEvent(
+            h => DialogueManager.DialogueFinished += h,
+            h => DialogueManager.DialogueFinished -= h
+            );
+    
+        // 移动相机
+        CameraSystem.SetSpecialCameraTarget(GameVariables.StartAndFindCameraPosition);
+
+        // 停留1秒后开启寻找
+        await UniTask.WaitForSeconds(1f);
+        
+        PlayerDialogue.Instance.FindLora(GameVariables.StartAndFindCameraPosition);
+        
+        // 等待对话完成
+        await WaitForEvent(
+            h => DialogueManager.DialogueFinished += h,
+            h => DialogueManager.DialogueFinished -= h
+        );
+        
+        CameraSystem.SetSpecialCameraTarget(PlayerMove.CurrentPlayer.transform);
+    }
+    
+    private static async UniTask WaitForEvent(Action<Action> addListener, Action<Action> removeListener) {
+        var utcs = new UniTaskCompletionSource();
+    
+        Action handler = null;
+        handler = () => {
+            removeListener(handler); 
+            utcs.TrySetResult();
+        };
+
+        addListener(handler);
+        await utcs.Task;
+    }
+    
 
     public void QuitGame()
     {

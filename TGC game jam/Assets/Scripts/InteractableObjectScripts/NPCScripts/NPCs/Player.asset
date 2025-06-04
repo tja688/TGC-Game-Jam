@@ -26,3 +26,6 @@ MonoBehaviour:
       sorted out yet.
   - dialogueID: initial5
     dialogueText: First, let's check the post office situation.
+  - dialogueID: findlora
+    dialogueText: "Searching for contact person Laura \u2014 beep beep, no match
+      found."
