@@ -14,6 +14,7 @@ public class GameFlow : MonoBehaviour
     [Header("Audio")]
     public SoundEffect streetMainMusic;
     public SoundEffect beginPanelMusic;
+    public SoundEffect messageTips;
 
 
     [Header("UI Elements")]
@@ -24,6 +25,11 @@ public class GameFlow : MonoBehaviour
     [Tooltip("玩家界面按钮")]
     public GameObject playerPanelButton;
 
+    
+    [Header("Event Objects")]
+    public GameObject postOfficePortal;
+
+    
     private float originalCameraSpeed; 
     
     private void Start()
@@ -169,8 +175,42 @@ public class GameFlow : MonoBehaviour
             h => DialogueManager.DialogueFinished -= h
         );
         
+        // 镜头回到主角身上
         CameraSystem.SetSpecialCameraTarget(PlayerMove.CurrentPlayer.transform);
+        
+        // 发送任务提示并记录任务
+        MessageTipManager.ShowMessage("Time to tackle that avalanche of letters in the post office.");
+        AudioManager.Instance.Play(messageTips);
+        QuestTipManager.Instance.AddTask("FindMail", "Objective: Search for the Lost Letters");
+
+
+        // 失活传送门，等待主角完成找信的任务
+        postOfficePortal.SetActive(false);
+        
+        await WaitForEvent(
+            h => RubbishItem.OnFindAllLetters += h,
+            h => RubbishItem.OnFindAllLetters -= h
+        );
+        
+        // 完成找信后激活传送门
+        postOfficePortal.SetActive(true);
+        
+        // 停留2秒后提醒分拣完成准备投递
+        await UniTask.WaitForSeconds(2f);
+        PlayerDialogue.Instance.SendLetter();
+
+        QuestTipManager.Instance.AddTask("SendLetterDay1", "Objective: Deliver Mail Across the Town.");
+        QuestTipManager.Instance.AddTask("ExplorePostOffice", "Objective: Investigate the Post Office.");
+        
+        // 停留4秒后提醒可以查看任务面板
+        await UniTask.WaitForSeconds(4f);
+        MessageTipManager.ShowMessage("Tap the top-right corner to check your mission list.");
+        AudioManager.Instance.Play(messageTips);
+        
+        
+        
     }
+    
     
     private static async UniTask WaitForEvent(Action<Action> addListener, Action<Action> removeListener) {
         var utcs = new UniTaskCompletionSource();

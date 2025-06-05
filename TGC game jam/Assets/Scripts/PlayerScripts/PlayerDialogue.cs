@@ -67,6 +67,12 @@ public class PlayerDialogue : MonoBehaviour
         DialogueManager.Instance.StartDialogueSequence(ids, playerInternalMonologueData, t, false);
     }
     
+    public void SendLetter()
+    {
+        var ids = new List<string> { "sendletter" };
+        DialogueManager.Instance.StartDialogueSequence(ids, playerInternalMonologueData, playerTalkTransform, false);
+    }
+    
     private void OnDestroy()
     {
         if (_instance != this) return;

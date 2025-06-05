@@ -6,7 +6,7 @@ public abstract class ItemBase : InteractableObjectBase, IStorable
     private bool originalColliderState;
     private bool originalRendererState;
 
-    [SerializeField] private SoundEffect grabSound;
+    [SerializeField] protected SoundEffect grabSound;
     
     public string ItemName => objectName;
 
