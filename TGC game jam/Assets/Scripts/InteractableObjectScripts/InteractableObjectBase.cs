@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+[RequireComponent(typeof(Collider2D))] // <--- 新增此行
 public abstract class InteractableObjectBase : MonoBehaviour , IInteractable
 {
+    // ... 其余代码保持不变 ...
     [SerializeField] protected string objectName = "Eco"; 
 
     public Transform PromptAnchor => promptAnchorTransform;
@@ -37,6 +39,7 @@ public abstract class InteractableObjectBase : MonoBehaviour , IInteractable
     
     public void ShowInteractionPrompt(GameObject instigator)
     {
+        if (InstantiatedPromptInstance != null) return; // 防止重复创建
         InstantiatedPromptInstance = Instantiate(InteractNotice,PromptAnchor.position, PromptAnchor.rotation);
     }
 
@@ -52,6 +55,7 @@ public abstract class InteractableObjectBase : MonoBehaviour , IInteractable
         if (!InstantiatedPromptInstance ) return;
 
         Destroy(InstantiatedPromptInstance);
+        InstantiatedPromptInstance = null; // <--- 最好在销毁后设置为null
     }
 
     public abstract void Interact(GameObject instigator);

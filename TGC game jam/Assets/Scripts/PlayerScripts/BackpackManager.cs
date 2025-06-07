@@ -123,7 +123,6 @@ public class BackpackManager : MonoBehaviour
         itemNamesInBackpack.RemoveAt(index); // 保持同步
 
         storableToRetrieve.OnRetrieved();
-        Debug.Log($"Retrieved {storableToRetrieve.ItemName} from backpack by index. Remaining items: {string.Join(", ", itemNamesInBackpack)}");
         return itemToRetrieve;
     }
     

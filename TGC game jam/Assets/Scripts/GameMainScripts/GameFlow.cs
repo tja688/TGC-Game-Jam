@@ -14,7 +14,6 @@ public class GameFlow : MonoBehaviour
     [Header("Audio")]
     public SoundEffect streetMainMusic;
     public SoundEffect beginPanelMusic;
-    public SoundEffect messageTips;
 
 
     [Header("UI Elements")]
@@ -180,8 +179,9 @@ public class GameFlow : MonoBehaviour
         
         // 发送任务提示并记录任务
         MessageTipManager.ShowMessage("Time to tackle that avalanche of letters in the post office.");
-        AudioManager.Instance.Play(messageTips);
         QuestTipManager.Instance.AddTask("FindMail", "Objective: Search for the Lost Letters");
+        QuestTipManager.Instance.AddTask("ExplorePostOffice", "Objective: Investigate the Post Office.");
+
 
 
         // 失活传送门，等待主角完成找信的任务
@@ -200,12 +200,10 @@ public class GameFlow : MonoBehaviour
         PlayerDialogue.Instance.SendLetter();
 
         QuestTipManager.Instance.AddTask("SendLetterDay1", "Objective: Deliver Mail Across the Town.");
-        QuestTipManager.Instance.AddTask("ExplorePostOffice", "Objective: Investigate the Post Office.");
         
         // 停留4秒后提醒可以查看任务面板
         await UniTask.WaitForSeconds(4f);
         MessageTipManager.ShowMessage("Tap the top-right corner to check your mission list.");
-        AudioManager.Instance.Play(messageTips);
         
         
         

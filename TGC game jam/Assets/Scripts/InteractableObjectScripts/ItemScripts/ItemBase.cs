@@ -14,7 +14,7 @@ public abstract class ItemBase : InteractableObjectBase, IStorable
     {
         base.Start();
 
-        var col = GetComponent<Collider>();
+        var col = GetComponent<BoxCollider2D>();
         if (col)
         {
             originalColliderState = col.enabled;
@@ -35,7 +35,7 @@ public abstract class ItemBase : InteractableObjectBase, IStorable
 
     public virtual void OnStored(BackpackManager backpackManager)
     {
-        var col = GetComponent<Collider>();
+        var col = GetComponent<BoxCollider2D>();
         if (col)
         {
             originalColliderState = col.enabled;
@@ -65,7 +65,7 @@ public abstract class ItemBase : InteractableObjectBase, IStorable
         // 默认回到场景保持独立
         transform.SetParent(null);
 
-        var col = GetComponent<Collider>();
+        var col = GetComponent<BoxCollider2D>();
         if (col)
         {
             col.enabled = originalColliderState;

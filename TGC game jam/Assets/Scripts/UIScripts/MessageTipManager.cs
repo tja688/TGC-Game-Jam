@@ -6,7 +6,8 @@ using UnityEngine;
 // 你可能需要修改或移除这个 using 语句，并调整下面的 textAnimatorPlayer 变量的类型。
 // ------------------------------------------------------------------------------------------
 using Febucci.UI;
-using Febucci.UI.Core; // 仅当使用 Febucci Text Animator 时需要，否则请移除或替换
+using Febucci.UI.Core;
+using UnityEngine.Serialization; // 仅当使用 Febucci Text Animator 时需要，否则请移除或替换
 
 /// <summary>
 /// 单例消息提示管理器。
@@ -15,6 +16,8 @@ using Febucci.UI.Core; // 仅当使用 Febucci Text Animator 时需要，否则�
 public class MessageTipManager : MonoBehaviour
 {
     private static MessageTipManager _instance;
+    public static SoundEffect MessageTips;
+    public SoundEffect messageSounds;
 
     
     public bool debugText = true;
@@ -55,6 +58,8 @@ public class MessageTipManager : MonoBehaviour
 
             Debug.LogError("MessageTipManager: 未在 Inspector 中指定 Text Animator 组件，并且未能自动获取。请手动赋值。");
         }
+
+        MessageTips = messageSounds;
     }
 
     private void Update()
@@ -86,5 +91,7 @@ public class MessageTipManager : MonoBehaviour
         }
         
         Instance.textAnimatorPlayer.ShowText(message); 
+        AudioManager.Instance.Play(MessageTips);
+
     }
 }
