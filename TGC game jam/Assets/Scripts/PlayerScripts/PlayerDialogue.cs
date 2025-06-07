@@ -73,6 +73,12 @@ public class PlayerDialogue : MonoBehaviour
         DialogueManager.Instance.StartDialogueSequence(ids, playerInternalMonologueData, playerTalkTransform, false);
     }
     
+    public void Roadsigns()
+    {
+        var ids = new List<string> { "roadsigns" };
+        DialogueManager.Instance.StartDialogueSequence(ids, playerInternalMonologueData, playerTalkTransform, false);
+    }
+    
     private void OnDestroy()
     {
         if (_instance != this) return;

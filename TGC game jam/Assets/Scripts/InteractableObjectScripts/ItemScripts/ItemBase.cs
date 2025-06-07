@@ -29,6 +29,7 @@ public abstract class ItemBase : InteractableObjectBase, IStorable
     public override void Interact(GameObject player)
     {
         BackpackManager.Instance.StoreItem(this.gameObject);
+            
         if (grabSound)
             AudioManager.Instance.Play(grabSound);
     }

@@ -31,3 +31,5 @@ MonoBehaviour:
       found."
   - dialogueID: sendletter
     dialogueText: All sorted. Time to deliver.
+  - dialogueID: roadsigns
+    dialogueText: "\u201CWelcome to Virla \u2014 the town in the wind.\u201D"

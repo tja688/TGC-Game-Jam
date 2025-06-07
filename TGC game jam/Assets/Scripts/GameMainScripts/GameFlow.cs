@@ -161,12 +161,12 @@ public class GameFlow : MonoBehaviour
             );
     
         // 移动相机
-        CameraSystem.SetSpecialCameraTarget(GameVariables.StartAndFindCameraPosition);
+        CameraSystem.SetSpecialCameraTarget(GameVariables.FindLoraPosition);
 
         // 停留1秒后开启寻找
         await UniTask.WaitForSeconds(1f);
         
-        PlayerDialogue.Instance.FindLora(GameVariables.StartAndFindCameraPosition);
+        PlayerDialogue.Instance.FindLora(GameVariables.FindLoraPosition);
         
         // 等待对话完成
         await WaitForEvent(

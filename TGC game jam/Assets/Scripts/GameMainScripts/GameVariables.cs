@@ -8,11 +8,14 @@ public class GameVariables : MonoBehaviour
     public static bool DebugNoOpener;
     public static bool Day1Findletter = false;
     public static Transform StartAndFindCameraPosition;
+    public static Transform FindLoraPosition;
+
     
     // Inspector可编辑的中间变量
     [SerializeField] private int editorDay;
     [SerializeField] private bool editorDebugNoOpener;
     [SerializeField] private Transform startAndFindCameraPosition;
+    [SerializeField] private Transform findLoraPosition;
 
 
     private void Awake()
@@ -20,5 +23,7 @@ public class GameVariables : MonoBehaviour
         Day = editorDay;
         DebugNoOpener = editorDebugNoOpener;
         StartAndFindCameraPosition = startAndFindCameraPosition;
+        FindLoraPosition = findLoraPosition;
+
     }
 }
