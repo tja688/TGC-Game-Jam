@@ -33,3 +33,22 @@ MonoBehaviour:
     dialogueText: All sorted. Time to deliver.
   - dialogueID: roadsigns
     dialogueText: "\u201CWelcome to Virla \u2014 the town in the wind.\u201D"
+  - dialogueID: liftnotice
+    dialogueText: "The floorboards are soaked and rotten. They won\u2019t hold my
+      weight."
+  - dialogueID: outsidedialogue1
+    dialogueText: "Beep beep beep\u2014 Today is February 8th. "
+  - dialogueID: outsidedialogue2
+    dialogueText: This is the Virla Branch of the Federal Post Office.
+  - dialogueID: outsidedialogue3
+    dialogueText: 'Mail carrier: OT-3A, Lake.'
+  - dialogueID: outsidedialogue4
+    dialogueText: "Beep beep beep\u2014 Today is February 9th."
+  - dialogueID: outsidedialogue5
+    dialogueText: "Beep beep beep\u2014 Today is February 10th."
+  - dialogueID: outsidedialogue6
+    dialogueText: "Beep beep beep\u2014 Today is February 11th."
+  - dialogueID: outsidedialogue7
+    dialogueText: "Beep beep beep\u2014 Today is February 12th."
+  - dialogueID: imagingstoreday1
+    dialogueText: The mailbox seems to be locked. Maybe check inside the store.

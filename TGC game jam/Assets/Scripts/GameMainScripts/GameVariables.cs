@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
+using System;
 
 public class GameVariables : MonoBehaviour
 {
@@ -10,6 +11,10 @@ public class GameVariables : MonoBehaviour
     public static Transform StartAndFindCameraPosition;
     public static Transform FindLoraPosition;
 
+    public static event Action OnDayChanged;
+    
+    // 用于轮询的私有变量
+    private int lastKnownDay;
     
     // Inspector可编辑的中间变量
     [SerializeField] private int editorDay;
@@ -24,6 +29,17 @@ public class GameVariables : MonoBehaviour
         DebugNoOpener = editorDebugNoOpener;
         StartAndFindCameraPosition = startAndFindCameraPosition;
         FindLoraPosition = findLoraPosition;
+        lastKnownDay = Day;
+    }
 
+
+    private void FixedUpdate()
+    {
+        if (lastKnownDay != Day)
+        {
+            lastKnownDay =  Day;
+            OnDayChanged?.Invoke();
+        }
+        
     }
 }

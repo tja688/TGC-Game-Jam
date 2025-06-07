@@ -79,6 +79,59 @@ public class PlayerDialogue : MonoBehaviour
         DialogueManager.Instance.StartDialogueSequence(ids, playerInternalMonologueData, playerTalkTransform, false);
     }
     
+    public void LiftNotice()
+    {
+        var ids = new List<string> { "liftnotice" };
+        DialogueManager.Instance.StartDialogueSequence(ids, playerInternalMonologueData, playerTalkTransform, false);
+    }
+
+    public void Day1OutSideTalk()
+    {
+        var dialogueIDs = new List<string> { "outsidedialogue1", "outsidedialogue2", "outsidedialogue3" };
+        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerInternalMonologueData, playerTalkTransform, true, () => {
+        });
+    }
+    
+    public void Day2OutSideTalk()
+    {
+        var dialogueIDs = new List<string> { "outsidedialogue4", "outsidedialogue2", "outsidedialogue4" };
+        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerInternalMonologueData, playerTalkTransform, true, () => {
+        });
+    }
+    
+    public void Day3OutSideTalk()
+    {
+        var dialogueIDs = new List<string> { "outsidedialogue5", "outsidedialogue2", "outsidedialogue3" };
+        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerInternalMonologueData, playerTalkTransform, true, () => {
+        });
+    }
+    
+    public void Day4OutSideTalk()
+    {
+        var dialogueIDs = new List<string> { "outsidedialogue6", "outsidedialogue2", "outsidedialogue3" };
+        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerInternalMonologueData, playerTalkTransform, true, () => {
+        });
+    }
+    
+    public void Day5OutSideTalk()
+    {
+        var dialogueIDs = new List<string> { "outsidedialogue7", "outsidedialogue2", "outsidedialogue3" };
+        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerInternalMonologueData, playerTalkTransform, true, () => {
+        });
+    }
+    
+    
+    public void Day1ImagingStoreEmail()
+    {
+        var ids = new List<string> { "imagingstoreday1" };
+        DialogueManager.Instance.StartDialogueSequence(ids, playerInternalMonologueData, playerTalkTransform, false);
+    }
+    
     private void OnDestroy()
     {
         if (_instance != this) return;

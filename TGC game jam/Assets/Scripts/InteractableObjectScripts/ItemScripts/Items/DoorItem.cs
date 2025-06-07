@@ -7,13 +7,19 @@ using UnityEngine.Serialization;
 public class DoorItem : ItemBase
 {
     public SoundEffect jobFinishedSound;
+
+    public GameObject brokenLift; 
     
     public override void Interact(GameObject player)
     {
         if (BackpackManager.Instance.HasItem("Key"))
         {
             MessageTipManager.ShowMessage("Door Opened.");
+            
             FinishJob();
+            
+            brokenLift.SetActive(true);
+            
             this.gameObject.SetActive(false);
         }
         else

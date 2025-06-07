@@ -20,7 +20,7 @@ public class BrokenLiftItem : ItemBase
         }
         else
         {
-            MessageTipManager.ShowMessage("Requires a elevator base.");
+            PlayerDialogue.Instance.LiftNotice();
         }
         
     }
