@@ -1609,7 +1609,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.084358215, y: -1.38714}
+  m_Offset: {x: -0.2942238, y: -1.742291}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1620,7 +1620,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.3814125, y: 7.373347}
+  m_Size: {x: 0.80114365, y: 6.663045}
   m_EdgeRadius: 0
 --- !u!1 &1028906037 stripped
 GameObject:
@@ -4484,6 +4484,14 @@ PrefabInstance:
       propertyPath: m_Offset.x
       value: -0.05303943
       objectReference: {fileID: 0}
+    - target: {fileID: 5804820666328027409, guid: 4adc0e67592edb241ae5278f0f1d9ca2, type: 3}
+      propertyPath: defaultCursor
+      value: 
+      objectReference: {fileID: 2800000, guid: 44a99ee545fd8ba46a452b12c1f9378b, type: 3}
+    - target: {fileID: 5804820666328027409, guid: 4adc0e67592edb241ae5278f0f1d9ca2, type: 3}
+      propertyPath: interactableCursor
+      value: 
+      objectReference: {fileID: 2800000, guid: 8ea795c067613354898068091ffc7130, type: 3}
     - target: {fileID: 6887528046918649070, guid: 4adc0e67592edb241ae5278f0f1d9ca2, type: 3}
       propertyPath: playerMoveSound
       value: 
