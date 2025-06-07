@@ -238,11 +238,8 @@ public class GameFlow : MonoBehaviour
     // 当此 GameFlow 对象销毁时，确保取消事件订阅，以防内存泄漏
     private void OnDestroy()
     {
-        // 确保在对象销毁时，如果事件仍然被订阅，则取消订阅
-        // 这种情况可能发生在 HandleCameraArrivedAtPlayer 从未被调用的情况下（例如，场景切换或对象被销毁）
         CameraSystem.OnCameraArrivedAtSpecialTarget -= HandleCameraArrivedAtPlayer;
 
-        // 如果按钮存在，也移除监听器
         if (startGameButton)
         {
             startGameButton.onClick.RemoveListener(StartGameSequence);
