@@ -18,22 +18,22 @@ MonoBehaviour:
     dialogueText: "Hello. I\u2019m Lake, a mail delivery robot from the post office.
       I have a letter for you."
   - dialogueID: day1bolu2
-    dialogueText: "\u2026.\u2026."
+    dialogueText: "<color=red>\u2026.\u2026.</color>"
   - dialogueID: day1bolu3
     dialogueText: Looks like the owner doesn't want to talk. Just leave the letter
       on the table and head out.
   - dialogueID: day1grandma1
     dialogueText: Good morning, Grandma.
   - dialogueID: day1grandma2
-    dialogueText: "\u2026.\u2026."
+    dialogueText: "<color=green>\u2026.\u2026.</color>"
   - dialogueID: day1grandma3
     dialogueText: "She doesn\u2019t seem to want to talk to me..."
   - dialogueID: day1grandma4
     dialogueText: "Let\u2019s just put the letter in the mailbox."
   - dialogueID: day1restaurant1
-    dialogueText: "The restaurant\u2019s closed. My daughter is sick."
+    dialogueText: "<color=blue>The restaurant\u2019s closed. My daughter is sick.</color>"
   - dialogueID: day1restaurant2
     dialogueText: "Hello. I\u2019m Lake, a mail delivery robot from the post office.
       I have a letter for you."
   - dialogueID: day1restaurant3
-    dialogueText: Just put it in the mailbox.
+    dialogueText: <color=blue>Just put it in the mailbox.</color>

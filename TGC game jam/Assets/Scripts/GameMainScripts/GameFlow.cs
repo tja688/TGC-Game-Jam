@@ -15,6 +15,7 @@ public class GameFlow : MonoBehaviour
     [Header("Audio")]
     public SoundEffect streetMainMusic;
     public SoundEffect beginPanelMusic;
+    public SoundEffect taskFinishMusic;
 
 
     [Header("UI Elements")]
@@ -227,6 +228,7 @@ public class GameFlow : MonoBehaviour
     {
         MessageTipManager.ShowMessage("Delivery complete. Time to head back.");
         QuestTipManager.Instance.CompleteTask("SendLetterDay1");
+        AudioManager.Instance.Stop(taskFinishMusic);
 
     }
     

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ChargingDetection : MonoBehaviour
 {
+    public Transform chargingPosition;
+    
     private void OnTriggerEnter2D(Collider2D other)
     {
         // 检查碰撞对象是否有"Player"标签
@@ -15,6 +17,9 @@ public class ChargingDetection : MonoBehaviour
                     if (GameVariables.Day1Finish)
                     {
                         PlayerMove.CanPlayerMove = false;
+                        
+                        PlayerMove.CurrentPlayer.transform.position = chargingPosition.position;
+                        
                         EventCenter.TriggerEvent(GameEvents.PlayerSleep);
                         
                     }
