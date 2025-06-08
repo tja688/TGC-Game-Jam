@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: KeyItemInformation
   m_EditorClassIdentifier: 
   itemName: Key
-  itemIcon: {fileID: 2800000, guid: df2ac387b6ff5dd49a5cc5c244abc346, type: 3}
+  buttonIcon: {fileID: 2800000, guid: df2ac387b6ff5dd49a5cc5c244abc346, type: 3}
+  largeDisplayImage: {fileID: 2800000, guid: df2ac387b6ff5dd49a5cc5c244abc346, type: 3}
   itemDescription: Post Office Key
   button: {fileID: 158104279655659741, guid: 9186c5ebd4afe9f42b3c54916d49f561, type: 3}

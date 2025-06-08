@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a056262781e36354a9f1b7d7e307d063, type: 3}
-  m_Name: TestLetter2ItemInformation
+  m_Name: Letter1-2Info
   m_EditorClassIdentifier: 
-  itemName: TestLetter2
-  itemIcon: {fileID: 2800000, guid: 2e98a6b27201127429e3119e689065f5, type: 3}
-  itemDescription: Test Letter 2
-  button: {fileID: 158104279655659741, guid: 542ab9ca575db7840b4c325e48e6eb50, type: 3}
+  itemName: Letter1-2
+  buttonIcon: {fileID: 2800000, guid: 1319fe2a2f7c43d408f896add8234e9e, type: 3}
+  largeDisplayImage: {fileID: 2800000, guid: 55c8600d43f8e8e4094e92590cfaa34d, type: 3}
+  itemDescription: 
+  button: {fileID: 158104279655659741, guid: 940a4df4b6aa9c244b812bde7cea4ee8, type: 3}

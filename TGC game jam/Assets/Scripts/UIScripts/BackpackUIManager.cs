@@ -142,13 +142,14 @@ public class BackpackUIManager : MonoBehaviour
 
                 // 配置按钮视觉（如果需要从ItemInfo动态设置）
                 Image[] imagesInButton = newButtonGO.GetComponentsInChildren<Image>(true);
-                if (imagesInButton.Length > 0 && info.itemIcon)
+                if (imagesInButton.Length > 0 && info.buttonIcon) // <--- 修改点
                 {
                     Image iconImage = imagesInButton.FirstOrDefault(img => img.gameObject.name.ToLower().Contains("icon")) ?? imagesInButton[0];
-                     if(iconImage)
+                    if(iconImage)
                     {
-                         iconImage.sprite = Sprite.Create(info.itemIcon, new Rect(0, 0, info.itemIcon.width, info.itemIcon.height), new Vector2(0.5f, 0.5f));
-                         iconImage.gameObject.SetActive(true);
+                        // 使用 buttonIcon
+                        iconImage.sprite = Sprite.Create(info.buttonIcon, new Rect(0, 0, info.buttonIcon.width, info.buttonIcon.height), new Vector2(0.5f, 0.5f)); // <--- 修改点
+                        iconImage.gameObject.SetActive(true);
                     }
                 }
                 
@@ -194,13 +195,16 @@ public class BackpackUIManager : MonoBehaviour
             return;
         }
 
-        if (info.itemIcon != null)
+        // 将 info.itemIcon 改为 info.largeDisplayImage
+        if (info.largeDisplayImage != null) // <--- 修改点
         {
-            itemImageDisplay.sprite = Sprite.Create(info.itemIcon, new Rect(0, 0, info.itemIcon.width, info.itemIcon.height), new Vector2(0.5f, 0.5f));
+            // 使用 largeDisplayImage
+            itemImageDisplay.sprite = Sprite.Create(info.largeDisplayImage, new Rect(0, 0, info.largeDisplayImage.width, info.largeDisplayImage.height), new Vector2(0.5f, 0.5f)); // <--- 修改点
             itemImageDisplay.gameObject.SetActive(true);
         }
         else
         {
+            // 如果没有指定大图，也可以选择用按钮图标作为备用，或者直接隐藏
             itemImageDisplay.sprite = null;
             itemImageDisplay.gameObject.SetActive(false);
         }

@@ -2,17 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LetterItem : MonoBehaviour
+public class LetterItem : MonoBehaviour, IStorable
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] protected string objectName = "Eco"; 
+
+    public string ItemName => objectName;
+
+    public void OnStored(BackpackManager backpackManager)
     {
+        transform.SetParent(BackpackManager.BackpackObject);
+        transform.localPosition = Vector3.zero; // 可以根据需要调整在背包内的位置
         
+        this.enabled = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnRetrieved()
     {
-        
     }
 }

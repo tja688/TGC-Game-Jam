@@ -166,17 +166,9 @@ public class DialogueManager : MonoBehaviour
         // 当前行文本已完全显示
         if (currentDialogueQueue.Count > 0) // 如果队列中还有对话
         {
-            if (autoPlayNextLine)
-            {
-                // StartCoroutine(WaitAndShowNext(0.2f)); // 可选的短暂延迟
-                ShowNextDialogueInQueue();
-            }
-            else
-            {
-                CurrentState = DialogueSystemState.WaitingForContinuation; // 等待玩家交互
-                // 交互提示的显示逻辑应由NPC或UI根据此状态处理
-                // 例如，NPC的交互提示现在可以显示了
-            }
+            // 移除 if (autoPlayNextLine) 判断，直接调用 ShowNextDialogueInQueue()
+            // 这会强制所有对话序列都自动播放下一句，无论原始 autoPlay 参数是什么。
+            ShowNextDialogueInQueue();
         }
         else // 队列为空，这是序列的最后一句
         {
@@ -217,15 +209,25 @@ public class DialogueManager : MonoBehaviour
     private void EndSequenceInternal()
     {
         if (dialoguePanel) dialoguePanel.SetActive(false);
-        PlayerMove.CanPlayerMove = true; // 序列结束，允许玩家移动
+        PlayerMove.CanPlayerMove = true; 
+
+        // 1. 先将需要调用的回调保存到临时变量中。
+        //    这是一个好习惯，以防回调函数内部又尝试操作DialogueManager。
+        var tempCallback = onSequenceCompleteCallback;
+
+        // 2. 立即、彻底地清理所有内部状态，将管理器重置为完全空闲。
+        //    这是最关键的修改：将状态清理放在事件触发之前！
         CurrentState = DialogueSystemState.Idle;
-
-        onSequenceCompleteCallback?.Invoke(); // 调用特定的完成回调
-        onSequenceCompleteCallback = null; // 清理回调
-
-        DialogueFinished?.Invoke(); // 触发全局的对话完成事件
+        onSequenceCompleteCallback = null; 
         currentDialogueData = null;
         currentDialogueAnchor = null;
+        // 为保险起见，也清空队列，防止任何残留。
+        currentDialogueQueue.Clear(); 
+
+        // 3. 最后，在所有内部状态都已安全重置后，再调用回调和触发全局事件。
+        //    此时，任何监听者（比如你的 async/await）收到的信号都表示“可以安全开始新的对话了”。
+        tempCallback?.Invoke();
+        DialogueFinished?.Invoke(); 
     }
     
 }
