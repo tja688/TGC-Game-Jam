@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Febucci.UI.Core;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Cysharp.Threading.Tasks;
+
 
 public class PlayerDialogue : MonoBehaviour
 {
@@ -28,6 +30,8 @@ public class PlayerDialogue : MonoBehaviour
     
     [SerializeField] private Transform playerTalkTransform;
     [SerializeField] private NPCDialogue playerInternalMonologueData;
+    [SerializeField] private NPCDialogue playerToNPClogueData;
+
     
     private void Awake()
     {
@@ -50,7 +54,9 @@ public class PlayerDialogue : MonoBehaviour
 
     }
 
-    private void OnGameStartsPlayerWakesUp()
+    #region PlayerSelfTalking
+
+        private void OnGameStartsPlayerWakesUp()
     {
         if (GameVariables.Day != 1) return; 
         if (GameVariables.DebugNoOpener) return;
@@ -132,6 +138,124 @@ public class PlayerDialogue : MonoBehaviour
         DialogueManager.Instance.StartDialogueSequence(ids, playerInternalMonologueData, playerTalkTransform, false);
     }
     
+
+
+    #endregion
+
+
+    #region PlayerToNPCTalking
+
+    public async void Day1Bolu()
+    {
+        var dialogueIDs = new List<string> { "day1bolu1", "day1bolu2", "day1bolu3" };
+        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerToNPClogueData, playerTalkTransform, true, () => {
+        });
+
+        await BoluGiveLetter();
+    }
+    
+    public async void Day1Grandma()
+    {
+        var dialogueIDs = new List<string> { "day1grandma1"};
+        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerToNPClogueData, playerTalkTransform, false);
+
+        await Day1Grandma2();
+    }
+    
+    
+    public async UniTask Day1Grandma2()
+    {
+        // 等待对话完成
+        await GameFlow.WaitForEvent(
+            h => DialogueManager.DialogueFinished += h,
+            h => DialogueManager.DialogueFinished -= h
+        );
+        
+        var dialogueIDs = new List<string> { "day1grandma2"};
+        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerToNPClogueData, GameVariables.GrandmaInSecondFloor, false);
+
+        await Day1Grandma3();
+    }
+    
+    public async UniTask Day1Grandma3()
+    {
+        // 等待对话完成
+        await GameFlow.WaitForEvent(
+            h => DialogueManager.DialogueFinished += h,
+            h => DialogueManager.DialogueFinished -= h
+        );
+        
+        var dialogueIDs = new List<string> { "day1grandma3", "day1grandma4"};
+        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerToNPClogueData, playerTalkTransform, true, () => {
+        });
+
+    }
+    
+    
+    public async void Day1Restaurant()
+    {
+        var dialogueIDs = new List<string> { "day1restaurant1"};
+        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerToNPClogueData, GameVariables.Restaurant, false);
+
+        await Day1Restaurant2();
+    }
+    
+    public async UniTask Day1Restaurant2()
+    {
+        // 等待对话完成
+        await GameFlow.WaitForEvent(
+            h => DialogueManager.DialogueFinished += h,
+            h => DialogueManager.DialogueFinished -= h
+        );
+        
+        var dialogueIDs = new List<string> { "day1restaurant2"};
+        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerToNPClogueData, playerTalkTransform, false);
+
+        await Day1Restaurant3();
+    }
+    
+    public async UniTask Day1Restaurant3()
+    {
+        // 等待对话完成
+        await GameFlow.WaitForEvent(
+            h => DialogueManager.DialogueFinished += h,
+            h => DialogueManager.DialogueFinished -= h
+        );
+        
+        var dialogueIDs = new List<string> { "day1restaurant3"};
+        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerToNPClogueData, GameVariables.Restaurant, false);
+    }
+
+
+
+    #endregion
+
+    
+    #region OtherEvents
+
+    private async UniTask BoluGiveLetter()
+    {
+        // 等待对话完成
+        await GameFlow.WaitForEvent(
+            h => DialogueManager.DialogueFinished += h,
+            h => DialogueManager.DialogueFinished -= h
+        );
+
+        BackpackManager.Instance.RetrieveItem("Letter1-2");
+        MessageTipManager.ShowMessage("Letter has been delivered");
+        GameVariables.Day1LetterSend++;
+
+    }
+    
+    
+    #endregion
     private void OnDestroy()
     {
         if (_instance != this) return;

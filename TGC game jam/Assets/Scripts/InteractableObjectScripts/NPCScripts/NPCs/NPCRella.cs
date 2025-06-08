@@ -2,14 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPCRella : NPCBase
+public class NPCRella : ItemBase
 {
-
-
-    public override void InitiateDialogue()
+    
+    private bool day1Talk = false;
+    
+    public override void Interact(GameObject instigator)
     {
-        
+        switch (GameVariables.Day)
+        {
+            case 1:
+                if (day1Talk) return;
+                PlayerDialogue.Instance.Day1Grandma();
+                day1Talk = true;
+                break;
+            
+        }
     }
-
 
 }

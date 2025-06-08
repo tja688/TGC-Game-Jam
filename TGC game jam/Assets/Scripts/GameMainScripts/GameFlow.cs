@@ -7,6 +7,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
 
 
 public class GameFlow : MonoBehaviour
@@ -82,6 +83,8 @@ public class GameFlow : MonoBehaviour
         
         if(playerPanelButton)
             playerPanelButton.SetActive(false);
+
+        GameVariables.OnDay1FinishSend += Day1Finish;
     }
 
     // 开始场景演出
@@ -204,13 +207,10 @@ public class GameFlow : MonoBehaviour
         // 停留4秒后提醒可以查看任务面板
         await UniTask.WaitForSeconds(4f);
         MessageTipManager.ShowMessage("Tap the top-right corner to check your mission list.");
-        
-        
-        
     }
     
     
-    private static async UniTask WaitForEvent(Action<Action> addListener, Action<Action> removeListener) {
+    public static async UniTask WaitForEvent(Action<Action> addListener, Action<Action> removeListener) {
         var utcs = new UniTaskCompletionSource();
     
         Action handler = null;
@@ -221,6 +221,13 @@ public class GameFlow : MonoBehaviour
 
         addListener(handler);
         await utcs.Task;
+    }
+
+    private void Day1Finish()
+    {
+        MessageTipManager.ShowMessage("Delivery complete. Time to head back.");
+        QuestTipManager.Instance.CompleteTask("SendLetterDay1");
+
     }
     
 
@@ -237,6 +244,8 @@ public class GameFlow : MonoBehaviour
     private void OnDestroy()
     {
         CameraSystem.OnCameraArrivedAtSpecialTarget -= HandleCameraArrivedAtPlayer;
+        GameVariables.OnDay1FinishSend -= Day1Finish;
+
 
         if (startGameButton)
         {

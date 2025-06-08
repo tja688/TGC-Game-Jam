@@ -136,11 +136,7 @@ public class PlayerMove : MonoBehaviour
 
     private void OnPlayerSleep()
     {
-        Debug.Log("Event: PlayerSleep received. Player going to sleep.");
         CanPlayerMove = false; // 玩家入睡，禁止移动
-        // Update() 方法中会因为 CanPlayerMove = false 导致速度为0，并传递给 Animator
-        // IsWalking 也会在 Update() 中被设置为 false
-        // movementVelocityForFixedUpdate 也会在 Update() 中被设置为 Vector2.zero
 
         if (animator)
         {
