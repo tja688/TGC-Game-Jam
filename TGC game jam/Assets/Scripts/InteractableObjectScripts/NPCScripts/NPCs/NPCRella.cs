@@ -9,6 +9,8 @@ public class NPCRella : ItemBase
     
     public override void Interact(GameObject instigator)
     {
+        Debug.Log("{gameObject.name} day1Talk :" + day1Talk);
+        
         switch (GameVariables.Day)
         {
             case 1:

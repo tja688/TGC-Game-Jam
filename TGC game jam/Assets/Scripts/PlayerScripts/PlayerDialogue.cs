@@ -145,7 +145,7 @@ public class PlayerDialogue : MonoBehaviour
 
     #region PlayerToNPCTalking
 
-    public async void Day1Bolu()
+    public async UniTask Day1Bolu()
     {
         var dialogueIDs = new List<string> { "day1bolu1", "day1bolu2", "day1bolu3" };
         
@@ -155,7 +155,7 @@ public class PlayerDialogue : MonoBehaviour
         await BoluGiveLetter();
     }
     
-    public async void Day1Grandma()
+    public async UniTask Day1Grandma()
     {
         var dialogueIDs = new List<string> { "day1grandma1"};
         
@@ -196,7 +196,7 @@ public class PlayerDialogue : MonoBehaviour
     }
     
     
-    public async void Day1Restaurant()
+    public async UniTask Day1Restaurant()
     {
         var dialogueIDs = new List<string> { "day1restaurant1"};
         

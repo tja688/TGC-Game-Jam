@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -134,14 +135,19 @@ public class PlayerMove : MonoBehaviour
         // UpdateAnimatorParameters(new Vector2(lastValidInputX, lastValidInputY), 0f);
     }
 
-    private void OnPlayerSleep()
+    private async void OnPlayerSleep()
     {
         CanPlayerMove = false; // 玩家入睡，禁止移动
 
+        await Sleep();
+    }
+
+    private async UniTask Sleep()
+    {
+        await UniTask.WaitForSeconds(0.5f);
+        
         if (animator)
         {
-            // 触发入眠动画前，可以确保速度参数已经是0（虽然Update中会处理）
-            // animator.SetFloat(SpeedAnimHash, 0f);
             animator.SetTrigger(SleepAnimHash);
         }
     }

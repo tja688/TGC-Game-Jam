@@ -12,9 +12,10 @@ public class RestaurantEmail : ItemBase
         {
             case 1:
                 if( day1Letter ) return;
+                
                 BackpackManager.Instance.RetrieveItem("Letter1-3");
                 MessageTipManager.ShowMessage("Letter has been delivered");
-                GameVariables.Day++;
+                GameVariables.Day1LetterSend++;
                 day1Letter= true;
                 break;
             case 2:

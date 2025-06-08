@@ -45,6 +45,15 @@ public class GameVariables : MonoBehaviour
         Restaurant = restaurant;
     }
 
+    private void Update()
+    {
+        // 按1增加Day1完成Day1任务
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            Day1LetterSend = 3;
+            Debug.Log("Day1LetterSend : " + Day1LetterSend);
+        }
+    }
 
     private void FixedUpdate()
     {
@@ -56,9 +65,10 @@ public class GameVariables : MonoBehaviour
 
         if (Day1LetterSend == 3)
         {
+            if (Day1Finish) return;
+            
             OnDay1FinishSend?.Invoke();
             Day1Finish = true;
         }
-        
     }
 }

@@ -18,14 +18,14 @@ MonoBehaviour:
     dialogueText: "Hello. I\u2019m Lake, a mail delivery robot from the post office.
       I have a letter for you."
   - dialogueID: day1bolu2
-    dialogueText: "\u2026\u2026"
+    dialogueText: "\u2026.\u2026."
   - dialogueID: day1bolu3
     dialogueText: Looks like the owner doesn't want to talk. Just leave the letter
       on the table and head out.
   - dialogueID: day1grandma1
     dialogueText: Good morning, Grandma.
   - dialogueID: day1grandma2
-    dialogueText: "\u2026\u2026"
+    dialogueText: "\u2026.\u2026."
   - dialogueID: day1grandma3
     dialogueText: "She doesn\u2019t seem to want to talk to me..."
   - dialogueID: day1grandma4

@@ -8,13 +8,16 @@ public class GrandmaEmail : ItemBase
     
     public override void Interact(GameObject player)
     {
+        Debug.Log("Day:" + GameVariables.Day);
+
         switch( GameVariables.Day)
         {
             case 1:
                 if( day1Letter ) return;
+                
                 BackpackManager.Instance.RetrieveItem("Letter1-1");
                 MessageTipManager.ShowMessage("Letter has been delivered");
-                GameVariables.Day++;
+                GameVariables.Day1LetterSend++;
                 day1Letter= true;
                 break;
             case 2:
