@@ -6,11 +6,10 @@ public class NPCRella : ItemBase
 {
     
     private bool day1Talk = false;
+    private bool day2Talk = false;
     
     public override void Interact(GameObject instigator)
     {
-        Debug.Log("{gameObject.name} day1Talk :" + day1Talk);
-        
         switch (GameVariables.Day)
         {
             case 1:
@@ -18,6 +17,16 @@ public class NPCRella : ItemBase
                 PlayerDialogue.Instance.Day1Grandma();
                 day1Talk = true;
                 break;
+            case 2:
+                if (day2Talk) return;
+                PlayerDialogue.Instance.Day2Grandma();
+                BackpackManager.Instance.RetrieveItem("Letter2-3");
+                MessageTipManager.ShowMessage("Letter has been delivered");
+                GameVariables.Day2HasTalkToGrandma = true;
+                GameVariables.Day2EventCount++;
+                day2Talk = true;
+                break;
+            
             
         }
     }

@@ -8,7 +8,6 @@ public class GrandmaEmail : ItemBase
     
     public override void Interact(GameObject player)
     {
-        Debug.Log("Day:" + GameVariables.Day);
 
         switch( GameVariables.Day)
         {
@@ -21,6 +20,8 @@ public class GrandmaEmail : ItemBase
                 day1Letter= true;
                 break;
             case 2:
+                MessageTipManager.ShowMessage("Try talking to Grandma today");
+                break;
             case 3:
             case 4:
             case 5:

@@ -12,6 +12,10 @@ public class GameVariables : MonoBehaviour
     public static Transform FindLoraPosition;
     public static int Day1LetterSend = 0;
     public static bool Day1Finish = false;
+    public static int Day2EventCount = 0;
+    public static bool Day2HasTalkToGrandma = false;
+    public static bool Day2Finish = false;
+
 
     public static Transform BoluSetInStore;
     public static Transform GrandmaInSecondFloor;
@@ -66,9 +70,18 @@ public class GameVariables : MonoBehaviour
         if (Day1LetterSend == 3)
         {
             if (Day1Finish) return;
-            
+            QuestTipManager.Instance.CompleteTask("SendLetterDay1");
             OnDay1FinishSend?.Invoke();
             Day1Finish = true;
+        }
+        
+        if (Day2EventCount == 4)
+        {
+            if (Day2Finish) return;
+            QuestTipManager.Instance.CompleteTask("SendLetterDay2");
+
+            OnDay1FinishSend?.Invoke();
+            Day2Finish = true;
         }
     }
 }

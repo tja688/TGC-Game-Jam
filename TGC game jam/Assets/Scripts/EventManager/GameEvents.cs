@@ -94,6 +94,9 @@ public static class GameEvents
     /// <summary> 游戏开始，玩家醒来。</summary>
     public const string GameStartsPlayerWakesUp = "GameStartsPlayerWakesUp";
     
+    /// <summary> 正常玩家醒来。</summary>
+    public const string PlayerWakesUp = "PlayerWakesUp";
+    
     /// <summary> 玩家休眠。</summary>
     public const string PlayerSleep = "PlayerSleep";
 

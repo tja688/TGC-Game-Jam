@@ -90,6 +90,13 @@ public class PlayerDialogue : MonoBehaviour
         var ids = new List<string> { "liftnotice" };
         DialogueManager.Instance.StartDialogueSequence(ids, playerInternalMonologueData, playerTalkTransform, false);
     }
+    
+    public void Charging()
+    {
+        var ids = new List<string> { "charging" };
+        DialogueManager.Instance.StartDialogueSequence(ids, playerInternalMonologueData, playerTalkTransform, false);
+    }
+
 
     public void Day1OutSideTalk()
     {
@@ -138,8 +145,19 @@ public class PlayerDialogue : MonoBehaviour
         DialogueManager.Instance.StartDialogueSequence(ids, playerInternalMonologueData, playerTalkTransform, false);
     }
     
+    public void StoreClosed()
+    {
+        var ids = new List<string> { "storeclosed" };
+        DialogueManager.Instance.StartDialogueSequence(ids, playerInternalMonologueData, playerTalkTransform, false);
+    }
 
-
+    
+    public void FindPaper()
+    {
+        var ids = new List<string> { "findpaper" };
+        DialogueManager.Instance.StartDialogueSequence(ids, playerInternalMonologueData, playerTalkTransform, false);
+    }
+    
     #endregion
 
 
@@ -234,6 +252,23 @@ public class PlayerDialogue : MonoBehaviour
     }
 
 
+    public void Day2Grandma()
+    {
+        var dialogueIDs = new List<string> { "day2tograndma1", "day2tograndma2", "day2tograndma3", "day2tograndma4" , "day2tograndma5" , "day2tograndma6" , "day2tograndma7" , "day2tograndma8" };
+        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerToNPClogueData, GameVariables.GrandmaInSecondFloor, true, () => {
+        });
+
+    }
+    
+    public void Day2Restaurant()
+    {
+        var dialogueIDs = new List<string> { "day2torestaurant1", "day2torestaurant2", "day2torestaurant3", "day2torestaurant4" , "day2torestaurant5" , "day2torestaurant6" , "day2torestaurant7" , "day2torestaurant8" };
+        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerToNPClogueData, GameVariables.Restaurant, true, () => {
+        });
+
+    }
 
     #endregion
 

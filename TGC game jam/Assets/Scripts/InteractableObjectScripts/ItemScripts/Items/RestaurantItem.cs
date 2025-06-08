@@ -6,12 +6,10 @@ using UnityEngine;
 public class RestaurantItem : ItemBase
 {
     private bool day1Talk = false;
-    
+    private bool day2Talk = false;
+
     public override void Interact(GameObject instigator)
     {
-        Debug.Log("{gameObject.name} day1Talk :" + day1Talk);
-
-        
         switch (GameVariables.Day)
         {
             case 1:
@@ -19,6 +17,13 @@ public class RestaurantItem : ItemBase
                 
                 PlayerDialogue.Instance.Day1Restaurant();
                 day1Talk = true;
+                break;
+            
+            case 2:
+                if (day2Talk) return;
+                
+                PlayerDialogue.Instance.Day2Restaurant();
+                day2Talk = true;
                 break;
         }
     }

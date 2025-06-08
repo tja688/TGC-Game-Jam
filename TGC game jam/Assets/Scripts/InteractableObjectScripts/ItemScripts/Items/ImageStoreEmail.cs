@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ImageStoreEmail : ItemBase
 {
+    private bool isDay2Send = false;
+    
     public override void Interact(GameObject player)
     {
         switch( GameVariables.Day)
@@ -12,6 +14,13 @@ public class ImageStoreEmail : ItemBase
                 PlayerDialogue.Instance.Day1ImagingStoreEmail();
                 break;
             case 2:
+                if(isDay2Send) return;
+                AudioManager.Instance.Play(grabSound);
+                BackpackManager.Instance.RetrieveItem("Letter3-1");
+                MessageTipManager.ShowMessage("Letter has been delivered");
+                GameVariables.Day2EventCount++;
+                isDay2Send =  true;
+                break;
             case 3:
             case 4:
             case 5:

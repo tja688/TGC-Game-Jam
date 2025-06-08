@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a056262781e36354a9f1b7d7e307d063, type: 3}
+  m_Name: Letter2-2Info
+  m_EditorClassIdentifier: 
+  itemName: Letter2-2
+  buttonIcon: {fileID: 2800000, guid: 1319fe2a2f7c43d408f896add8234e9e, type: 3}
+  largeDisplayImage: {fileID: 2800000, guid: 93017aa72f5d7d84e918f8d56d34cbcb, type: 3}
+  itemDescription: 
+  button: {fileID: 158104279655659741, guid: 940a4df4b6aa9c244b812bde7cea4ee8, type: 3}

@@ -37,3 +37,38 @@ MonoBehaviour:
       I have a letter for you."
   - dialogueID: day1restaurant3
     dialogueText: <color=blue>Just put it in the mailbox.</color>
+  - dialogueID: day2tograndma1
+    dialogueText: Good morning, Grandma.
+  - dialogueID: day2tograndma2
+    dialogueText: <color=green>Who are you...?</color>
+  - dialogueID: day2tograndma3
+    dialogueText: "I\u2019m Lake. A mail delivery robot from the post office."
+  - dialogueID: day2tograndma4
+    dialogueText: "<color=green>...Hello. I\u2019m Rella.</color>"
+  - dialogueID: day2tograndma5
+    dialogueText: Grandma Rella, I have a letter for you.
+  - dialogueID: day2tograndma6
+    dialogueText: <color=green>Thank you.</color>
+  - dialogueID: day2tograndma7
+    dialogueText: "No need to thank me. It\u2019s my job."
+  - dialogueID: day2tograndma8
+    dialogueText: "Looks like she\u2019s got a radio. I might bring her some cassettes
+      next time."
+  - dialogueID: day2torestaurant1
+    dialogueText: "<color=#FFB6C1>Who\u2019s there?</color>"
+  - dialogueID: day2torestaurant2
+    dialogueText: "Hello. I\u2019m Lake, a mail delivery robot from the post office.
+      I have a letter for you."
+  - dialogueID: day2torestaurant3
+    dialogueText: <color=#FFB6C1>Why are you only showing up now...</color>
+  - dialogueID: day2torestaurant4
+    dialogueText: "<color=#FFB6C1>Do you even know what I\u2019ve been through?</color>"
+  - dialogueID: day2torestaurant5
+    dialogueText: "<color=#FFB6C1>All those letters\u2014 I kept sending\u2014</color>"
+  - dialogueID: day2torestaurant6
+    dialogueText: "<color=#FFB6C1>They\u2019re just sitting there!</color>"
+  - dialogueID: day2torestaurant7
+    dialogueText: "I\u2019m sorry, ma\u2019am... The post office just came back online
+      yesterday."
+  - dialogueID: day2torestaurant8
+    dialogueText: <color=#FFB6C1>...<delay=1>Just put it in the mailbox.</color>

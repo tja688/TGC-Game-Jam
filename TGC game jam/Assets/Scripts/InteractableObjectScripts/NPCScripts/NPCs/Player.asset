@@ -52,3 +52,10 @@ MonoBehaviour:
     dialogueText: "Beep beep beep\u2014 Today is February 12th."
   - dialogueID: imagingstoreday1
     dialogueText: The mailbox seems to be locked. Maybe check inside the store.
+  - dialogueID: charging
+    dialogueText: 'Charging in progress. Estimated time to full charge: 12 hours.'
+  - dialogueID: storeclosed
+    dialogueText: "Looks like the store\u2019s closed. I\u2019ll just drop it in
+      the mailbox."
+  - dialogueID: findpaper
+    dialogueText: Maybe this junk paper could come in handy.

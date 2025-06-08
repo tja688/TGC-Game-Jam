@@ -57,6 +57,9 @@ public class PlayerMove : MonoBehaviour
 
         // 注册事件监听
         EventCenter.AddEventListener(GameEvents.GameStartsPlayerWakesUp, OnGameStartsPlayerWakesUp);
+        
+        EventCenter.AddEventListener(GameEvents.PlayerWakesUp, OnPlayerWakesUp);
+
         EventCenter.AddEventListener(GameEvents.PlayerSleep, OnPlayerSleep);
     }
 
@@ -125,14 +128,11 @@ public class PlayerMove : MonoBehaviour
 
     private void OnGameStartsPlayerWakesUp()
     {
-        Debug.Log("Event: GameStartsPlayerWakesUp received. Player waking up.");
         CanPlayerMove = true; // 确保玩家在醒来后可以移动
-        if (animator != null)
+        if (animator)
         {
             animator.SetTrigger(WakeUpAnimHash);
         }
-        // 可选：如果需要，可以在这里重置玩家的初始站立朝向的动画参数
-        // UpdateAnimatorParameters(new Vector2(lastValidInputX, lastValidInputY), 0f);
     }
 
     private async void OnPlayerSleep()
@@ -140,6 +140,14 @@ public class PlayerMove : MonoBehaviour
         CanPlayerMove = false; // 玩家入睡，禁止移动
 
         await Sleep();
+    }
+    
+    private void OnPlayerWakesUp()
+    {
+        if (animator)
+        {
+            animator.SetTrigger(WakeUpAnimHash);
+        }
     }
 
     private async UniTask Sleep()
@@ -168,6 +176,9 @@ public class PlayerMove : MonoBehaviour
     {
         // 移除事件监听
         EventCenter.RemoveListener(GameEvents.GameStartsPlayerWakesUp, OnGameStartsPlayerWakesUp);
+        
+        EventCenter.RemoveListener(GameEvents.PlayerWakesUp, OnPlayerWakesUp);
+        
         EventCenter.RemoveListener(GameEvents.PlayerSleep, OnPlayerSleep);
     }
 }

@@ -5,7 +5,8 @@ using UnityEngine;
 public class RestaurantEmail : ItemBase
 {
     private bool day1Letter = false;
-    
+    private bool day2Letter = false;
+
     public override void Interact(GameObject player)
     {
         switch( GameVariables.Day)
@@ -19,6 +20,13 @@ public class RestaurantEmail : ItemBase
                 day1Letter= true;
                 break;
             case 2:
+                if( day2Letter ) return;
+                
+                BackpackManager.Instance.RetrieveItem("Letter2-1");
+                MessageTipManager.ShowMessage("Letter has been delivered");
+                GameVariables.Day2EventCount++;
+                day2Letter= true;
+                break;
             case 3:
             case 4:
             case 5:
