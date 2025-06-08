@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
   m_Name: "UI\u5B57\u4F53"
   m_EditorClassIdentifier: 
-  hashCode: 0
+  hashCode: 2632088
   material: {fileID: 9165591241578340036}
-  materialHashCode: 0
+  materialHashCode: 905327160
   m_Version: 1.1.0
   m_SourceFontFileGUID: 660963b496f0f3a4dac126fa8d40f068
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: 660963b496f0f3a4dac126fa8d40f068, type: 3}
@@ -2708,9 +2708,9 @@ Material:
     - _OutlineWidth: 0
     - _PerspectiveFilter: 0.875
     - _Reflectivity: 10
-    - _ScaleRatioA: 1
-    - _ScaleRatioB: 1
-    - _ScaleRatioC: 1
+    - _ScaleRatioA: 0.8333333
+    - _ScaleRatioB: 0.6770833
+    - _ScaleRatioC: 0.6770833
     - _ScaleX: 1
     - _ScaleY: 1
     - _ShaderFlags: 0
