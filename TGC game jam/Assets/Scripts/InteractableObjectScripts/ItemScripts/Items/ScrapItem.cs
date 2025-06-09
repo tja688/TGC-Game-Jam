@@ -22,12 +22,8 @@ public class ScrapItem : ItemBase
         var ani = paper.GetComponent<AnimationTriggerAndDestroy>();
 
         ani.TriggerAnimation();
-
-        QuestTipManager.Instance.CompleteTask("Origami");
         
         GameVariables.Day2EventCount++;
-        
-        Debug.Log("Day 2 Event:" + GameVariables.Day2EventCount);
         
         base.Interact(player);
         

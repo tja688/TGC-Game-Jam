@@ -17,6 +17,7 @@ public class GameFlow : MonoBehaviour
     public SoundEffect taskFinishMusic;
     public SoundEffect endMusic;
 
+    public Camera camera1;
 
     [Header("UI Elements")]
     [Tooltip("开始菜单的游戏对象，游戏开始时默认激活")]
@@ -151,6 +152,20 @@ public class GameFlow : MonoBehaviour
         
         if(playerPanelButton) playerPanelButton.SetActive(true);
 
+        // Smoothly change camera size
+        float duration = 1f; // Duration of the transition in seconds
+        float startSize = camera1.orthographicSize;
+        float endSize = 1.2f;
+        float elapsed = 0f;
+    
+        while (elapsed < duration)
+        {
+            camera1.orthographicSize = Mathf.Lerp(startSize, endSize, elapsed / duration);
+            elapsed += Time.deltaTime;
+            await UniTask.Yield();
+        }
+        camera1.orthographicSize = endSize; // Ensure exact final value
+        
         // 6. 触发事件并等待对话
         EventCenter.TriggerEvent(GameEvents.GameStartsPlayerWakesUp);
         
