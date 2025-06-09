@@ -15,6 +15,8 @@ public class ScrapItem : ItemBase
 
     public override void Interact(GameObject player)
     {
+        if(!GameVariables.CanPickPaper) return;
+        
         paper.SetActive(true);
 
         var ani = paper.GetComponent<AnimationTriggerAndDestroy>();

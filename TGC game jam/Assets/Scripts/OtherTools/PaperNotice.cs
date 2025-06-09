@@ -68,6 +68,8 @@ public class PaperNotice : MonoBehaviour
         MessageTipManager.ShowMessage("The task list has been updated.");
 
         QuestTipManager.Instance.AddTask("Origami", "Objective: Take the scrap paper.");
+        
+        GameVariables.CanPickPaper = true;
 
 
     }

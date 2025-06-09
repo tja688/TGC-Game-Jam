@@ -26,6 +26,7 @@ public class GameVariables : MonoBehaviour
     public static Transform BoluNewPosition;
     public static Transform GirlPosition;
     public static bool Day5Finish = false;
+    public static bool CanPickPaper = false;
 
     
     public static Transform BoluSetInStore;

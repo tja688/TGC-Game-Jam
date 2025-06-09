@@ -7709,6 +7709,14 @@ PrefabInstance:
       propertyPath: minSoundDelay
       value: 0.15
       objectReference: {fileID: 0}
+    - target: {fileID: 6968030699844442441, guid: 38d6ec0d07a42d94ab91fd9834a08cfd, type: 3}
+      propertyPath: soundEffects.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6968030699844442441, guid: 38d6ec0d07a42d94ab91fd9834a08cfd, type: 3}
+      propertyPath: soundEffects.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 21f8fe31e72de3643beb27d9662e3a52, type: 2}
     - target: {fileID: 8272399813838392850, guid: 38d6ec0d07a42d94ab91fd9834a08cfd, type: 3}
       propertyPath: waitForNormalChars
       value: 0.05
@@ -7771,7 +7779,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: fd2d610f93dd89245adef9ff2dc27429, type: 2}
     - target: {fileID: 8940666311816156363, guid: 38d6ec0d07a42d94ab91fd9834a08cfd, type: 3}
       propertyPath: m_fontStyle
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8940666311816156363, guid: 38d6ec0d07a42d94ab91fd9834a08cfd, type: 3}
       propertyPath: m_fontColor.b
