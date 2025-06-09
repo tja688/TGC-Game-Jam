@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "\u5F71\u50CF\u5E97\u97F3\u4E50"
   m_EditorClassIdentifier: 
   clip: {fileID: 8300000, guid: e6bf51fe6963a064e98308048a2846e3, type: 3}
-  volume: 0.2
+  volume: 0.1
   pitch: 1
   loop: 1
   outputAudioMixerGroup: {fileID: 4123470219919196356, guid: c58cd71f3e91bcb4ba0e64f64091fa80, type: 2}

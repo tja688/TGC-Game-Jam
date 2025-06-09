@@ -89,7 +89,21 @@ public class ChargingDetection : MonoBehaviour
                 }
                 break;
             case 5:
-
+                if (GameVariables.Day5Finish)
+                {
+                    // 立刻锁上状态，防止其他触发进入
+                    isCharging = true;
+                    
+                    PlayerMove.CanPlayerMove = false;
+                    
+                    if (PlayerMove.CurrentPlayer)
+                    {
+                        PlayerMove.CurrentPlayer.transform.position = chargingPosition.position;
+                    }
+                    
+                    await GameEnd();
+                    
+                }
                 break;
         }
     }
@@ -102,6 +116,27 @@ public class ChargingDetection : MonoBehaviour
         if (PlayerDialogue.Instance)
         {
             PlayerDialogue.Instance.Charging();
+        }
+        
+        // 等待对话结束事件
+        await GameFlow.WaitForEvent(
+            h => DialogueManager.DialogueFinished += h,
+            h => DialogueManager.DialogueFinished -= h
+        );
+        
+        // 触发睡眠事件
+        EventCenter.TriggerEvent(GameEvents.PlayerSleep);
+    }
+    
+    
+    private async UniTask GameEnd()
+    {
+        await UniTask.WaitForSeconds(1f);
+        
+        // 确保PlayerDialogue实例存在
+        if (PlayerDialogue.Instance)
+        {
+            PlayerDialogue.Instance.EndTalk();
         }
         
         // 等待对话结束事件

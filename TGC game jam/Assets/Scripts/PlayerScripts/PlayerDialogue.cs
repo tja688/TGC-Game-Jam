@@ -158,6 +158,25 @@ public class PlayerDialogue : MonoBehaviour
         DialogueManager.Instance.StartDialogueSequence(ids, playerInternalMonologueData, playerTalkTransform, false);
     }
     
+    public void FixSender()
+    {
+        var ids = new List<string> { "fixsender" };
+        DialogueManager.Instance.StartDialogueSequence(ids, playerInternalMonologueData, playerTalkTransform, false);
+    }
+    
+    public void LetterSender()
+    {
+        var ids = new List<string> { "lettersender" };
+        DialogueManager.Instance.StartDialogueSequence(ids, playerInternalMonologueData, playerTalkTransform, false);
+    }
+    
+    public void EndTalk()
+    {
+        var ids = new List<string> { "end1", "end2",  "end3",  "end4",  "end5",  "end6",  "end7",  "end8",  "end9",  "end10",  "end11",  "end12" };
+        DialogueManager.Instance.StartDialogueSequence(ids, playerInternalMonologueData, playerTalkTransform, true, () => {
+        });   
+    }
+    
     #endregion
 
 
@@ -334,6 +353,33 @@ public class PlayerDialogue : MonoBehaviour
         
         DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerToNPClogueData, GameVariables.Restaurant, false);
         
+    }
+    
+    public void Day4Bolu()
+    {
+        var dialogueIDs = new List<string> { "day4tobolu1",  "day4tobolu2", "day4tobolu3",   "day4tobolu4", "day4tobolu5", "day4tobolu6",  "day4tobolu7", "day4tobolu8",   "day4tobolu9", "day4tobolu10", "day4tobolu11"  };
+        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerToNPClogueData, GameVariables.BoluSetInStore, true, () => {
+        });
+
+    }
+    
+    public void Day4Girl()
+    {
+        var dialogueIDs = new List<string> { "day4togirl1", "day4togirl2" ,  "day4togirl3",  "day4togirl4","day4togirl5", "day4togirl6" ,  "day4togirl7",  "day4togirl8",  "day4togirl9" };
+        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerToNPClogueData, playerTalkTransform, true, () => {
+        });
+
+    }
+
+    public void Day5()
+    {
+        var dialogueIDs = new List<string> { "day51", "day52", "day53", "day54", "day55" };
+        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerToNPClogueData, playerTalkTransform, true, () => {
+        });
+
     }
 
     #endregion

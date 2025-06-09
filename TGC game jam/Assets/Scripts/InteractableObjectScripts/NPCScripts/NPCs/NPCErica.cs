@@ -2,13 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPCErica : NPCBase
+public class NPCErica : ItemBase
 {
+    private bool day4Talk = false;
 
-    public override void InitiateDialogue()
+    public override void Interact(GameObject instigator)
     {
-        throw new System.NotImplementedException();
+        switch (GameVariables.Day)
+        {
+            case 4:
+                if (day4Talk) return;
+                PlayerDialogue.Instance.Day4Girl();
+                BackpackManager.Instance.RetrieveItem("Letter4-1");
+                
+                MessageTipManager.ShowMessage("Letter has been delivered");
+                GameVariables.Day4EventCount++;
+
+                day4Talk = true;
+                break;
+
+            
+        }
     }
-
-
 }

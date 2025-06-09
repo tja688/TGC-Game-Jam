@@ -22,7 +22,10 @@ public class GameVariables : MonoBehaviour
     public static int Day4EventCount = 0;
     public static bool Day4Finish = false;
     public static int Day5EventCount = 0;
-    public static bool Day4OpenDoor = false;
+    public static Transform LetterSender;
+    public static Transform BoluNewPosition;
+    public static Transform GirlPosition;
+    public static bool Day5Finish = false;
 
     
     public static Transform BoluSetInStore;
@@ -45,6 +48,9 @@ public class GameVariables : MonoBehaviour
     [SerializeField] private Transform grandmaInSecondFloor;
     [SerializeField] private Transform restaurant;
     [SerializeField] private Transform batteryPos;
+    [SerializeField] private Transform letterSender;
+    [SerializeField] private Transform boluNewPosition;
+    [SerializeField] private Transform girlPosition;
 
     private void Awake()
     {
@@ -57,15 +63,26 @@ public class GameVariables : MonoBehaviour
         GrandmaInSecondFloor = grandmaInSecondFloor;
         Restaurant = restaurant;
         BatteryPos = batteryPos;
+        LetterSender = letterSender;
+        BoluNewPosition = boluNewPosition;
+        GirlPosition = girlPosition;
     }
 
     private void Update()
     {
-        // 按1增加Day1完成Day1任务
+        // 按F1增加Day1完成Day1任务
         if (Input.GetKeyDown(KeyCode.F1))
         {
             Day1LetterSend = 3;
-            Debug.Log("Day1LetterSend : " + Day1LetterSend);
+        }
+        
+        // 按F2增加完成Day3任务
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            Day = 3;
+            OnDay1FinishSend?.Invoke(); 
+            Day3Finish = true;
+            IsHaveBattery = true;
         }
     }
 
@@ -101,5 +118,21 @@ public class GameVariables : MonoBehaviour
             OnDay1FinishSend?.Invoke(); 
             Day3Finish = true;
         }
+        
+        // Day3 逻辑（独立）
+        if (Day4EventCount == 2 && !Day4Finish)
+        {
+            QuestTipManager.Instance.CompleteTask("SendLetterDay4");
+            OnDay1FinishSend?.Invoke(); 
+            Day4Finish = true;
+        }
+        
+        if (Day5EventCount == 1 && !Day5Finish)
+        {
+            QuestTipManager.Instance.CompleteTask("SendLetterDay5");
+            OnDay1FinishSend?.Invoke(); 
+            Day5Finish = true;
+        }
+
     }
 }

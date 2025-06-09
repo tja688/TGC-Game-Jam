@@ -17,6 +17,7 @@ public class BrokenLiftItem : ItemBase
             lift.SetActive(true);
             MessageTipManager.ShowMessage("Elevator available.");
 
+            this.gameObject.SetActive(false);
         }
         else
         {

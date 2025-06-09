@@ -58,3 +58,35 @@ MonoBehaviour:
       the mailbox."
   - dialogueID: findpaper
     dialogueText: Maybe this junk paper could come in handy.
+  - dialogueID: fixsender
+    dialogueText: Maybe I should fix our mail dispenser first...
+  - dialogueID: lettersender
+    dialogueText: "Looks like the power\u2019s back on. I should be able to send
+      letters again."
+  - dialogueID: end1
+    dialogueText: "The snow doesn\u2019t seem as deep anymore."
+  - dialogueID: end2
+    dialogueText: The fog has thinned. The wind feels a little warmer.
+  - dialogueID: end3
+    dialogueText: Snow has been cleared from the roads. Somewhere above, faint music
+      plays.
+  - dialogueID: end4
+    dialogueText: "The restaurant windows are slowly being wiped clean\u2014 Irina\u2019s
+      figure visible behind the glass."
+  - dialogueID: end5
+    dialogueText: Erica watches the snow in the distance, the worry in her eyes fading
+      with the snow.
+  - dialogueID: end6
+    dialogueText: Stuck mailbox doors have been carefully oiled.
+  - dialogueID: end7
+    dialogueText: Bolu is working on his storefront.
+  - dialogueID: end8
+    dialogueText: Grandma Rella squints in the sunlight.
+  - dialogueID: end9
+    dialogueText: "And for a moment, it feels like she\u2019s smiling at me."
+  - dialogueID: end10
+    dialogueText: This winter may soon be over.
+  - dialogueID: end11
+    dialogueText: What kind of letters will tomorrow bring?
+  - dialogueID: end12
+    dialogueText: ".\u2026..\u2026.."

@@ -15,6 +15,7 @@ public class GameFlow : MonoBehaviour
     [Header("Audio")]
     public SoundEffect beginPanelMusic;
     public SoundEffect taskFinishMusic;
+    public SoundEffect endMusic;
 
 
     [Header("UI Elements")]
@@ -29,6 +30,7 @@ public class GameFlow : MonoBehaviour
     [Header("Event Objects")]
     public GameObject postOfficePortal;
 
+    public GameObject gameOverPanel;
     
     private float originalCameraSpeed; 
     
@@ -221,9 +223,14 @@ public class GameFlow : MonoBehaviour
         
         GameVariables.Day ++;
 
-        Debug.Log("currentDay ："+GameVariables.Day);
-
-        ReadyToWakeUp();
+        if (GameVariables.Day < 6)
+        {
+            ReadyToWakeUp();
+        }
+        else
+        {
+            gameOverPanel.SetActive(true);
+        }
     }
 
     private async UniTask ReadyToWakeUp()
@@ -244,6 +251,25 @@ public class GameFlow : MonoBehaviour
         PlayerMove.CanPlayerMove = true;
         
         MessageTipManager.ShowMessage("Let's check today's mail to send out.");
+
+        if (GameVariables.Day == 4)
+        {
+            PlayerMove.CanPlayerMove = false;
+            
+            await UniTask.WaitForSeconds(1f);
+
+            CameraSystem.SetSpecialCameraTarget(GameVariables.LetterSender);
+            
+            await UniTask.WaitForSeconds(2f);
+
+            CameraSystem.SetSpecialCameraTarget(PlayerMove.CurrentPlayer.transform);
+            
+            await UniTask.WaitForSeconds(1f);
+
+            PlayerDialogue.Instance.FixSender();
+            
+        }
+        
     }
     
     

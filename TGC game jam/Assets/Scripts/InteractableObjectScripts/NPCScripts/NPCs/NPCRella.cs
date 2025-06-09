@@ -8,6 +8,7 @@ public class NPCRella : ItemBase
     private bool day1Talk = false;
     private bool day2Talk = false;
     private bool day3Talk = false;
+    private bool day5Talk = false;
 
     public override void Interact(GameObject instigator)
     {
@@ -38,7 +39,16 @@ public class NPCRella : ItemBase
                 day3Talk = true;
                 break;
 
-            
+            case 5:
+                
+                if (day5Talk) return;
+                PlayerDialogue.Instance.Day5();
+
+                GameVariables.Day5EventCount++;
+
+                day5Talk = true;
+                break;
+
         }
     }
 

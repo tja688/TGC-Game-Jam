@@ -133,3 +133,70 @@ MonoBehaviour:
       useful.</color>"
   - dialogueID: day3torestaurant6
     dialogueText: "It\u2019s alright, Erica."
+  - dialogueID: day4tobolu1
+    dialogueText: "<color=red>You\u2019re here. Look at this place\u2014doesn\u2019t
+      it seem a bit cleaner today?</color>"
+  - dialogueID: day4tobolu2
+    dialogueText: "It does! I\u2019ve got another letter for you."
+  - dialogueID: day4tobolu3
+    dialogueText: <color=red>Thanks. This shop...I inherited it from my father. He
+      spent half his life building it up.</color>
+  - dialogueID: day4tobolu4
+    dialogueText: <color=red>I guess I always felt like it was my duty to keep it
+      going.</color>
+  - dialogueID: day4tobolu5
+    dialogueText: <color=red>I used to dream of writing something. But I never thought
+      I had the talent.</color>
+  - dialogueID: day4tobolu6
+    dialogueText: <color=red>Being a writer felt like chasing smoke. Better to do
+      something practical, you know?</color>
+  - dialogueID: day4tobolu7
+    dialogueText: "<color=red>But now\u2026 nobody needs a videotape store anymore,
+      do they?</color>"
+  - dialogueID: day4tobolu8
+    dialogueText: <color=red>Ha... sometimes I wish I had the guts to go all in,
+      like Ites did.</color>
+  - dialogueID: day4tobolu9
+    dialogueText: "The post office\u2019s outgoing system is working again. Do you
+      have anything you\u2019d like to send?"
+  - dialogueID: day4tobolu10
+    dialogueText: <color=red>If I need it in the future, then the answer is definitely
+      yes.</color>
+  - dialogueID: day4tobolu11
+    dialogueText: Good luck chasing your dreams!
+  - dialogueID: day4togirl1
+    dialogueText: <color=#FFB6C1>Hi, Lake.</color>
+  - dialogueID: day4togirl2
+    dialogueText: Hello, Erica. I have a letter for you.
+  - dialogueID: day4togirl3
+    dialogueText: "<color=#FFB6C1>I\u2019m so sorry, Lake. I was just so scared.</color>"
+  - dialogueID: day4togirl4
+    dialogueText: <color=#FFB6C1>I left my husband because of his condition.</color>
+  - dialogueID: day4togirl5
+    dialogueText: <color=#FFB6C1>And then the storm hit out of nowhere...</color>
+  - dialogueID: day4togirl6
+    dialogueText: "<color=#FFB6C1>If regular people couldn\u2019t survive it, how
+      could he possibly manage...?</color>"
+  - dialogueID: day4togirl7
+    dialogueText: "I\u2019m sorry, Erica. But the post office can send letters again
+      now."
+  - dialogueID: day4togirl8
+    dialogueText: "<color=#FFB6C1>..I\u2019m sorry for how I treated you before.
+      And thank you\u2014for helping me send letters.</color>"
+  - dialogueID: day4togirl9
+    dialogueText: "It\u2019s alright, Erica. Everything\u2019s going to be okay."
+  - dialogueID: day51
+    dialogueText: Grandma, where did everyone in the town go?
+  - dialogueID: day52
+    dialogueText: "<color=green>Haha, they\u2019re all busy today\u2014preparing
+      to do something great.</color>"
+  - dialogueID: day53
+    dialogueText: <color=green>This village is becoming more and more lively, all
+      thanks to you.</color>
+  - dialogueID: day54
+    dialogueText: "<color=green>Head back early. There\u2019s a celebration in town
+      tomorrow\u2014you should come.</color>"
+  - dialogueID: day55
+    dialogueText: Alright, you should rest early too.
+  - dialogueID: 
+    dialogueText: 

@@ -45,6 +45,14 @@ public class PortalController : MonoBehaviour
     /// </summary>
     private void ActivatePortal()
     {
+        if (portalGameObject && GameVariables.Day != 4)
+        {
+            portalGameObject.SetActive(true);
+        }
+    }
+    
+    public void ActivatePortalAPI()
+    {
         if (portalGameObject != null)
         {
             portalGameObject.SetActive(true);

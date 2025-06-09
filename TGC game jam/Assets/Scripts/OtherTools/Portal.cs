@@ -10,8 +10,6 @@ public class Portal : MonoBehaviour
 {
     [Header("传送设置")]
     public Transform teleportTargetPoint;
-    public float cooldownDuration = 1.0f;
-    private bool isThisPortalOnCooldown = false;
 
     public static event Action<Transform> OnTeleportationProcessWillStart; // 参数可以是玩家Transform
     public static event Action<Transform> OnPlayerActuallyTeleported;
@@ -20,7 +18,6 @@ public class Portal : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (isThisPortalOnCooldown) return;
         if (!other.CompareTag("Player")) return;
         
         var playerRb = other.attachedRigidbody;
@@ -41,7 +38,6 @@ public class Portal : MonoBehaviour
 
     private IEnumerator TeleportSequenceWithFade(Transform playerTransform)
     {
-        isThisPortalOnCooldown = true; // 传送门进入冷却
 
         OnTeleportationProcessWillStart?.Invoke(playerTransform); // 通知：传送流程即将开始
 
@@ -74,9 +70,6 @@ public class Portal : MonoBehaviour
 
         OnTeleportationProcessHasFinished?.Invoke(playerTransform); // 通知：整个传送流程（包括效果）已结束
 
-        yield return new WaitForSeconds(cooldownDuration); 
-
-        isThisPortalOnCooldown = false;
     }
 
 }
