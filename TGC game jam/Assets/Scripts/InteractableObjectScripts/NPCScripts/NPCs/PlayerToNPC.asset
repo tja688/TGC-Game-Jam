@@ -71,4 +71,65 @@ MonoBehaviour:
     dialogueText: "I\u2019m sorry, ma\u2019am... The post office just came back online
       yesterday."
   - dialogueID: day2torestaurant8
-    dialogueText: <color=#FFB6C1>...<delay=1>Just put it in the mailbox.</color>
+    dialogueText: <color=#FFB6C1>......Just put it in the mailbox.</color>
+  - dialogueID: day3tobolu1
+    dialogueText: "Hello. I\u2019m Lake, a mail delivery robot from the post office.
+      I have a letter for you."
+  - dialogueID: day3tobolu2
+    dialogueText: "<color=red>Oh, it\u2019s you. You dropped off the last one too,
+      right?</color>"
+  - dialogueID: day3tobolu3
+    dialogueText: <color=red>I figured the post office was long gone...</color>
+  - dialogueID: day3tobolu4
+    dialogueText: "<color=red>Okay... let\u2019s check what\u2019s in the letter...</color>"
+  - dialogueID: day3tobolu5
+    dialogueText: <color=red>Heh... that kid. Looks like he finally got to do what
+      he always wanted. Lucky bastard.</color>
+  - dialogueID: day3tobolu6
+    dialogueText: <color=red>...</color>
+  - dialogueID: day3tobolu7
+    dialogueText: "<color=red>Your name\u2019s Lake, right? </color>"
+  - dialogueID: day3tobolu8
+    dialogueText: "<color=red>So... is the post office up and running again? Can
+      we send letters now?\"\r</color>"
+  - dialogueID: day3tobolu9
+    dialogueText: "Sorry. The outgoing system hasn\u2019t been restarted yet."
+  - dialogueID: day3tobolu10
+    dialogueText: "<color=red>That\u2019s alright. Give me a shout when they fix
+      that crappy machine.</color>"
+  - dialogueID: day3tobolu11
+    dialogueText: Of course.
+  - dialogueID: day3tograndma1
+    dialogueText: Good morning, Grandma Rella. You seem to be in a good mood today.
+  - dialogueID: day3tograndma2
+    dialogueText: <color=green>Hello there, little talking tin can.</color>
+  - dialogueID: day3tograndma3
+    dialogueText: "There\u2019s another letter for you today."
+  - dialogueID: day3tograndma4
+    dialogueText: <color=green>Thank you.</color>
+  - dialogueID: day3tograndma5
+    dialogueText: 'I also made this paper rose for you. '
+  - dialogueID: day3tograndma6
+    dialogueText: "If you don\u2019t mind, I hope you\u2019ll accept it. I just want
+      you to stay this happy."
+  - dialogueID: day3tograndma7
+    dialogueText: "<color=green>Oh my, it\u2019s beautiful. </color>"
+  - dialogueID: day3tograndma8
+    dialogueText: <color=green>Someone gave me one just like this, a long time ago.
+      Thank you, little tin can.</color>
+  - dialogueID: day3torestaurant1
+    dialogueText: "Hello. I\u2019m Lake, a mail delivery robot from the post office.
+      I have a letter for you.\""
+  - dialogueID: day3torestaurant2
+    dialogueText: "<color=#FFB6C1>\u2026.....Thank you.</color>"
+  - dialogueID: day3torestaurant3
+    dialogueText: "You\u2019re welcome. I\u2019ll place it in the mailbox."
+  - dialogueID: day3torestaurant4
+    dialogueText: "<color=#FFB6C1>...About yesterday... I\u2019m sorry. And... my
+      name is Erica.</color>"
+  - dialogueID: day3torestaurant5
+    dialogueText: "<color=#FFB6C1>Sorry about what happened. I\u2019ve left spare
+      batteries from our restaurant near the 2nd-floor stairs\u2014hope they\u2019re
+      useful.</color>"
+  - dialogueID: day3torestaurant6
+    dialogueText: "It\u2019s alright, Erica."

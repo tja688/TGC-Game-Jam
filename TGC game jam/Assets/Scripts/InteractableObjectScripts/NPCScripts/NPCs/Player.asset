@@ -34,8 +34,7 @@ MonoBehaviour:
   - dialogueID: roadsigns
     dialogueText: "\u201CWelcome to Virla \u2014 the town in the wind.\u201D"
   - dialogueID: liftnotice
-    dialogueText: "The floorboards are soaked and rotten. They won\u2019t hold my
-      weight."
+    dialogueText: It appears to be lacking power.
   - dialogueID: outsidedialogue1
     dialogueText: "Beep beep beep\u2014 Today is February 8th. "
   - dialogueID: outsidedialogue2

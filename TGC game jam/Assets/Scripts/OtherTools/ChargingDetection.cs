@@ -36,7 +36,60 @@ public class ChargingDetection : MonoBehaviour
                     await WaitForCharging();
                     
                 }
-                
+                break;
+            case 2:
+                if (GameVariables.Day2Finish)
+                {
+                    // 立刻锁上状态，防止其他触发进入
+                    isCharging = true;
+                    
+                    PlayerMove.CanPlayerMove = false;
+                    
+                    if (PlayerMove.CurrentPlayer)
+                    {
+                        PlayerMove.CurrentPlayer.transform.position = chargingPosition.position;
+                    }
+                    
+                    await WaitForCharging();
+                    
+                }
+                break;
+            case 3:
+                if (GameVariables.Day3Finish)
+                {
+                    // 立刻锁上状态，防止其他触发进入
+                    isCharging = true;
+                    
+                    PlayerMove.CanPlayerMove = false;
+                    
+                    if (PlayerMove.CurrentPlayer)
+                    {
+                        PlayerMove.CurrentPlayer.transform.position = chargingPosition.position;
+                    }
+                    
+                    await WaitForCharging();
+                    
+                }
+                break;
+            case 4:
+                if (GameVariables.Day4Finish)
+                {
+                    // 立刻锁上状态，防止其他触发进入
+                    isCharging = true;
+                    
+                    PlayerMove.CanPlayerMove = false;
+                    
+                    if (PlayerMove.CurrentPlayer)
+                    {
+                        PlayerMove.CurrentPlayer.transform.position = chargingPosition.position;
+                    }
+                    
+                    await WaitForCharging();
+                    
+                }
+                break;
+            case 5:
+
                 break;
         }
     }

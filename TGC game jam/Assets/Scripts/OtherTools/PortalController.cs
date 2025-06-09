@@ -47,7 +47,6 @@ public class PortalController : MonoBehaviour
     {
         if (portalGameObject != null)
         {
-            Debug.Log("接收到 'OnFindAllLettersForDay' 事件，正在激活传送门...");
             portalGameObject.SetActive(true);
         }
     }
@@ -59,7 +58,6 @@ public class PortalController : MonoBehaviour
     {
         if (portalGameObject != null)
         {
-            Debug.Log("接收到 'OnDayChanged' 事件，正在关闭传送门以待重新开启...");
             portalGameObject.SetActive(false);
         }
     }

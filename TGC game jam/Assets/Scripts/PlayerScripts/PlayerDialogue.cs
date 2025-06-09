@@ -269,6 +269,72 @@ public class PlayerDialogue : MonoBehaviour
         });
 
     }
+    
+    public void Day3ToBolu()
+    {
+        var dialogueIDs = new List<string> { "day3tobolu1",  "day3tobolu2", "day3tobolu3",  "day3tobolu4",   "day3tobolu5",  "day3tobolu6",   "day3tobolu7",   "day3tobolu8", "day3tobolu9", "day3tobolu10","day3tobolu11" };
+        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerToNPClogueData, GameVariables.BoluSetInStore, true, () => {
+        });
+
+    }
+    
+    
+    public async UniTask Day3ToGrandma1()
+    {
+        var dialogueIDs = new List<string> { "day3tograndma1", "day3tograndma2", "day3tograndma3" , "day3tograndma4" , "day3tograndma5" , "day3tograndma6" };
+        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerToNPClogueData, GameVariables.GrandmaInSecondFloor , false);
+
+        await Day3ToGrandma2();
+    }
+    
+    public async UniTask Day3ToGrandma2()
+    {
+        // 等待对话完成
+        await GameFlow.WaitForEvent(
+            h => DialogueManager.DialogueFinished += h,
+            h => DialogueManager.DialogueFinished -= h
+        );
+        
+        MessageTipManager.ShowMessage("Gave Grandma the paper flowers folded yesterday.");
+        
+        var dialogueIDs = new List<string> { "day3tograndma7", "day3tograndma8" };
+        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerToNPClogueData, GameVariables.GrandmaInSecondFloor, false);
+        
+    }
+    
+    public async UniTask Day3ToRestaurant1()
+    {
+        var dialogueIDs = new List<string> { "day3torestaurant1",  "day3torestaurant2", "day3torestaurant3",  "day3torestaurant4",   "day3torestaurant5" };
+        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerToNPClogueData, GameVariables.Restaurant, false);
+
+        await Day3ToRestaurant2();
+    }
+    
+    public async UniTask Day3ToRestaurant2()
+    {
+        // 等待对话完成
+        await GameFlow.WaitForEvent(
+            h => DialogueManager.DialogueFinished += h,
+            h => DialogueManager.DialogueFinished -= h
+        );
+        
+        CameraSystem.SetSpecialCameraTarget(GameVariables.BatteryPos);
+        
+        await UniTask.WaitForSeconds(2f);
+        
+        CameraSystem.SetSpecialCameraTarget(PlayerMove.CurrentPlayer.transform);
+
+        await UniTask.WaitForSeconds(1f);
+        
+        var dialogueIDs = new List<string> {  "day3torestaurant6" };
+        
+        DialogueManager.Instance.StartDialogueSequence(dialogueIDs, playerToNPClogueData, GameVariables.Restaurant, false);
+        
+    }
 
     #endregion
 

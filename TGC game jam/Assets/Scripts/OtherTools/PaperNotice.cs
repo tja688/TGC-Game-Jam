@@ -24,6 +24,7 @@ public class PaperNotice : MonoBehaviour
 
     private void Start()
     {
+        paper.SetActive(false);
 
         GameVariables.OnDayChanged += OndayChange;
     }

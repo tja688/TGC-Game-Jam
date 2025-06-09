@@ -12,7 +12,7 @@ public class BrokenLiftItem : ItemBase
     {
         AudioManager.Instance.Play(grabSound);
         
-        if (BackpackManager.Instance.HasItem("LiftBase"))
+        if (GameVariables.IsHaveBattery)
         {
             lift.SetActive(true);
             MessageTipManager.ShowMessage("Elevator available.");

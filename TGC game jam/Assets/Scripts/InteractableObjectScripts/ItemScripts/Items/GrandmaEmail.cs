@@ -23,6 +23,8 @@ public class GrandmaEmail : ItemBase
                 MessageTipManager.ShowMessage("Try talking to Grandma today");
                 break;
             case 3:
+                MessageTipManager.ShowMessage("Let’s give Grandma some special gifts");
+                break;
             case 4:
             case 5:
                 break;

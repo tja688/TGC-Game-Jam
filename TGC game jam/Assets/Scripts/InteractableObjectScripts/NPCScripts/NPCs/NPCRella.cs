@@ -7,7 +7,8 @@ public class NPCRella : ItemBase
     
     private bool day1Talk = false;
     private bool day2Talk = false;
-    
+    private bool day3Talk = false;
+
     public override void Interact(GameObject instigator)
     {
         switch (GameVariables.Day)
@@ -24,9 +25,19 @@ public class NPCRella : ItemBase
                 MessageTipManager.ShowMessage("Letter has been delivered");
                 GameVariables.Day2HasTalkToGrandma = true;
                 GameVariables.Day2EventCount++;
+
                 day2Talk = true;
                 break;
-            
+            case 3:
+                if (day3Talk) return;
+                PlayerDialogue.Instance.Day3ToGrandma1();
+                BackpackManager.Instance.RetrieveItem("Letter3-2");
+                MessageTipManager.ShowMessage("Letter has been delivered");
+                GameVariables.Day3EventCount++;
+
+                day3Talk = true;
+                break;
+
             
         }
     }

@@ -25,6 +25,8 @@ public class ScrapItem : ItemBase
         
         GameVariables.Day2EventCount++;
         
+        Debug.Log("Day 2 Event:" + GameVariables.Day2EventCount);
+        
         base.Interact(player);
         
         

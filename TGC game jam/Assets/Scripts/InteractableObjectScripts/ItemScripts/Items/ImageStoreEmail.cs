@@ -19,9 +19,13 @@ public class ImageStoreEmail : ItemBase
                 BackpackManager.Instance.RetrieveItem("Letter3-1");
                 MessageTipManager.ShowMessage("Letter has been delivered");
                 GameVariables.Day2EventCount++;
+                Debug.Log("Day 2 Event:" + GameVariables.Day2EventCount);
+
                 isDay2Send =  true;
                 break;
             case 3:
+                MessageTipManager.ShowMessage("The shop door is open—let’s go see the boss");
+                break;
             case 4:
             case 5:
                 break;
