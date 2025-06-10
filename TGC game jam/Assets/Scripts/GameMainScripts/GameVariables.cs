@@ -37,7 +37,6 @@ public class GameVariables : MonoBehaviour
     public static event Action OnDay1FinishSend;
 
     
-    // 用于轮询的私有变量
     private int lastKnownDay;
     
     // Inspector可编辑的中间变量
@@ -120,7 +119,7 @@ public class GameVariables : MonoBehaviour
             Day3Finish = true;
         }
         
-        // Day3 逻辑（独立）
+        // Day4 逻辑（独立）
         if (Day4EventCount == 2 && !Day4Finish)
         {
             QuestTipManager.Instance.CompleteTask("SendLetterDay4");
@@ -128,6 +127,7 @@ public class GameVariables : MonoBehaviour
             Day4Finish = true;
         }
         
+        // Day5 逻辑（独立）
         if (Day5EventCount == 1 && !Day5Finish)
         {
             QuestTipManager.Instance.CompleteTask("SendLetterDay5");

@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-//不再需要 using System; 因为没有静态事件了
 
 [RequireComponent(typeof(Button))]
 public class PlayerInterfaceOpenerButton : MonoBehaviour
@@ -33,7 +32,6 @@ public class PlayerInterfaceOpenerButton : MonoBehaviour
 
     private void HandleButtonClick()
     {
-        // 1. 打开目标UI组
         if (UIAnimationManager.Instance)
         {
             UIAnimationManager.Instance.ShowGroup(targetUIGroupName);
@@ -44,7 +42,6 @@ public class PlayerInterfaceOpenerButton : MonoBehaviour
             Debug.LogError($"PlayerInterfaceOpenerButton: UIAnimationManager.Instance 为空！无法显示UI组 '{targetUIGroupName}'。", this);
         }
     
-        // 2. 通知 BackpackUIManager 准备并显示背包内容
         if (BackpackUIManager.Instance)
         {
             BackpackUIManager.Instance.RefreshContentView(); 
@@ -58,13 +55,10 @@ public class PlayerInterfaceOpenerButton : MonoBehaviour
     
         OnOpenUI = true;
 
-        this.gameObject.SetActive(false); // 按钮自身隐藏
+        this.gameObject.SetActive(false); 
     }
 
-
-    /// <summary>
-    /// 公开接口：用于从外部重新显示并激活此按钮。
-    /// </summary>
+    
     public void ShowAndActivateButton()
     {
         this.gameObject.SetActive(true);

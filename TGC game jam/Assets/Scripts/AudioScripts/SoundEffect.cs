@@ -7,7 +7,7 @@ public class SoundEffect : ScriptableObject
 {
     [Header("基本设置")]
     [Tooltip("默认的音频片段。如果不是随机池，或者随机池为空且此项已设置，则播放此片段。")]
-    public AudioClip clip; // 保留，可作为非随机池或随机池为空时的备选项
+    public AudioClip clip; 
 
     [Tooltip("音效的基础音量 (0.0 到 1.0)")]
     [Range(0f, 1f)]
@@ -37,7 +37,6 @@ public class SoundEffect : ScriptableObject
     [Range(0f, 2f)]
     public float loopFadeOutTime = 0.1f;
 
-    // --- 新增随机池设置 ---
     [Header("随机音频池设置")]
     [Tooltip("是否启用随机池功能。若启用，播放时将从此列表随机选择一个音频片段。")]
     public bool isRandomPool = false;

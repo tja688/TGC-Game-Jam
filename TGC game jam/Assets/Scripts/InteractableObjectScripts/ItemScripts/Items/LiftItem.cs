@@ -3,7 +3,7 @@ using System.Collections;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class LiftItem : ItemBase // 假设 ItemBase 是你已有的基类
+public class LiftItem : ItemBase 
 {
     public Transform liftUpTransform;
     public Transform liftDownTransform;

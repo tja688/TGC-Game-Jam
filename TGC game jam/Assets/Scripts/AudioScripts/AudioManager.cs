@@ -21,17 +21,14 @@ public class AudioManager : MonoBehaviour
     private Dictionary<SoundEffect, ActiveLoopingSound> _activeLoopingSounds;
     private Dictionary<SoundEffect, float> _soundEffectNextPlayTime;
 
-    // --- 新增：Audio Mixer 控制相关 ---
     [Header("Audio Mixer Settings")]
     [Tooltip("在此处指定场景中的主 Audio Mixer")]
-    public AudioMixer masterMixer; // 将你的 Audio Mixer 资源拖拽到 Inspector 中
+    public AudioMixer masterMixer; 
 
-    // Audio Mixer 中暴露的参数名称 (根据你的描述)
     private const string BACKGROUND_MIXER_PARAM = "BackGround";
     private const string SFX_MIXER_PARAM = "SFX";
     private const string UI_MIXER_PARAM = "UI";
 
-    // PlayerPrefs 的键名
     private const string PREFS_BG_VOL = "AudioManager_BackgroundVolume";
     private const string PREFS_BG_MUTE = "AudioManager_BackgroundMute";
     private const string PREFS_SFX_VOL = "AudioManager_SFXVolume";
@@ -39,7 +36,6 @@ public class AudioManager : MonoBehaviour
     private const string PREFS_UI_VOL = "AudioManager_UIVolume";
     private const string PREFS_UI_MUTE = "AudioManager_UIMute";
 
-    // 存储各个通道的静音状态和静音前的线性音量值 (0.0001f - 1f)
     private bool _isBackgroundMuted = false;
     private float _lastBackgroundVolumeLinear = 0.75f; // 默认音量
 
@@ -48,7 +44,6 @@ public class AudioManager : MonoBehaviour
 
     private bool _isUIMuted = false;
     private float _lastUIVolumeLinear = 0.75f;
-    // --- 结束新增：Audio Mixer 控制相关 ---
 
     void Awake()
     {
@@ -76,7 +71,6 @@ public class AudioManager : MonoBehaviour
             CreateAndPoolAudioSource();
         }
 
-        // --- 新增：加载并应用 Mixer 音量设置 ---
         if (masterMixer == null)
         {
             Debug.LogWarning("AudioManager: Master AudioMixer 未在 Inspector 中指定。音量控制功能将不可用。");
@@ -85,7 +79,6 @@ public class AudioManager : MonoBehaviour
         {
             LoadAndApplyMixerSettings();
         }
-        // --- 结束新增 ---
     }
 
     private AudioSource CreateAndPoolAudioSource()
@@ -124,7 +117,7 @@ public class AudioManager : MonoBehaviour
             source.loop = false;
             source.volume = 1f;
             source.pitch = 1f;
-            source.outputAudioMixerGroup = null; // 重置 Mixer Group
+            source.outputAudioMixerGroup = null; 
             source.gameObject.SetActive(false);
         }
     }
@@ -328,25 +321,19 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // --- 音量混合器公共方法 ---
-    // 此方法由你的新方法调用，用于设置实际的dB值
     public void SetMixerVolume(AudioMixer mixer, string exposedParamName, float linearValue)
     {
         if (mixer == null)
         {
-            // Debug.LogError("AudioManager: AudioMixer 为空。"); // 在调用处处理此问题
             return;
         }
-        // 确保 linearValue 在0.0001f到1f之间，以避免Log10(0)错误
         float clampedValue = Mathf.Clamp(linearValue, 0.0001f, 1f);
         float decibels = Mathf.Log10(clampedValue) * 20f;
         mixer.SetFloat(exposedParamName, decibels);
     }
 
-    // --- 新增：加载并应用 Mixer 音量设置 ---
     private void LoadAndApplyMixerSettings()
     {
-        // 背景音量
         _lastBackgroundVolumeLinear = PlayerPrefs.GetFloat(PREFS_BG_VOL, 0.75f);
         _isBackgroundMuted = PlayerPrefs.GetInt(PREFS_BG_MUTE, 0) == 1;
         if (_isBackgroundMuted)
@@ -358,7 +345,6 @@ public class AudioManager : MonoBehaviour
             SetMixerVolume(masterMixer, BACKGROUND_MIXER_PARAM, _lastBackgroundVolumeLinear);
         }
 
-        // SFX 音量
         _lastSFXVolumeLinear = PlayerPrefs.GetFloat(PREFS_SFX_VOL, 0.75f);
         _isSFXMuted = PlayerPrefs.GetInt(PREFS_SFX_MUTE, 0) == 1;
         if (_isSFXMuted)
@@ -370,7 +356,6 @@ public class AudioManager : MonoBehaviour
             SetMixerVolume(masterMixer, SFX_MIXER_PARAM, _lastSFXVolumeLinear);
         }
 
-        // UI 音量
         _lastUIVolumeLinear = PlayerPrefs.GetFloat(PREFS_UI_VOL, 0.75f);
         _isUIMuted = PlayerPrefs.GetInt(PREFS_UI_MUTE, 0) == 1;
         if (_isUIMuted)
@@ -383,9 +368,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // --- 新增：供UI调用的公共方法 ---
 
-    // 获取初始音量值 (用于UI Slider初始化)
     public float GetInitialBackgroundVolume() => _lastBackgroundVolumeLinear;
     public float GetInitialSFXVolume() => _lastSFXVolumeLinear;
     public float GetInitialUIVolume() => _lastUIVolumeLinear;
@@ -396,12 +379,11 @@ public class AudioManager : MonoBehaviour
     public bool IsUIMuted() => _isUIMuted;
 
 
-    // 背景音量控制 (由UI Slider调用)
     public void SetBackgroundVolumeSlider(float linearValue)
     {
         if (masterMixer == null) return;
         _lastBackgroundVolumeLinear = Mathf.Clamp(linearValue, 0.0001f, 1f); // 更新期望的音量
-        if (!_isBackgroundMuted) // 如果没有被静音按钮静音，则实际更新Mixer
+        if (!_isBackgroundMuted) 
         {
             SetMixerVolume(masterMixer, BACKGROUND_MIXER_PARAM, _lastBackgroundVolumeLinear);
         }
@@ -409,7 +391,6 @@ public class AudioManager : MonoBehaviour
         PlayerPrefs.Save(); // 确保设置被保存
     }
 
-    // 背景静音切换 (由UI Button调用)
     public void ToggleBackgroundMute()
     {
         if (masterMixer == null) return;
@@ -426,7 +407,6 @@ public class AudioManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    // SFX 音量控制
     public void SetSFXVolumeSlider(float linearValue)
     {
         if (masterMixer == null) return;
@@ -455,7 +435,6 @@ public class AudioManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    // UI 音量控制
     public void SetUIVolumeSlider(float linearValue)
     {
         if (masterMixer == null) return;
@@ -483,5 +462,5 @@ public class AudioManager : MonoBehaviour
         PlayerPrefs.SetInt(PREFS_UI_MUTE, _isUIMuted ? 1 : 0);
         PlayerPrefs.Save();
     }
-    // --- 结束新增 ---
+   
 }

@@ -11,7 +11,7 @@ public class LetterItem : MonoBehaviour, IStorable
     public void OnStored(BackpackManager backpackManager)
     {
         transform.SetParent(BackpackManager.BackpackObject);
-        transform.localPosition = Vector3.zero; // 可以根据需要调整在背包内的位置
+        transform.localPosition = Vector3.zero;
         
         this.enabled = false;
     }

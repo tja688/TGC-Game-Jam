@@ -40,8 +40,7 @@ public class GameFlow : MonoBehaviour
         if (ScreenFadeController.Instance)
             ScreenFadeController.Instance.BeginFadeToClear(2f);
         
-        // 1. 播放背景音乐
-        if (!beginPanelMusic) // 修正：变量名应该是 streetMainMusic
+        if (!beginPanelMusic) 
         {
             Debug.LogError("GameFlow: streetMainMusic (背景音乐 SoundEffect) 未在 Inspector 中指定。");
         }
@@ -68,7 +67,7 @@ public class GameFlow : MonoBehaviour
             Debug.LogError("GameFlow: PlayerInputController.Instance 为空。无法设置初始输入模式。");
         }
 
-        // 4. 为开始按钮添加监听器
+        // 为开始按钮添加监听器
         if (startGameButton)
         {
             startGameButton.onClick.AddListener(StartGameSequence);
@@ -78,7 +77,7 @@ public class GameFlow : MonoBehaviour
             Debug.LogError("GameFlow: startGameButton (开始游戏按钮) 未在 Inspector 中指定。");
         }
 
-        // (可选) 获取相机初始速度，如果恢复速度不是固定值的话
+        // 获取相机初始速度
         if (CameraSystem.Instance)
         {
             originalCameraSpeed = CameraSystem.Instance.MoveSpeed;
@@ -95,7 +94,6 @@ public class GameFlow : MonoBehaviour
     // 开始场景演出
     private void StartGameSequence()
     {
-        // 0. (可选) 禁用按钮避免重复点击
         if (startGameButton)
         {
             startGameButton.interactable = false;
@@ -298,7 +296,6 @@ public class GameFlow : MonoBehaviour
 #endif
     }
 
-    // 当此 GameFlow 对象销毁时，确保取消事件订阅，以防内存泄漏
     private void OnDestroy()
     {
         CameraSystem.OnCameraArrivedAtSpecialTarget -= HandleCameraArrivedAtPlayer;

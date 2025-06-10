@@ -41,7 +41,7 @@ public class PlayerDialogue : MonoBehaviour
             return;
         }
         _instance = this;
-        DontDestroyOnLoad(gameObject); // 可选：跨场景不销毁
+        DontDestroyOnLoad(gameObject);
     }
 
 
