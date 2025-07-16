@@ -20,7 +20,7 @@ public class DialogueTestTrigger : MonoBehaviour
             if (!string.IsNullOrEmpty(conversationTitle))
             {
                 // 使用官方文档中最常用的方法来启动对话
-                PixelCrushers.DialogueSystem.DialogueManager.StartConversation(conversationTitle);
+                PixelCrushers.DialogueSystem.DialogueManager.StartConversation(conversationTitle,this.transform);
             }
             else
             {
