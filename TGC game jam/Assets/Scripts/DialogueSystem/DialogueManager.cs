@@ -5,7 +5,9 @@ using System.Collections.Generic; // 需要 List 和 Queue
 using Febucci.UI.Core;
 using System; // 需要 Action
 
-public class DialogueManager : MonoBehaviour
+namespace OldDialogue
+{
+    public class DialogueManager : MonoBehaviour
 {
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI dialogueText;
@@ -230,4 +232,5 @@ public class DialogueManager : MonoBehaviour
         DialogueFinished?.Invoke(); 
     }
     
+}
 }
