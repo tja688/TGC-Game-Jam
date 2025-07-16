@@ -47,27 +47,27 @@ public class TowmTriggerZone : MonoBehaviour
             {
                 case 1:
                     PlayerDialogue.Instance.Day1OutSideTalk();
-                    QuestTipManager.Instance.AddTask("SendLetterDay1", "Objective: Deliver Mail Across the Town. February 8th.");
+                    // QuestTipManager.Instance.AddTask("SendLetterDay1", "Objective: Deliver Mail Across the Town. February 8th.");
                     isTalk = true;
                     break;
                 case 2:
                     PlayerDialogue.Instance.Day2OutSideTalk();
-                    QuestTipManager.Instance.AddTask("SendLetterDay2", "Objective: Deliver Mail Across the Town. February 9th.");
+                    // QuestTipManager.Instance.AddTask("SendLetterDay2", "Objective: Deliver Mail Across the Town. February 9th.");
                     isTalk = true;
                     break;
                 case 3:
                     PlayerDialogue.Instance.Day3OutSideTalk();
-                    QuestTipManager.Instance.AddTask("SendLetterDay3", "Objective: Deliver Mail Across the Town. February 10th.");
+                    // QuestTipManager.Instance.AddTask("SendLetterDay3", "Objective: Deliver Mail Across the Town. February 10th.");
                     isTalk = true;
                     break;
                 case 4:
                     PlayerDialogue.Instance.Day4OutSideTalk();
-                    QuestTipManager.Instance.AddTask("SendLetterDay4", "Objective: Deliver Mail Across the Town. February 11th.");
+                    // QuestTipManager.Instance.AddTask("SendLetterDay4", "Objective: Deliver Mail Across the Town. February 11th.");
                     isTalk = true;
                     break;
                 case 5:
                     PlayerDialogue.Instance.Day5OutSideTalk();
-                    QuestTipManager.Instance.AddTask("SendLetterDay5", "Objective: Deliver Mail Across the Town. February 12th.");
+                    // QuestTipManager.Instance.AddTask("SendLetterDay5", "Objective: Deliver Mail Across the Town. February 12th.");
                     isTalk = true;
                     break;
             }

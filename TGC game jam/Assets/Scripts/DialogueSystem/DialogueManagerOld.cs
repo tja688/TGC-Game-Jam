@@ -6,7 +6,7 @@ using Febucci.UI.Core;
 using System; // 需要 Action
 
 
-    public class DialogueManager : MonoBehaviour
+    public class DialogueManagerOld : MonoBehaviour
 {
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI dialogueText;
@@ -15,7 +15,7 @@ using System; // 需要 Action
 
     // [SerializeField] public bool isDialogueProcessActive; // 将通过CurrentState管理
     public TypewriterCore Typewriter => typewriter;
-    public static DialogueManager Instance { get; private set; }
+    public static DialogueManagerOld Instance { get; private set; }
     public static event Action DialogueFinished; // 整个序列完成时触发
 
     // 新增：对话系统状态

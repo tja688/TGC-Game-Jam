@@ -8,24 +8,21 @@ using UnityEngine;
 public class DialogueTestTrigger : MonoBehaviour
 {
     [Tooltip("要启动的对话的标题，该标题在Dialogue Editor中定义")]
-    [PixelCrushers.DialogueSystem.ConversationPopup]
+    [ConversationPopup]
     public string conversationTitle;
 
-    void Update()
+    void StartDialogue()
     {
-        // 检测玩家是否按下了空格键
-        if (Input.GetKeyDown(KeyCode.Space))
+        // 检查标题是否为空，避免不必要的错误
+        if (!string.IsNullOrEmpty(conversationTitle))
         {
-            // 检查标题是否为空，避免不必要的错误
-            if (!string.IsNullOrEmpty(conversationTitle))
-            {
-                // 使用官方文档中最常用的方法来启动对话
-                PixelCrushers.DialogueSystem.DialogueManager.StartConversation(conversationTitle,this.transform);
-            }
-            else
-            {
-                Debug.LogWarning("对话标题未指定，无法开始对话！", this);
-            }
+            // 使用官方文档中最常用的方法来启动对话
+            DialogueManager.StartConversation(conversationTitle);
         }
+        else
+        {
+            Debug.LogWarning("对话标题未指定，无法开始对话！", this);
+        }
+    
     }
 }

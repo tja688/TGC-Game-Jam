@@ -39,7 +39,7 @@ public class DoorItem : ItemBase
 
         await UniTask.WaitForSeconds(0.2f);
 
-        QuestTipManager.Instance.CompleteTask("ExplorePostOffice");
+        // QuestTipManager.Instance.CompleteTask("ExplorePostOffice");
         
         AudioManager.Instance.Play(jobFinishedSound);
 

@@ -120,8 +120,8 @@ public class ChargingDetection : MonoBehaviour
         
         // 等待对话结束事件
         await GameFlow.WaitForEvent(
-            h => DialogueManager.DialogueFinished += h,
-            h => DialogueManager.DialogueFinished -= h
+            h => DialogueManagerOld.DialogueFinished += h,
+            h => DialogueManagerOld.DialogueFinished -= h
         );
         
         // 触发睡眠事件
@@ -141,8 +141,8 @@ public class ChargingDetection : MonoBehaviour
         
         // 等待对话结束事件
         await GameFlow.WaitForEvent(
-            h => DialogueManager.DialogueFinished += h,
-            h => DialogueManager.DialogueFinished -= h
+            h => DialogueManagerOld.DialogueFinished += h,
+            h => DialogueManagerOld.DialogueFinished -= h
         );
         
         // 触发睡眠事件

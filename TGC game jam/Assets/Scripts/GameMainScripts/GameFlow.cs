@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using PixelCrushers.DialogueSystem;
 
 using Cysharp.Threading.Tasks;
 using Unity.VisualScripting;
@@ -12,6 +13,8 @@ using Unity.VisualScripting;
 
 public class GameFlow : MonoBehaviour
 {
+    public GameObject playerTalkDay1;
+    
     [Header("Audio")]
     public SoundEffect beginPanelMusic;
     // public SoundEffect taskFinishMusic;
@@ -169,8 +172,13 @@ public class GameFlow : MonoBehaviour
         // 6. 触发事件并等待对话
         EventCenter.TriggerEvent(GameEvents.GameStartsPlayerWakesUp);
         
+        GameVariables.Day = 1;
+        
+        playerTalkDay1.SetActive(true);
+        
         // await WaitForDialogueAsync(); // 明确等待
     }
+    
 
     // private async UniTask WaitForDialogueAsync() {
     //     
