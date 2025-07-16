@@ -10,6 +10,9 @@ public class KeyItem : ItemBase
         base.Interact(player);
         
         MessageTipManager.ShowMessage("Got the post office key.");
+        
+        
+        
     }
 
     

@@ -14,8 +14,8 @@ public class GameFlow : MonoBehaviour
 {
     [Header("Audio")]
     public SoundEffect beginPanelMusic;
-    public SoundEffect taskFinishMusic;
-    public SoundEffect endMusic;
+    // public SoundEffect taskFinishMusic;
+    // public SoundEffect endMusic;
 
     public Camera camera1;
 
@@ -27,12 +27,12 @@ public class GameFlow : MonoBehaviour
     [Tooltip("玩家界面按钮")]
     public GameObject playerPanelButton;
 
-    
-    [Header("Event Objects")]
-    public GameObject postOfficePortal;
-
-    public GameObject gameOverPanel;
-    
+    //
+    // [Header("Event Objects")]
+    // public GameObject postOfficePortal;
+    //
+    // public GameObject gameOverPanel;
+    //
     private float originalCameraSpeed; 
     
     private void Start()
@@ -41,7 +41,7 @@ public class GameFlow : MonoBehaviour
             ScreenFadeController.Instance.BeginFadeToClear(2f);
         
         // 1. 播放背景音乐
-        if (!beginPanelMusic) // 修正：变量名应该是 streetMainMusic
+        if (!beginPanelMusic) 
         {
             Debug.LogError("GameFlow: streetMainMusic (背景音乐 SoundEffect) 未在 Inspector 中指定。");
         }
@@ -87,9 +87,9 @@ public class GameFlow : MonoBehaviour
         if(playerPanelButton)
             playerPanelButton.SetActive(false);
 
-        GameVariables.OnDay1FinishSend += Day1Finish;
-        
-        EventCenter.AddEventListener(GameEvents.PlayerSleep,OnPlayerSleep);
+        // GameVariables.OnDay1FinishSend += Day1Finish;
+        //
+        // EventCenter.AddEventListener(GameEvents.PlayerSleep,OnPlayerSleep);
     }
 
     // 开始场景演出
@@ -169,47 +169,47 @@ public class GameFlow : MonoBehaviour
         // 6. 触发事件并等待对话
         EventCenter.TriggerEvent(GameEvents.GameStartsPlayerWakesUp);
         
-        await WaitForDialogueAsync(); // 明确等待
+        // await WaitForDialogueAsync(); // 明确等待
     }
 
-    private async UniTask WaitForDialogueAsync() {
-        
-        // 等待对话完成
-        await WaitForEvent(
-            h => DialogueManager.DialogueFinished += h,
-            h => DialogueManager.DialogueFinished -= h
-            );
-    
-        // 移动相机
-        CameraSystem.SetSpecialCameraTarget(GameVariables.FindLoraPosition);
-
-        // 停留1秒后开启寻找
-        await UniTask.WaitForSeconds(1f);
-        
-        PlayerDialogue.Instance.FindLora(GameVariables.FindLoraPosition);
-        
-        // 等待对话完成
-        await WaitForEvent(
-            h => DialogueManager.DialogueFinished += h,
-            h => DialogueManager.DialogueFinished -= h
-        );
-        
-        // 镜头回到主角身上
-        CameraSystem.SetSpecialCameraTarget(PlayerMove.CurrentPlayer.transform);
-        
-        // 发送任务提示并记录任务
-        MessageTipManager.ShowMessage("Time to tackle that avalanche of letters in the post office.");
-        QuestTipManager.Instance.AddTask("FindMail", "Objective: Search for the Lost Letters");
-        QuestTipManager.Instance.AddTask("ExplorePostOffice", "Objective: Investigate the Post Office.");
-
-        
-        // 停留2秒后提醒分拣完成准备投递
-        await UniTask.WaitForSeconds(2f);
-        
-        // 停留4秒后提醒可以查看任务面板
-        await UniTask.WaitForSeconds(4f);
-        MessageTipManager.ShowMessage("Tap the top-right corner to check your mission list.");
-    }
+    // private async UniTask WaitForDialogueAsync() {
+    //     
+    //     // 等待对话完成
+    //     await WaitForEvent(
+    //         h => DialogueManager.DialogueFinished += h,
+    //         h => DialogueManager.DialogueFinished -= h
+    //         );
+    //
+    //     // 移动相机
+    //     CameraSystem.SetSpecialCameraTarget(GameVariables.FindLoraPosition);
+    //
+    //     // 停留1秒后开启寻找
+    //     await UniTask.WaitForSeconds(1f);
+    //     
+    //     PlayerDialogue.Instance.FindLora(GameVariables.FindLoraPosition);
+    //     
+    //     // 等待对话完成
+    //     await WaitForEvent(
+    //         h => DialogueManager.DialogueFinished += h,
+    //         h => DialogueManager.DialogueFinished -= h
+    //     );
+    //     
+    //     // 镜头回到主角身上
+    //     CameraSystem.SetSpecialCameraTarget(PlayerMove.CurrentPlayer.transform);
+    //     
+    //     // 发送任务提示并记录任务
+    //     MessageTipManager.ShowMessage("Time to tackle that avalanche of letters in the post office.");
+    //     QuestTipManager.Instance.AddTask("FindMail", "Objective: Search for the Lost Letters");
+    //     QuestTipManager.Instance.AddTask("ExplorePostOffice", "Objective: Investigate the Post Office.");
+    //
+    //     
+    //     // 停留2秒后提醒分拣完成准备投递
+    //     await UniTask.WaitForSeconds(2f);
+    //     
+    //     // 停留4秒后提醒可以查看任务面板
+    //     await UniTask.WaitForSeconds(4f);
+    //     MessageTipManager.ShowMessage("Tap the top-right corner to check your mission list.");
+    // }
     
     
     public static async UniTask WaitForEvent(Action<Action> addListener, Action<Action> removeListener) {
@@ -220,73 +220,72 @@ public class GameFlow : MonoBehaviour
             removeListener(handler); 
             utcs.TrySetResult();
         };
-
+    
         addListener(handler);
         await utcs.Task;
     }
 
-    private void Day1Finish()
-    {
-        MessageTipManager.ShowMessage("Delivery complete. Time to head back.");
-        AudioManager.Instance.Play(taskFinishMusic);
+    // private void Day1Finish()
+    // {
+    //     MessageTipManager.ShowMessage("Delivery complete. Time to head back.");
+    //     AudioManager.Instance.Play(taskFinishMusic);
+    // }
 
-    }
-
-    private void OnPlayerSleep()
-    {
-        ScreenFadeController.Instance.BeginFadeToBlack(1f);
-        
-        GameVariables.Day ++;
-
-        if (GameVariables.Day < 6)
-        {
-            ReadyToWakeUp();
-        }
-        else
-        {
-            gameOverPanel.SetActive(true);
-        }
-    }
-
-    private async UniTask ReadyToWakeUp()
-    {
-        await WakeUp();
-    }
-
-    private async UniTask WakeUp()
-    {
-        await UniTask.WaitForSeconds(4f);
-        
-        ScreenFadeController.Instance.BeginFadeToClear(1f);
-
-        EventCenter.TriggerEvent(GameEvents.PlayerWakesUp);
-        
-        await UniTask.WaitForSeconds(1f);
-
-        PlayerMove.CanPlayerMove = true;
-        
-        MessageTipManager.ShowMessage("Let's check today's mail to send out.");
-
-        if (GameVariables.Day == 4)
-        {
-            PlayerMove.CanPlayerMove = false;
-            
-            await UniTask.WaitForSeconds(1f);
-
-            CameraSystem.SetSpecialCameraTarget(GameVariables.LetterSender);
-            
-            await UniTask.WaitForSeconds(2f);
-
-            CameraSystem.SetSpecialCameraTarget(PlayerMove.CurrentPlayer.transform);
-            
-            await UniTask.WaitForSeconds(1f);
-
-            PlayerDialogue.Instance.FixSender();
-            
-        }
-        
-    }
-    
+    // private void OnPlayerSleep()
+    // {
+    //     ScreenFadeController.Instance.BeginFadeToBlack(1f);
+    //     
+    //     GameVariables.Day ++;
+    //
+    //     if (GameVariables.Day < 6)
+    //     {
+    //         ReadyToWakeUp();
+    //     }
+    //     else
+    //     {
+    //         gameOverPanel.SetActive(true);
+    //     }
+    // }
+    //
+    // private async UniTask ReadyToWakeUp()
+    // {
+    //     await WakeUp();
+    // }
+    //
+    // private async UniTask WakeUp()
+    // {
+    //     await UniTask.WaitForSeconds(4f);
+    //     
+    //     ScreenFadeController.Instance.BeginFadeToClear(1f);
+    //
+    //     EventCenter.TriggerEvent(GameEvents.PlayerWakesUp);
+    //     
+    //     await UniTask.WaitForSeconds(1f);
+    //
+    //     PlayerMove.CanPlayerMove = true;
+    //     
+    //     MessageTipManager.ShowMessage("Let's check today's mail to send out.");
+    //
+    //     if (GameVariables.Day == 4)
+    //     {
+    //         PlayerMove.CanPlayerMove = false;
+    //         
+    //         await UniTask.WaitForSeconds(1f);
+    //
+    //         CameraSystem.SetSpecialCameraTarget(GameVariables.LetterSender);
+    //         
+    //         await UniTask.WaitForSeconds(2f);
+    //
+    //         CameraSystem.SetSpecialCameraTarget(PlayerMove.CurrentPlayer.transform);
+    //         
+    //         await UniTask.WaitForSeconds(1f);
+    //
+    //         PlayerDialogue.Instance.FixSender();
+    //         
+    //     }
+    //     
+    // }
+    //
     
 
     public void QuitGame()
@@ -298,18 +297,18 @@ public class GameFlow : MonoBehaviour
 #endif
     }
 
-    // 当此 GameFlow 对象销毁时，确保取消事件订阅，以防内存泄漏
-    private void OnDestroy()
-    {
-        CameraSystem.OnCameraArrivedAtSpecialTarget -= HandleCameraArrivedAtPlayer;
-        GameVariables.OnDay1FinishSend -= Day1Finish;
-
-        EventCenter.RemoveListener(GameEvents.PlayerSleep,OnPlayerSleep);
-
-
-        if (startGameButton)
-        {
-            startGameButton.onClick.RemoveListener(StartGameSequence);
-        }
-    }
+    // // 当此 GameFlow 对象销毁时，确保取消事件订阅，以防内存泄漏
+    // private void OnDestroy()
+    // {
+    //     CameraSystem.OnCameraArrivedAtSpecialTarget -= HandleCameraArrivedAtPlayer;
+    //     GameVariables.OnDay1FinishSend -= Day1Finish;
+    //
+    //     EventCenter.RemoveListener(GameEvents.PlayerSleep,OnPlayerSleep);
+    //
+    //
+    //     if (startGameButton)
+    //     {
+    //         startGameButton.onClick.RemoveListener(StartGameSequence);
+    //     }
+    // }
 }
