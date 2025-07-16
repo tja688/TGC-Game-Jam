@@ -5,8 +5,7 @@ using System.Collections.Generic; // 需要 List 和 Queue
 using Febucci.UI.Core;
 using System; // 需要 Action
 
-namespace OldDialogue
-{
+
     public class DialogueManager : MonoBehaviour
 {
     [Header("UI References")]
@@ -232,5 +231,4 @@ namespace OldDialogue
         DialogueFinished?.Invoke(); 
     }
     
-}
 }

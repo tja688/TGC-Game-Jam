@@ -8,7 +8,7 @@ using UnityEngine;
 public class DialogueTestTrigger : MonoBehaviour
 {
     [Tooltip("要启动的对话的标题，该标题在Dialogue Editor中定义")]
-    [ConversationPopup] // 使用官方文档中提到的 [ConversationPopup] 特性，可以在Inspector中获得一个方便的下拉菜单
+    [PixelCrushers.DialogueSystem.ConversationPopup]
     public string conversationTitle;
 
     void Update()
@@ -20,7 +20,7 @@ public class DialogueTestTrigger : MonoBehaviour
             if (!string.IsNullOrEmpty(conversationTitle))
             {
                 // 使用官方文档中最常用的方法来启动对话
-                DialogueManager.StartConversation(conversationTitle);
+                PixelCrushers.DialogueSystem.DialogueManager.StartConversation(conversationTitle);
             }
             else
             {
