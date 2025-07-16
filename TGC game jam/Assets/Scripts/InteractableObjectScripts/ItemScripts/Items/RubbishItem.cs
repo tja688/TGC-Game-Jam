@@ -1,9 +1,14 @@
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using PixelCrushers.DialogueSystem;
 
 public class RubbishItem : ItemBase
 {
+    [ConversationPopup]
+    public string conversationTitle;
+    
+    public PortalController  portalController;
     
     [Header("Day1 Letters")]
     [SerializeField] private GameObject letter1;
@@ -54,6 +59,7 @@ public class RubbishItem : ItemBase
     
     public override void Interact(GameObject player)
     {
+        DialogueManager.StartConversation(conversationTitle);
         
         if(!isFindAllLetters)
             AudioManager.Instance.Play(grabSound);
@@ -63,7 +69,7 @@ public class RubbishItem : ItemBase
             case 1:
                 if (isFindAllLetters)
                 {
-                    MessageTipManager.ShowMessage("The letter package is full.");
+                    OpenPortal();
                     return;
                 }
                 var newItem1 = Instantiate(letter1);
@@ -75,13 +81,13 @@ public class RubbishItem : ItemBase
                 MessageTipManager.ShowMessage("Received some letters.");
                 OnFindAllLetters?.Invoke();
                 isFindAllLetters =  true;
-                QuestTipManager.Instance.CompleteTask("FindMail");
+                // QuestTipManager.Instance.CompleteTask("FindMail");
                 PlayerDialogue.Instance.SendLetter();
                 break;
             case 2:
                 if (isFindAllLetters)
                 {
-                    MessageTipManager.ShowMessage("The letter package is full.");
+                    OpenPortal();
                     return;
                 }
                 var newItem4 = Instantiate(letter4);
@@ -99,7 +105,7 @@ public class RubbishItem : ItemBase
             case 3:
                 if (isFindAllLetters)
                 {
-                    MessageTipManager.ShowMessage("The letter package is full.");
+                    OpenPortal();
                     return;
                 }
                 var newItem8 = Instantiate(letter8);
@@ -115,7 +121,7 @@ public class RubbishItem : ItemBase
             case 4:
                 if (isFindAllLetters)
                 {
-                    MessageTipManager.ShowMessage("The letter package is full.");
+                    OpenPortal();
                     return;
                 }
                 var newItem11 = Instantiate(letter11);
@@ -129,7 +135,7 @@ public class RubbishItem : ItemBase
             case 5:
                 if (isFindAllLetters)
                 {
-                    MessageTipManager.ShowMessage("The letter package is full.");
+                    OpenPortal();
                     return;
                 }
                 var newItem13 = Instantiate(letter13);
@@ -144,4 +150,24 @@ public class RubbishItem : ItemBase
 
     }
     
+    void StartDialogue()
+    {
+        // 检查标题是否为空，避免不必要的错误
+        if (!string.IsNullOrEmpty(conversationTitle))
+        {
+            // 使用官方文档中最常用的方法来启动对话
+            DialogueManager.StartConversation(conversationTitle);
+        }
+        else
+        {
+            Debug.LogWarning("对话标题未指定，无法开始对话！", this);
+        }
+    }
+    
+    void OpenPortal()
+    {
+        DialogueLua.SetVariable("LetterSorting", true);
+        
+        portalController.ActivatePortal();
+    }
 }

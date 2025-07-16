@@ -21,48 +21,18 @@ public class PortalController : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        // --- 订阅事件 ---
-        // 订阅“找到当天所有信件”事件，当事件触发时，调用 ActivatePortal 方法
-        RubbishItem.OnFindAllLetters += ActivatePortal;
-
-        // 订阅“天数变化”事件，当事件触发时，调用 DeactivatePortal 方法
-        GameVariables.OnDayChanged += DeactivatePortal;
-
-    }
-
-    // 当这个控制器对象被销毁时，取消订阅以防止内存泄漏
-    void OnDestroy()
-    {
-        // --- 取消订阅事件 ---
-        RubbishItem.OnFindAllLetters -= ActivatePortal;
-        GameVariables.OnDayChanged -= DeactivatePortal;
-    }
-
     /// <summary>
     /// 激活传送门的方法
     /// </summary>
-    private void ActivatePortal()
-    {
-        if (portalGameObject && GameVariables.Day != 4)
-        {
-            portalGameObject.SetActive(true);
-        }
-    }
-    
-    public void ActivatePortalAPI()
+    public void ActivatePortal()
     {
         if (portalGameObject != null)
         {
             portalGameObject.SetActive(true);
         }
     }
-
-    /// <summary>
-    /// 关闭（失活）传送门的方法
-    /// </summary>
-    private void DeactivatePortal()
+    
+    public void DeactivatePortal()
     {
         if (portalGameObject != null)
         {

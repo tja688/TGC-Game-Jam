@@ -99,7 +99,7 @@ public class GameVariables : MonoBehaviour
         // Day1 逻辑（独立）
         if (Day1LetterSend == 3 && !Day1Finish)
         {
-            QuestTipManager.Instance.CompleteTask("SendLetterDay1");
+            // QuestTipManager.Instance.CompleteTask("SendLetterDay1");
             OnDay1FinishSend?.Invoke();
             Day1Finish = true;
         }
@@ -107,7 +107,7 @@ public class GameVariables : MonoBehaviour
         // Day2 逻辑（独立）
         if (Day2EventCount == 4 && !Day2Finish)
         {
-            QuestTipManager.Instance.CompleteTask("SendLetterDay2");
+            // QuestTipManager.Instance.CompleteTask("SendLetterDay2");
             OnDay1FinishSend?.Invoke(); // 注意：这里可能应该是 OnDay2FinishSend?
             Day2Finish = true;
         }
@@ -115,7 +115,7 @@ public class GameVariables : MonoBehaviour
         // Day3 逻辑（独立）
         if (Day3EventCount == 4 && !Day3Finish)
         {
-            QuestTipManager.Instance.CompleteTask("SendLetterDay3");
+            // QuestTipManager.Instance.CompleteTask("SendLetterDay3");
             OnDay1FinishSend?.Invoke(); 
             Day3Finish = true;
         }
@@ -123,14 +123,14 @@ public class GameVariables : MonoBehaviour
         // Day3 逻辑（独立）
         if (Day4EventCount == 2 && !Day4Finish)
         {
-            QuestTipManager.Instance.CompleteTask("SendLetterDay4");
+            // QuestTipManager.Instance.CompleteTask("SendLetterDay4");
             OnDay1FinishSend?.Invoke(); 
             Day4Finish = true;
         }
         
         if (Day5EventCount == 1 && !Day5Finish)
         {
-            QuestTipManager.Instance.CompleteTask("SendLetterDay5");
+            // QuestTipManager.Instance.CompleteTask("SendLetterDay5");
             OnDay1FinishSend?.Invoke(); 
             Day5Finish = true;
         }

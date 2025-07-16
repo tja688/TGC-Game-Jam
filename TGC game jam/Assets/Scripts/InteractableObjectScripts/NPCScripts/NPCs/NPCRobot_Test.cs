@@ -31,7 +31,7 @@ public class NPCRobot_Test : NPCBase
     private void FirstMeet()
     {
         var ids = new List<string> { "meet1" };
-        DialogueManager.Instance.StartDialogueSequence(ids, dialogueData, promptAnchorTransform, false);
+        DialogueManagerOld.Instance.StartDialogueSequence(ids, dialogueData, promptAnchorTransform, false);
     }
 
     private void SecondMeet()
@@ -42,7 +42,7 @@ public class NPCRobot_Test : NPCBase
             Debug.LogError("TestItemShowPointTrans is not set for NPCRobot_Test.SecondMeet");
             // Fallback to default anchor or skip
             List<string> idsFallback = new List<string> { "meet2_fallback" }; // 假设有备用对话
-            DialogueManager.Instance.StartDialogueSequence(idsFallback, dialogueData, promptAnchorTransform, false);
+            DialogueManagerOld.Instance.StartDialogueSequence(idsFallback, dialogueData, promptAnchorTransform, false);
             return;
         }
 
@@ -59,7 +59,7 @@ public class NPCRobot_Test : NPCBase
         // 对话锚点是TestItemShowPointTrans
         // false: 等待交互继续
         // MoveBackCameraAfterDialogue 是整个meet2序列（这里只有一句）完成后执行的回调
-        DialogueManager.Instance.StartDialogueSequence(ids, dialogueData, testItemShowPointTrans, false, MoveBackCameraAfterDialogue);
+        DialogueManagerOld.Instance.StartDialogueSequence(ids, dialogueData, testItemShowPointTrans, false, MoveBackCameraAfterDialogue);
     }
 
     private void MoveBackCameraAfterDialogue()
@@ -74,7 +74,7 @@ public class NPCRobot_Test : NPCBase
         List<string> ids = new List<string> { "meet3", "meet3_extra" }; // 示例：第三次交互播放两句话
         // false: 自动播放这两句话，但整个序列说完后（即meet3_extra说完），会等待下一次交互（如果还有后续交互的话）
         // 这里最后一个参数是 onComplete 回调
-        DialogueManager.Instance.StartDialogueSequence(ids, dialogueData, promptAnchorTransform, true, () => {
+        DialogueManagerOld.Instance.StartDialogueSequence(ids, dialogueData, promptAnchorTransform, true, () => {
             Debug.Log("ThirdMeet sequence completed.");
             if(InstantiatedPromptInstance)
                 DestroyInteractionPrompt(); // 例如，在第三次对话结束后销毁交互提示
