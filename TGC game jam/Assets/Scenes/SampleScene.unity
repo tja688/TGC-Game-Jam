@@ -934,7 +934,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 265.5, y: 218}
+  m_AnchoredPosition: {x: 506, y: 249}
   m_SizeDelta: {x: 423.2, y: 423.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &179893749
@@ -3905,7 +3905,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -431}
+  m_AnchoredPosition: {x: -425, y: 11.2}
   m_SizeDelta: {x: 1667.3, y: 401.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &791023652
@@ -3928,8 +3928,13 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Programming:\u200B\u200B Jin Tang\nArt:\u200B\u200B Ruby\nAnimation:\u200B\u200B
-    Xing YeYun\nNarrative Designer: Xiao Ye"
+  m_text: "Game Design:   Jin Tang, Ruby Zhixuan Wang\r\nNarrative Design & Writing:  
+    Ruby Zhixuan Wang\r\nInitial Narrative Concepts:   Xiao Ye\r\nProgramming & Sound:  
+    Jin Tang\r\nArt:   Ruby Zhixuan Wang\r\nAnimation:    Xiao Chen\r\nUI Design:  
+    Jin Tang, Ruby Zhixuan Wang\n\nMusic Credits\r\n\u201CThe Future\u2019s On Loan\u201D\r                                  
+    by Thee Knaves\r\n\u201CBorn in Winter\u201D\r                          by One
+    Man Book\r\n\u201CThese Lights Are Wild\u201D\r                                  
+    by One Man Book\nSource: Free Music Archive\r\nLicense: CC BY-NC-ND 3.0"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fd2d610f93dd89245adef9ff2dc27429, type: 2}
   m_sharedMaterial: {fileID: 9165591241578340036, guid: fd2d610f93dd89245adef9ff2dc27429, type: 2}
@@ -3956,8 +3961,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 92.3
-  m_fontSizeBase: 92.3
+  m_fontSize: 57
+  m_fontSizeBase: 57
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3966,9 +3971,9 @@ MonoBehaviour:
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: 5
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: 5
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -3992,7 +3997,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: 656.4464, w: -522.0558}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
