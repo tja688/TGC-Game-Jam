@@ -99,7 +99,10 @@ public static class GameEvents
     
     /// <summary> 玩家休眠。</summary>
     public const string PlayerSleep = "PlayerSleep";
-
+    
+    
+    /// <summary> 一天过去。</summary>
+    public const string PlayerSleepAndDayChange = "PlayerSleepAndDayChange";
     
     #endregion
     

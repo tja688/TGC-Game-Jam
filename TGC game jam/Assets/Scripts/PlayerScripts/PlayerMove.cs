@@ -147,20 +147,32 @@ public class PlayerMove : MonoBehaviour
     private async void OnPlayerSleep()
     {
         CanPlayerMove = false; // 玩家入睡，禁止移动
-
+        
         await Sleep();
     }
     
-    private void OnPlayerWakesUp()
+    private async void OnPlayerWakesUp()
     {
+        await WakesUp();
+        
+        CanPlayerMove = true; // 玩家醒来，允许移动
+    }
+
+    private async UniTask WakesUp()
+    {
+        ScreenFadeController.Instance.BeginFadeToClear(1f);
+        
+        await UniTask.WaitForSeconds(0.5f);
+        
         if (animator)
         {
             animator.SetTrigger(WakeUpAnimHash);
         }
     }
-
     private async UniTask Sleep()
     {
+        ScreenFadeController.Instance.BeginFadeToBlack(1f);
+        
         await UniTask.WaitForSeconds(0.5f);
         
         if (animator)
@@ -225,6 +237,48 @@ public class PlayerMove : MonoBehaviour
         
             // 5. 等待结束后，再归还玩家的输入控制权
             isUnderSystemControl = false;
+        }
+    }
+    
+    
+    public async UniTask AutoMoveToSleep(Vector2 targetPosition, float proximityThreshold = 0.1f)
+    {
+        // 夺取控制权
+        isUnderSystemControl = true;
+        
+        try
+        {
+            // 循环直到玩家接近目标点
+            while (Vector2.Distance(transform.position, targetPosition) > proximityThreshold)
+            {
+                Vector2 currentPosition = transform.position;
+                Vector2 direction = (targetPosition - currentPosition).normalized;
+
+                UpdateAnimatorParameters(direction, 1f);
+                movementVelocityForFixedUpdate = direction * moveSpeed;
+                IsWalking = true;
+                lastValidInputX = direction.x;
+                lastValidInputY = direction.y;
+
+                await UniTask.Yield(PlayerLoopTiming.Update);
+            }
+        }
+        finally
+        {
+            // 1. 停止物理移动
+            movementVelocityForFixedUpdate = Vector2.zero;
+            IsWalking = false;
+        
+            // 2. 确保动画过渡到与最终朝向一致的Idle状态，防止滑动感
+            var lastDirection = new Vector2(lastValidInputX, lastValidInputY).normalized;
+            UpdateAnimatorParameters(lastDirection, 0f);
+            
+            // 5. 等待结束后，再归还玩家的输入控制权
+            isUnderSystemControl = false;
+            
+            // 3. 触发睡眠事件流
+            EventCenter.TriggerEvent(GameEvents.PlayerSleepAndDayChange);
+
         }
     }
 

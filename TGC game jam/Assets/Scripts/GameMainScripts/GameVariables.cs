@@ -2,9 +2,14 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 using System;
+using PixelCrushers.DialogueSystem;
 
 public class GameVariables : MonoBehaviour
 {
+    [Tooltip("输入您想要在 Dialogue System 中监听的变量的准确名称")]
+    [SerializeField] private string variableToWatch = "Day"; 
+
+    
     public static int Day;
     public static bool DebugNoOpener;
     public static bool Day1Findletter = false;
@@ -34,8 +39,6 @@ public class GameVariables : MonoBehaviour
     public static Transform Restaurant;
 
     public static event Action OnDayChanged;
-    public static event Action OnDay1FinishSend;
-
     
     // 用于轮询的私有变量
     private int lastKnownDay;
@@ -68,72 +71,17 @@ public class GameVariables : MonoBehaviour
         BoluNewPosition = boluNewPosition;
         GirlPosition = girlPosition;
     }
-
-    private void Update()
-    {
-        // 按F1增加Day1完成Day1任务
-        if (Input.GetKeyDown(KeyCode.F1))
-        {
-            Day1LetterSend = 3;
-        }
-        
-        // 按F2增加完成Day3任务
-        if (Input.GetKeyDown(KeyCode.F2))
-        {
-            Day = 3;
-            OnDay1FinishSend?.Invoke(); 
-            Day3Finish = true;
-            IsHaveBattery = true;
-        }
-    }
-
+    
+    
     private void FixedUpdate()
     {
+        Day = DialogueLua.GetVariable(variableToWatch).AsInt;
+        
         // 检查天数变化
         if (lastKnownDay != Day)
         {
             lastKnownDay = Day;
             OnDayChanged?.Invoke();
         }
-
-        // Day1 逻辑（独立）
-        if (Day1LetterSend == 3 && !Day1Finish)
-        {
-            // QuestTipManager.Instance.CompleteTask("SendLetterDay1");
-            OnDay1FinishSend?.Invoke();
-            Day1Finish = true;
-        }
-    
-        // Day2 逻辑（独立）
-        if (Day2EventCount == 4 && !Day2Finish)
-        {
-            // QuestTipManager.Instance.CompleteTask("SendLetterDay2");
-            OnDay1FinishSend?.Invoke(); // 注意：这里可能应该是 OnDay2FinishSend?
-            Day2Finish = true;
-        }
-        
-        // Day3 逻辑（独立）
-        if (Day3EventCount == 4 && !Day3Finish)
-        {
-            // QuestTipManager.Instance.CompleteTask("SendLetterDay3");
-            OnDay1FinishSend?.Invoke(); 
-            Day3Finish = true;
-        }
-        
-        // Day3 逻辑（独立）
-        if (Day4EventCount == 2 && !Day4Finish)
-        {
-            // QuestTipManager.Instance.CompleteTask("SendLetterDay4");
-            OnDay1FinishSend?.Invoke(); 
-            Day4Finish = true;
-        }
-        
-        if (Day5EventCount == 1 && !Day5Finish)
-        {
-            // QuestTipManager.Instance.CompleteTask("SendLetterDay5");
-            OnDay1FinishSend?.Invoke(); 
-            Day5Finish = true;
-        }
-
     }
 }
