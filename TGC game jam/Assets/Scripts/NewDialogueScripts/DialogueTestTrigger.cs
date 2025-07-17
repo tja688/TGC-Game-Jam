@@ -1,4 +1,6 @@
 // 引入官方文档指定的命名空间
+
+using System;
 using PixelCrushers.DialogueSystem;
 using UnityEngine;
 
@@ -10,6 +12,12 @@ public class DialogueTestTrigger : MonoBehaviour
     [Tooltip("要启动的对话的标题，该标题在Dialogue Editor中定义")]
     [ConversationPopup]
     public string conversationTitle;
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+            StartDialogue();
+    }
 
     void StartDialogue()
     {

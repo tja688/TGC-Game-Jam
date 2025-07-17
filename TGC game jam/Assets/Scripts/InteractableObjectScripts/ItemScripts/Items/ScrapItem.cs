@@ -1,32 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PixelCrushers.DialogueSystem;
 
 public class ScrapItem : ItemBase
 {
-    public GameObject paper;
-
-    protected override void Start()
-    {
-        base.Start();
-        
-        paper.SetActive(false);
-    }
-
+    [ConversationPopup]
+    public string conversationTitle;
+    
     public override void Interact(GameObject player)
     {
-        if(!GameVariables.CanPickPaper) return;
+        AudioManager.Instance.Play(grabSound);
+  
+        DialogueManager.StartConversation(conversationTitle);
         
-        paper.SetActive(true);
-
-        var ani = paper.GetComponent<AnimationTriggerAndDestroy>();
-
-        ani.TriggerAnimation();
-        
-        GameVariables.Day2EventCount++;
-        
-        base.Interact(player);
-        
-        
+        this.gameObject.SetActive(false);
     }
 }

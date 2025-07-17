@@ -12,21 +12,8 @@ public class SequencerCommandTriggerEvent : SequencerCommand
 {
     public void Start()
     {
-        // --- 1. 获取事件名称 (必须的第一个参数) ---
-        var eventName = GetParameter(0);
-
-        if (string.IsNullOrEmpty(eventName))
-        {
-            Debug.LogWarning("Dialogue System: Command 'TriggerEvent' requires an event name.", this);
-            Stop();
-            return;
-        }
+        SleepCycleManager.Instance.TriggerSleepSequence();
         
-        Debug.Log("Dialogue System TriggerEvent: "+eventName, this);
-
-        EventCenter.TriggerEvent(eventName);
-
-        // --- 3. 立即停止命令，让对话继续 ---
         Stop();
     }
 }

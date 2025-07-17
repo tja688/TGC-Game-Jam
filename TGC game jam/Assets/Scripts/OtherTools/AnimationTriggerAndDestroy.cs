@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class AnimationTriggerAndDestroy : MonoBehaviour
@@ -19,6 +20,11 @@ public class AnimationTriggerAndDestroy : MonoBehaviour
         {
             Debug.LogError("在对象 " + gameObject.name + " 上没有找到Animator组件！", this);
         }
+    }
+
+    private void OnEnable()
+    {
+        TriggerAnimation();
     }
 
     /// <summary>
