@@ -104,6 +104,9 @@ public static class GameEvents
     /// <summary> 一天过去。</summary>
     public const string PlayerSleepAndDayChange = "PlayerSleepAndDayChange";
     
+    /// <summary> 一天到来。</summary>
+    public const string DayChangeAndPlayerWakeUp = "DayChangeAndPlayerWakeUp";
+
     #endregion
     
 }

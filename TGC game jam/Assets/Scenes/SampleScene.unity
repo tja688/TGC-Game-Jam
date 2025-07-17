@@ -3610,6 +3610,51 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 4.410535, y: 4.193786}
   m_EdgeRadius: 0
+--- !u!1 &740713786
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 740713787}
+  - component: {fileID: 740713788}
+  m_Layer: 0
+  m_Name: "Dialogue System \u53D8\u91CF\u8C03\u8BD5"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &740713787
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740713786}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.1901245, y: -0.9448744, z: -0.013146754}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &740713788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740713786}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06548c1db0e9889499df9902152d32d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  variables: []
 --- !u!1 &748334199
 GameObject:
   m_ObjectHideFlags: 0
@@ -3868,9 +3913,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49c5af1ea94fe834bb89ea290c944806, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sleepDialogueTrigger: {fileID: 790222832}
-  waitBeforeDialogue: 2
-  waitAfterDialogueStarts: 2
+  fadeDuration: 2
 --- !u!1 &791023650
 GameObject:
   m_ObjectHideFlags: 0
@@ -5017,7 +5060,6 @@ GameObject:
   - component: {fileID: 976928811}
   - component: {fileID: 976928813}
   - component: {fileID: 976928812}
-  - component: {fileID: 976928815}
   - component: {fileID: 976928814}
   m_Layer: 0
   m_Name: "\u5B8C\u6210\u5DE5\u4F5C\u5145\u7535\u89E6\u53D1\u5668"
@@ -5174,90 +5216,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 976928810}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c593457cd8105e148906690e1707c592, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  trigger: 32
-  condition:
-    luaConditions: []
-    questConditions: []
-    acceptedTags: []
-    acceptedGameObjects: []
-    luaWizardIndex: -1
-    lastEvaluationValue: 0
-  setQuestState: 1
-  questName: 
-  questState: 0
-  setQuestEntryState: 0
-  questEntryNumber: 1
-  questEntryState: 0
-  setAnotherQuestEntryState: 0
-  anotherQuestEntryNumber: 1
-  anotherQuestEntryState: 0
-  luaCode: 
-  sequence: 
-  sequenceSpeaker: {fileID: 0}
-  sequenceListener: {fileID: 0}
-  waitOneFrameOnStartOrEnable: 1
-  alertMessage: 
-  textTable: {fileID: 0}
-  alertDuration: 0
-  sendMessages: []
-  barkSource: 0
-  barkConversation: 
-  barkEntryID: -1
-  barkEntryTitle: 
-  barkText: 
-  barkTextSequence: 
-  barker: {fileID: 0}
-  barkTarget: {fileID: 0}
-  barkOrder: 0
-  allowBarksDuringConversations: 0
-  skipBarkIfNoValidEntries: 0
-  cacheBarkLines: 0
-  conversation: "\u5F53\u524D\u5929\u6570(\u5929\u6570\u589E\u52A0)"
-  conversationConversant: {fileID: 0}
-  conversationActor: {fileID: 0}
-  startConversationEntryID: -1
-  startConversationEntryTitle: 
-  overrideDialogueUI: {fileID: 0}
-  exclusive: 0
-  replace: 0
-  queue: 0
-  skipIfNoValidEntries: 0
-  preventRestartOnSameFrameEnded: 0
-  stopConversationOnTriggerExit: 0
-  marginToAllowTriggerExit: 0.2
-  stopConversationIfTooFar: 0
-  maxConversationDistance: 5
-  monitorConversationDistanceFrequency: 1
-  showCursorDuringConversation: 0
-  pauseGameDuringConversation: 0
-  setActiveActions: []
-  setEnabledActions: []
-  setAnimatorStateActions: []
-  onExecute:
-    m_PersistentCalls:
-      m_Calls: []
-  useConversationTitlePicker: 1
-  useBarkTitlePicker: 1
-  useQuestNamePicker: 1
-  selectedDatabase: {fileID: 11400000, guid: c1a9410abf34866418cb2c7c9f3becdd, type: 2}
---- !u!114 &976928815
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 976928810}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 49c5af1ea94fe834bb89ea290c944806, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sleepDialogueTrigger: {fileID: 976928814}
-  waitBeforeDialogue: 2
-  waitAfterDialogueStarts: 4
+  fadeDuration: 2
 --- !u!114 &1027515678 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2174190109156182770, guid: 6c5982328fe68cb4dae4436ef5ad0095, type: 3}
@@ -6714,6 +6676,7 @@ MonoBehaviour:
     - Variable["BoluEmail"] == true
     - Variable["RellaEmail"] == true
     - Variable["EricaEmail"] == true
+    - Variable["FinishDayJob"] == false
     questConditions: []
     acceptedTags: []
     acceptedGameObjects: []
@@ -12262,6 +12225,22 @@ PrefabInstance:
       value: "\u9ED1\u5C4FCanvas"
       objectReference: {fileID: 0}
     - target: {fileID: 1839103629911751403, guid: 63fc5a7323a4140418e893a35dcb0ea2, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 312940276}
+    - target: {fileID: 1839103629911751403, guid: 63fc5a7323a4140418e893a35dcb0ea2, type: 3}
+      propertyPath: m_RenderMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1839103629911751403, guid: 63fc5a7323a4140418e893a35dcb0ea2, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1839103629911751403, guid: 63fc5a7323a4140418e893a35dcb0ea2, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -533567685
+      objectReference: {fileID: 0}
+    - target: {fileID: 1839103629911751403, guid: 63fc5a7323a4140418e893a35dcb0ea2, type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
       objectReference: {fileID: 0}
@@ -12434,3 +12413,4 @@ SceneRoots:
   - {fileID: 457002822}
   - {fileID: 1888381820}
   - {fileID: 1813550972}
+  - {fileID: 740713787}

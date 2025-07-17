@@ -160,7 +160,7 @@ public class PlayerMove : MonoBehaviour
 
     private async UniTask WakesUp()
     {
-        ScreenFadeController.Instance.BeginFadeToClear(2f);
+        ScreenFadeController.Instance.BeginFadeToClear(3f);
         
         await UniTask.WaitForSeconds(0.5f);
         
@@ -171,7 +171,7 @@ public class PlayerMove : MonoBehaviour
     }
     private async UniTask Sleep()
     {
-        ScreenFadeController.Instance.BeginFadeToBlack(2f);
+        ScreenFadeController.Instance.BeginFadeToBlack(3f);
         
         await UniTask.WaitForSeconds(0.5f);
         
@@ -241,7 +241,7 @@ public class PlayerMove : MonoBehaviour
     }
     
     
-    public async UniTask AutoMoveToSleep(Vector2 targetPosition, float proximityThreshold = 0.1f)
+    public async UniTask AutoMoveToSleep(Vector2 targetPosition, float proximityThreshold = 0.2f)
     {
         // 夺取控制权
         isUnderSystemControl = true;
@@ -275,10 +275,6 @@ public class PlayerMove : MonoBehaviour
             
             // 5. 等待结束后，再归还玩家的输入控制权
             isUnderSystemControl = false;
-            
-            // 3. 触发睡眠事件流
-            EventCenter.TriggerEvent(GameEvents.PlayerSleepAndDayChange);
-
         }
     }
 

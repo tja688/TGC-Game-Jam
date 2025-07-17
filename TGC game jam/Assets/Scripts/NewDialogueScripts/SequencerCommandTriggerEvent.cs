@@ -13,7 +13,7 @@ public class SequencerCommandTriggerEvent : SequencerCommand
     public void Start()
     {
         // --- 1. 获取事件名称 (必须的第一个参数) ---
-        string eventName = GetParameter(0);
+        var eventName = GetParameter(0);
 
         if (string.IsNullOrEmpty(eventName))
         {
@@ -22,7 +22,7 @@ public class SequencerCommandTriggerEvent : SequencerCommand
             return;
         }
         
-        var NumParameters = GetParameter(1);
+        Debug.Log("Dialogue System TriggerEvent: "+eventName, this);
 
         EventCenter.TriggerEvent(eventName);
 
