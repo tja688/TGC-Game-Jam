@@ -8,9 +8,9 @@ public class PlayerMove : MonoBehaviour
     private static readonly int HorizontalAnimHash = Animator.StringToHash("InputX");
     private static readonly int VerticalAnimHash = Animator.StringToHash("InputY");
     private static readonly int SpeedAnimHash = Animator.StringToHash("Speed");
-    private static readonly int WakeUpAnimHash = Animator.StringToHash("WakeUp");
-    private static readonly int SleepAnimHash = Animator.StringToHash("Sleep");
-    private static readonly int SendLetterAnimHash = Animator.StringToHash("SendLetter");
+    private static readonly int WakeUpAnimHash = Animator.StringToHash("WakeUp"); // 新增：起床动画Trigger
+    private static readonly int SleepAnimHash = Animator.StringToHash("Sleep");   // 新增：入眠动画Trigger
+    private static readonly int SendLetterAnimHash = Animator.StringToHash("SendLetter");   // 新增：入眠动画Trigger
 
     public static GameObject CurrentPlayer { get; private set; }
     public static bool CanPlayerMove { get; set; }
@@ -62,17 +62,21 @@ public class PlayerMove : MonoBehaviour
 
         // 注册事件监听
         EventCenter.AddEventListener(GameEvents.GameStartsPlayerWakesUp, OnGameStartsPlayerWakesUp);
+        
         EventCenter.AddEventListener(GameEvents.PlayerWakesUp, OnPlayerWakesUp);
+
         EventCenter.AddEventListener(GameEvents.PlayerSleep, OnPlayerSleep);
     }
 
     private void Update()
     {
+        
+        // 如果正由系统自动控制，则跳过玩家输入的所有逻辑
         if (isUnderSystemControl) return;
 
         var inputVector = Vector2.zero;
 
-        if (CanPlayerMove && inputActions != null)
+        if (CanPlayerMove && inputActions != null) // 确保 inputActions 也不是 null
         {
             inputVector = inputActions.PlayerControl.Move.ReadValue<Vector2>();
         }
@@ -80,6 +84,7 @@ public class PlayerMove : MonoBehaviour
         var horizontalInput = inputVector.x;
         var verticalInput = inputVector.y;
 
+        // 应用停止阈值
         var clampedHorizontal = Mathf.Abs(horizontalInput) < stopThreshold ? 0 : horizontalInput;
         var clampedVertical = Mathf.Abs(verticalInput) < stopThreshold ? 0 : verticalInput;
 
@@ -96,24 +101,29 @@ public class PlayerMove : MonoBehaviour
         }
         else
         {
+            // 如果没有输入，保持上一次的有效朝向
             targetAnimationDirection = new Vector2(lastValidInputX, lastValidInputY).normalized;
         }
-        
-        if (targetAnimationDirection.sqrMagnitude > 0.001f)
+
+        // 平滑动画朝向的转变
+        if (targetAnimationDirection.sqrMagnitude > 0.001f) // 避免target为零向量时产生NaN
         {
             currentAnimationDirection = Vector2.SmoothDamp(currentAnimationDirection, targetAnimationDirection, ref turnAnimationVelocity, turnSmoothTime);
         }
         
+        // 更新Animator的朝向和速度参数
+        // 如果 CanPlayerMove 为 false, currentRawSpeed 将为 0 (因为 inputVector 为 zero)
         UpdateAnimatorParameters(currentAnimationDirection, currentRawSpeed);
 
+        // 根据是否可以移动来计算最终的移动速度
         if (!CanPlayerMove)
         {
             movementVelocityForFixedUpdate = Vector2.zero;
-            IsWalking = false;
+            IsWalking = false; // 确保在不可移动时 IsWalking 也为 false
         }
         else
         {
-            movementVelocityForFixedUpdate = currentRawInputDirection.normalized * (moveSpeed * Mathf.Clamp01(currentRawSpeed));
+            movementVelocityForFixedUpdate = currentRawInputDirection.normalized * (moveSpeed * Mathf.Clamp01(currentRawSpeed)); // 使用 normalized 和 Clamp01 来确保速度与输入强度一致且不超过 moveSpeed
         }
     }
 
@@ -125,156 +135,164 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    // --- 事件处理方法 ---
     private void OnGameStartsPlayerWakesUp()
     {
-        CanPlayerMove = true;
-        if (animator) animator.SetTrigger(WakeUpAnimHash);
+        CanPlayerMove = true; // 确保玩家在醒来后可以移动
+        if (animator)
+        {
+            animator.SetTrigger(WakeUpAnimHash);
+        }
     }
 
     private async void OnPlayerSleep()
     {
-        CanPlayerMove = false;
+        CanPlayerMove = false; // 玩家入睡，禁止移动
+        
         await Sleep();
     }
     
     private async void OnPlayerWakesUp()
     {
         await WakesUp();
-        CanPlayerMove = true;
+        
+        CanPlayerMove = true; // 玩家醒来，允许移动
     }
 
     private async UniTask WakesUp()
     {
         ScreenFadeController.Instance.BeginFadeToClear(3f);
+        
         await UniTask.WaitForSeconds(0.5f);
-        if (animator) animator.SetTrigger(WakeUpAnimHash);
+        
+        if (animator)
+        {
+            animator.SetTrigger(WakeUpAnimHash);
+        }
     }
-
     private async UniTask Sleep()
     {
         ScreenFadeController.Instance.BeginFadeToBlack(3f);
+        
         await UniTask.WaitForSeconds(0.5f);
-        if (animator) animator.SetTrigger(SleepAnimHash);
+        
+        if (animator)
+        {
+            animator.SetTrigger(SleepAnimHash);
+        }
     }
 
     private void UpdateAnimatorParameters(Vector2 direction, float speed)
     {
         if (!animator) return;
+
         animator.SetFloat(HorizontalAnimHash, direction.x);
         animator.SetFloat(VerticalAnimHash, direction.y);
         animator.SetFloat(SpeedAnimHash, speed);
     }
     
-    public void PlaySendLetterSound()
-    {
-        AudioManager.Instance.Play(sendLetterSound);
-    }
-
-    // --- 核心修改：自动移动相关方法 ---
+    // 位于 PlayerMove.cs 中
 
     /// <summary>
-    /// 【核心修改】私有的移动循环方法，包含了超时逻辑。
-    /// </summary>
-    /// <param name="targetPosition">目标位置</param>
-    /// <param name="proximityThreshold">到达阈值</param>
-    /// <param name="timeout">超时时间（秒）</param>
-    /// <returns>如果成功到达返回 true, 超时则返回 false。</returns>
-    private async UniTask<bool> MoveUntilReached(Vector2 targetPosition, float proximityThreshold, float timeout)
-    {
-        float startTime = Time.time;
-
-        while (Vector2.Distance(transform.position, targetPosition) > proximityThreshold)
-        {
-            // 1. 超时检查：如果当前时间超过了开始时间+超时时长，则中断
-            if (Time.time - startTime > timeout)
-            {
-                Debug.LogWarning($"AutoMove to {targetPosition} timed out after {timeout} seconds. Player might be stuck.");
-                return false; // 返回 false 表示超时
-            }
-
-            // 2. 持续移动
-            Vector2 currentPosition = transform.position;
-            Vector2 direction = (targetPosition - currentPosition).normalized;
-
-            UpdateAnimatorParameters(direction, 1f); // 播放走路动画
-            movementVelocityForFixedUpdate = direction * moveSpeed;
-            IsWalking = true;
-            lastValidInputX = direction.x;
-            lastValidInputY = direction.y;
-
-            // 等待下一帧
-            await UniTask.Yield(PlayerLoopTiming.Update);
-        }
-
-        return true; // 返回 true 表示成功到达
-    }
-    
-    /// <summary>
-    /// 【修改后】异步方法，自动将玩家移动到指定位置，并在到达后播放动画。增加了超时保护。
+    /// 异步方法，自动将玩家移动到指定位置，并在到达后播放动画。
     /// </summary>
     /// <param name="targetPosition">目标世界坐标</param>
     /// <param name="proximityThreshold">判断为“到达”的距离阈值</param>
-    /// <param name="timeout">超时时间（秒），如果玩家被卡住，超过此时间将自动放弃移动</param>
-    public async UniTask AutoMoveToPosition(Vector2 targetPosition, float proximityThreshold = 0.1f, float timeout = 5f)
+    public async UniTask AutoMoveToPosition(Vector2 targetPosition, float proximityThreshold = 0.1f)
     {
+        // 夺取控制权
         isUnderSystemControl = true;
+        
         try
         {
-            // 调用包含超时逻辑的移动方法
-            bool reachedDestination = await MoveUntilReached(targetPosition, proximityThreshold, timeout);
-
-            // 只有在成功到达时才执行后续动作
-            if (reachedDestination)
+            // 循环直到玩家接近目标点
+            while (Vector2.Distance(transform.position, targetPosition) > proximityThreshold)
             {
-                animator.SetTrigger(SendLetterAnimHash);
-                await UniTask.WaitForSeconds(2f, cancellationToken: this.GetCancellationTokenOnDestroy());
+                Vector2 currentPosition = transform.position;
+                Vector2 direction = (targetPosition - currentPosition).normalized;
+
+                UpdateAnimatorParameters(direction, 1f);
+                movementVelocityForFixedUpdate = direction * moveSpeed;
+                IsWalking = true;
+                lastValidInputX = direction.x;
+                lastValidInputY = direction.y;
+
+                await UniTask.Yield(PlayerLoopTiming.Update);
             }
-            // 如果超时(reachedDestination为false)，则不执行任何特殊操作，直接进入finally块进行清理
         }
         finally
         {
-            // 无论成功、失败还是超时，这个代码块都保证执行，用于清理和归还控制权
+            // 1. 停止物理移动
             movementVelocityForFixedUpdate = Vector2.zero;
             IsWalking = false;
+        
+            // 2. 确保动画过渡到与最终朝向一致的Idle状态，防止滑动感
             var lastDirection = new Vector2(lastValidInputX, lastValidInputY).normalized;
-            UpdateAnimatorParameters(lastDirection, 0f); // 确保动画恢复到静止站立
-            isUnderSystemControl = false; // 归还玩家控制权，防止卡死
+            UpdateAnimatorParameters(lastDirection, 0f);
+        
+            // 3. 触发投信动画
+            animator.SetTrigger(SendLetterAnimHash);
+
+            // 4. 【核心修改】异步等待2秒，让动画有时间播放
+            await UniTask.WaitForSeconds(2f, cancellationToken: this.GetCancellationTokenOnDestroy());
+        
+            // 5. 等待结束后，再归还玩家的输入控制权
+            isUnderSystemControl = false;
         }
     }
     
-    /// <summary>
-    /// 【修改后】异步方法，自动将玩家移动到床上准备睡觉。增加了超时保护。
-    /// </summary>
-    /// <param name="targetPosition">目标世界坐标</param>
-    /// <param name="proximityThreshold">判断为“到达”的距离阈值</param>
-    /// <param name="timeout">超时时间（秒），如果玩家被卡住，超过此时间将自动放弃移动</param>
-    public async UniTask AutoMoveToSleep(Vector2 targetPosition, float proximityThreshold = 0.2f, float timeout = 5f)
+    
+    public async UniTask AutoMoveToSleep(Vector2 targetPosition, float proximityThreshold = 0.2f)
     {
+        // 夺取控制权
         isUnderSystemControl = true;
+        
         try
         {
-            // 调用包含超时逻辑的移动方法。此方法不关心是否成功，因为它之后没有特殊动画。
-            await MoveUntilReached(targetPosition, proximityThreshold, timeout);
+            // 循环直到玩家接近目标点
+            while (Vector2.Distance(transform.position, targetPosition) > proximityThreshold)
+            {
+                Vector2 currentPosition = transform.position;
+                Vector2 direction = (targetPosition - currentPosition).normalized;
+
+                UpdateAnimatorParameters(direction, 1f);
+                movementVelocityForFixedUpdate = direction * moveSpeed;
+                IsWalking = true;
+                lastValidInputX = direction.x;
+                lastValidInputY = direction.y;
+
+                await UniTask.Yield(PlayerLoopTiming.Update);
+            }
         }
         finally
         {
-            // 无论成功、失败还是超时，都清理并归还控制权
+            // 1. 停止物理移动
             movementVelocityForFixedUpdate = Vector2.zero;
             IsWalking = false;
+        
+            // 2. 确保动画过渡到与最终朝向一致的Idle状态，防止滑动感
             var lastDirection = new Vector2(lastValidInputX, lastValidInputY).normalized;
-            UpdateAnimatorParameters(lastDirection, 0f); // 确保动画恢复到静止站立
-            isUnderSystemControl = false; // 归还玩家控制权，防止卡死
+            UpdateAnimatorParameters(lastDirection, 0f);
+            
+            // 5. 等待结束后，再归还玩家的输入控制权
+            isUnderSystemControl = false;
         }
     }
 
     public void EnablePlayerMovement() => CanPlayerMove = true;
     public void DisablePlayerMovement() => CanPlayerMove = false;
+
+    public void PlaySendLetterSound()
+    {
+        AudioManager.Instance.Play(sendLetterSound);
+    }
     
     private void OnDestroy()
     {
+        // 移除事件监听
         EventCenter.RemoveListener(GameEvents.GameStartsPlayerWakesUp, OnGameStartsPlayerWakesUp);
+        
         EventCenter.RemoveListener(GameEvents.PlayerWakesUp, OnPlayerWakesUp);
+        
         EventCenter.RemoveListener(GameEvents.PlayerSleep, OnPlayerSleep);
     }
 }
