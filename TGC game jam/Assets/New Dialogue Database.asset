@@ -1591,8 +1591,66 @@ MonoBehaviour:
         type: 0
         typeString: 
       - title: Sequence
-        value: "MyCamera(\u70B9\u4F4D1, 1);\nDelay(1);\nMyCamera(\u6B63\u5F0F\u7248\u4E3B\u89D2,
-          1)@{{end}}"
+        value: "MyCamera(\u70B9\u4F4D1, 1)"
+        type: 0
+        typeString: 
+      - title: Response Menu Sequence
+        value: "MyCamera(\u6B63\u5F0F\u7248\u4E3B\u89D2, 1)"
+        type: 0
+        typeString: 
+      conversationID: 6
+      isRoot: 0
+      isGroup: 0
+      nodeColor: 
+      delaySimStatus: 0
+      falseConditionAction: Block
+      conditionPriority: 2
+      outgoingLinks:
+      - originConversationID: 6
+        originDialogueID: 2
+        destinationConversationID: 6
+        destinationDialogueID: 3
+        isConnector: 0
+        priority: 2
+      conditionsString: 
+      userScript: 
+      onExecute:
+        m_PersistentCalls:
+          m_Calls: []
+      canvasRect:
+        serializedVersion: 2
+        x: 158.66666
+        y: 218.66669
+        width: 160
+        height: 30
+    - id: 3
+      fields:
+      - title: Title
+        value: 
+        type: 0
+        typeString: 
+      - title: Description
+        value: 
+        type: 0
+        typeString: 
+      - title: Actor
+        value: 1
+        type: 5
+        typeString: CustomFieldType_Actor
+      - title: Conversant
+        value: 6
+        type: 5
+        typeString: CustomFieldType_Actor
+      - title: Menu Text
+        value: 
+        type: 0
+        typeString: 
+      - title: Dialogue Text
+        value: 
+        type: 0
+        typeString: 
+      - title: Sequence
+        value: Continue()
         type: 0
         typeString: 
       conversationID: 6
@@ -1610,8 +1668,8 @@ MonoBehaviour:
           m_Calls: []
       canvasRect:
         serializedVersion: 2
-        x: 158.66666
-        y: 219.33334
+        x: 157.33334
+        y: 311.33337
         width: 160
         height: 30
     entryGroups: []
@@ -8155,7 +8213,7 @@ MonoBehaviour:
         type: 0
         typeString: 
       - title: Dialogue Text
-        value: What is this key used for?
+        value: Is this... the key for the inside of the post office?
         type: 0
         typeString: 
       - title: Sequence
