@@ -160,7 +160,7 @@ public class PlayerMove : MonoBehaviour
 
     private async UniTask WakesUp()
     {
-        ScreenFadeController.Instance.BeginFadeToClear(1f);
+        ScreenFadeController.Instance.BeginFadeToClear(2f);
         
         await UniTask.WaitForSeconds(0.5f);
         
@@ -171,7 +171,7 @@ public class PlayerMove : MonoBehaviour
     }
     private async UniTask Sleep()
     {
-        ScreenFadeController.Instance.BeginFadeToBlack(1f);
+        ScreenFadeController.Instance.BeginFadeToBlack(2f);
         
         await UniTask.WaitForSeconds(0.5f);
         

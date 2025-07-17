@@ -14,7 +14,7 @@ public class SleepCycleManager : MonoBehaviour
     [SerializeField] private DialogueSystemTrigger sleepDialogueTrigger;
 
     [Tooltip("从触发睡眠事件到播放对话之间的等待时间（秒）")]
-    [SerializeField] private float waitBeforeDialogue = 2f;
+    [SerializeField] private float waitBeforeDialogue = 3f;
 
     [Tooltip("从播放对话开始，到触发醒来事件之间的等待时间（秒）")]
     [SerializeField] private float waitAfterDialogueStarts = 4f; // 名字稍作修改以更清晰
