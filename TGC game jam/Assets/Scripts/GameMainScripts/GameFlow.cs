@@ -172,8 +172,6 @@ public class GameFlow : MonoBehaviour
         // 6. 触发事件并等待对话
         EventCenter.TriggerEvent(GameEvents.GameStartsPlayerWakesUp);
         
-        GameVariables.Day = 1;
-        
         playerTalkDay1.SetActive(true);
         
         // await WaitForDialogueAsync(); // 明确等待

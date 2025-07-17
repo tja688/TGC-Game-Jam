@@ -6,25 +6,16 @@ using Cysharp.Threading.Tasks;
 
 public class PaperNotice : MonoBehaviour
 {
-    public Transform paperTransform;
-    
     public GameObject paper;
     
-    private bool isNoticed = false;
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (!other.CompareTag("Player")) return;
-        if (isNoticed) return;
-        if (GameVariables.Day != 2) return;
-        if(!GameVariables.Day2HasTalkToGrandma) return;
-
-        startNotice();
-        isNoticed = true;
-    }
-
+    public GameObject ball;
+    
+    
     private void Start()
     {
         paper.SetActive(false);
+        
+        ball.SetActive(false);
 
         GameVariables.OnDayChanged += OndayChange;
     }
@@ -40,33 +31,12 @@ public class PaperNotice : MonoBehaviour
         {
             paper.SetActive(true);
         }
-    }
-
-    private async void startNotice()
-    {
-        await Notice();
+        
+        if(GameVariables.Day == 3)
+        {
+            ball.SetActive(true);
+        }
     }
     
-    private async UniTask Notice()
-    {
-        PlayerMove.CanPlayerMove = false;
-        
-        CameraSystem.SetSpecialCameraTarget(paperTransform);
-        
-        await UniTask.WaitForSeconds(1f);
-        
-        CameraSystem.SetSpecialCameraTarget(PlayerMove.CurrentPlayer.transform);
-
-        await UniTask.WaitForSeconds(1f);
-
-        PlayerDialogue.Instance.FindPaper();
-        
-        await UniTask.WaitForSeconds(2f);
-
-        PlayerMove.CanPlayerMove = true;
-        
-        GameVariables.CanPickPaper = true;
-
-
-    }
+    
 }

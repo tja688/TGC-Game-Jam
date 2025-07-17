@@ -1,17 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PixelCrushers.DialogueSystem;
 
 public class Battery : ItemBase
 {
+    [ConversationPopup] public string conversationTitle;
+
     public override void Interact(GameObject player)
     {
-        GameVariables.IsHaveBattery = true;
-        
-        MessageTipManager.ShowMessage("Time to fix that post office elevator.");
+        DialogueManager.StartConversation(conversationTitle);
 
-        GameVariables.Day3EventCount++;
-        
         base.Interact(player);
     }
 }

@@ -50,6 +50,7 @@ public class RubbishItem : ItemBase
     private void OnDayChange()
     {
         isFindAllLetters = false;
+        portalController.DeactivatePortal();
     }
 
     protected void OnDestroy()

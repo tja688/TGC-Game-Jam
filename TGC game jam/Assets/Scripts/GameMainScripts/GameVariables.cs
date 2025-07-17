@@ -41,7 +41,7 @@ public class GameVariables : MonoBehaviour
     public static event Action OnDayChanged;
     
     // 用于轮询的私有变量
-    private int lastKnownDay;
+    private int lastKnownDay = 0;
     
     // Inspector可编辑的中间变量
     [SerializeField] private int editorDay;
@@ -71,8 +71,7 @@ public class GameVariables : MonoBehaviour
         BoluNewPosition = boluNewPosition;
         GirlPosition = girlPosition;
     }
-    
-    
+
     private void FixedUpdate()
     {
         Day = DialogueLua.GetVariable(variableToWatch).AsInt;
