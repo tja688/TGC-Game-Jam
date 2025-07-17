@@ -1144,7 +1144,7 @@ MonoBehaviour:
   - id: 4
     fields:
     - title: Title
-      value: "\u5206\u62E3\u4FE1\u4EF6\uFF08\u5B8C\u6210\u540E\u5F00\u542F\u4F20\u9001\u95E8\uFF09"
+      value: "\u5206\u62E3\u4FE1\u4EF6"
       type: 0
       typeString: 
     - title: Description
@@ -1379,7 +1379,7 @@ MonoBehaviour:
         type: 0
         typeString: 
       - title: Sequence
-        value: SendMessage(ActivatePortal, PortalControl)
+        value: 
         type: 0
         typeString: 
       - title: Response Menu Sequence
@@ -1591,66 +1591,11 @@ MonoBehaviour:
         type: 0
         typeString: 
       - title: Sequence
-        value: "MyCamera(\u70B9\u4F4D1, 1)"
+        value: "MyCameraShot(\u70B9\u4F4D1, 1)"
         type: 0
         typeString: 
       - title: Response Menu Sequence
-        value: "MyCamera(\u6B63\u5F0F\u7248\u4E3B\u89D2, 1)"
-        type: 0
-        typeString: 
-      conversationID: 6
-      isRoot: 0
-      isGroup: 0
-      nodeColor: 
-      delaySimStatus: 0
-      falseConditionAction: Block
-      conditionPriority: 2
-      outgoingLinks:
-      - originConversationID: 6
-        originDialogueID: 2
-        destinationConversationID: 6
-        destinationDialogueID: 3
-        isConnector: 0
-        priority: 2
-      conditionsString: 
-      userScript: 
-      onExecute:
-        m_PersistentCalls:
-          m_Calls: []
-      canvasRect:
-        serializedVersion: 2
-        x: 158.66666
-        y: 218.66669
-        width: 160
-        height: 30
-    - id: 3
-      fields:
-      - title: Title
         value: 
-        type: 0
-        typeString: 
-      - title: Description
-        value: 
-        type: 0
-        typeString: 
-      - title: Actor
-        value: 1
-        type: 5
-        typeString: CustomFieldType_Actor
-      - title: Conversant
-        value: 6
-        type: 5
-        typeString: CustomFieldType_Actor
-      - title: Menu Text
-        value: 
-        type: 0
-        typeString: 
-      - title: Dialogue Text
-        value: 
-        type: 0
-        typeString: 
-      - title: Sequence
-        value: Continue()
         type: 0
         typeString: 
       conversationID: 6
@@ -1668,8 +1613,8 @@ MonoBehaviour:
           m_Calls: []
       canvasRect:
         serializedVersion: 2
-        x: 157.33334
-        y: 311.33337
+        x: 158.66666
+        y: 217.33334
         width: 160
         height: 30
     entryGroups: []
@@ -8245,7 +8190,7 @@ MonoBehaviour:
   - id: 26
     fields:
     - title: Title
-      value: "\u5145\u7535\u4E2D\uFF08\u5173\u95ED\u4F20\u9001\u95E8\uFF09"
+      value: "\u5145\u7535\u4E2D"
       type: 0
       typeString: 
     - title: Description

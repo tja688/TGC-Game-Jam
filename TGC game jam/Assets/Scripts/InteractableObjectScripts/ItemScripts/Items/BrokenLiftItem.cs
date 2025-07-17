@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
+using PixelCrushers.DialogueSystem;
 
 public class BrokenLiftItem : ItemBase
 {
     public GameObject lift;
-
+    [ConversationPopup]
+    public string conversationTitle;
     public override void Interact(GameObject player)
     {
         AudioManager.Instance.Play(grabSound);
@@ -21,7 +23,7 @@ public class BrokenLiftItem : ItemBase
         }
         else
         {
-            PlayerDialogue.Instance.LiftNotice();
+            DialogueManager.StartConversation(conversationTitle);
         }
         
     }

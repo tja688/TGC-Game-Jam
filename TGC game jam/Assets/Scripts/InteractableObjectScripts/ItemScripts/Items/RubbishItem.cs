@@ -61,8 +61,7 @@ public class RubbishItem : ItemBase
     {
         DialogueManager.StartConversation(conversationTitle);
         
-        if(!isFindAllLetters)
-            AudioManager.Instance.Play(grabSound);
+        AudioManager.Instance.Play(grabSound);
         
         switch (GameVariables.Day)
         {
