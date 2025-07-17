@@ -21,15 +21,9 @@ public class BossController : MonoBehaviour
 
     private void OndayChange()
     {
-        if(GameVariables.Day == 4)
+        if(GameVariables.Day == 3)
         {
             boss2.SetActive(true);
-            boss1.SetActive(false);
-        }
-        
-        if(GameVariables.Day == 5)
-        {
-            boss2.SetActive(false);
             boss1.SetActive(false);
         }
     }

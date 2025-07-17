@@ -17646,7 +17646,7 @@ MonoBehaviour:
         type: 0
         typeString: 
       - title: Sequence
-        value: TriggerEvent();
+        value: 
         type: 0
         typeString: 
       conversationID: 33
@@ -17701,7 +17701,7 @@ MonoBehaviour:
         type: 0
         typeString: 
       - title: Sequence
-        value: RestartLevel();
+        value: "TriggerEvent(); Delay(1)->Message(done); \nRestartLevel()@Message(done)"
         type: 0
         typeString: 
       - title: Response Menu Sequence
@@ -17729,7 +17729,7 @@ MonoBehaviour:
         height: 30
     entryGroups: []
     canvasScrollPosition: {x: 0, y: 0}
-    canvasZoom: 0.97
+    canvasZoom: 0.85000014
   syncInfo:
     syncActors: 0
     syncItems: 0

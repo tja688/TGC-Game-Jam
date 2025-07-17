@@ -1289,37 +1289,6 @@ EdgeCollider2D:
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
   m_UseAdjacentEndPoint: 0
---- !u!1 &243797591
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 243797592}
-  m_Layer: 0
-  m_Name: Day5grandma
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &243797592
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 243797591}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.49, y: -4.54, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 821888830}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &260440679
 GameObject:
   m_ObjectHideFlags: 0
@@ -3438,7 +3407,9 @@ GameObject:
   - component: {fileID: 731286799}
   - component: {fileID: 731286798}
   - component: {fileID: 731286801}
-  - component: {fileID: 731286800}
+  - component: {fileID: 731286804}
+  - component: {fileID: 731286803}
+  - component: {fileID: 731286802}
   m_Layer: 0
   m_Name: "\u5E74\u8F7B\u7684\u9152\u9986\u8001\u677F"
   m_TagString: Untagged
@@ -3535,22 +3506,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &731286800
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 731286796}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a36f5e6355b51541b444efeba5b8bb7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objectName: newBolu
-  promptAnchorTransform: {fileID: 670802136}
-  interactNotice: {fileID: 7500774170993363956, guid: 55a61531a65483348b526bb0c41beee3, type: 3}
-  grabSound: {fileID: 0}
 --- !u!61 &731286801
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3596,6 +3551,71 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 4.410535, y: 4.193786}
   m_EdgeRadius: 0
+--- !u!114 &731286802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 731286796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a64578247383140469c45370654a984a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actor: Bolu
+  persistentDataName: 
+  portrait: {fileID: 0}
+  spritePortrait: {fileID: 0}
+  barkUISettings:
+    barkUI: {fileID: 0}
+    barkUIOffset: {x: 0, y: 2, z: 0}
+  standardDialogueUISettings:
+    subtitlePanelNumber: 2
+    customSubtitlePanel: {fileID: 5299478515297995129, guid: 7cd0cdc8c34e7db439e74c9a703da0d6, type: 3}
+    customSubtitlePanelOffset: {x: 0, y: 4, z: 0}
+    menuPanelNumber: 0
+    customMenuPanel: {fileID: 0}
+    customMenuPanelOffset: {x: 0, y: 0, z: 0}
+    useMenuPanelFor: 0
+    portraitAnimatorController: {fileID: 0}
+    setSubtitleColor: 0
+    applyColorToPrependedName: 0
+    prependActorNameSeparator: ': '
+    prependActorNameFormat: '{0}{1}'
+    subtitleColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &731286803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 731286796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c50c04d7301d620469e8ea2a885f66cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  yOffset: 0
+  isStatic: 1
+  precisionMultiplier: 100
+--- !u!114 &731286804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 731286796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21ca19f75cc44364d813089e387928b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectName: Bolu
+  promptAnchorTransform: {fileID: 670802136}
+  interactNotice: {fileID: 7500774170993363956, guid: 55a61531a65483348b526bb0c41beee3, type: 3}
+  grabSound: {fileID: 0}
+  conversationTitle: "\u5F71\u50CF\u5E97\u8001\u677Fbolu\u8C08\u8BDD"
 --- !u!1 &740713786
 GameObject:
   m_ObjectHideFlags: 0
@@ -4116,7 +4136,6 @@ Transform:
   - {fileID: 87634864}
   - {fileID: 1408483927}
   - {fileID: 1992925805}
-  - {fileID: 243797592}
   - {fileID: 492105606}
   - {fileID: 320718259}
   - {fileID: 1386462356}
@@ -8731,6 +8750,18 @@ MonoBehaviour:
   letterSender: {fileID: 2127667101}
   boluNewPosition: {fileID: 934158852}
   girlPosition: {fileID: 1974161759}
+--- !u!114 &1697276114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1683822056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bea132e302a64574b97b8c58aba237c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1704261725
 GameObject:
   m_ObjectHideFlags: 0
@@ -12957,6 +12988,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 315825822869682091, guid: a37992c7c4d803342b175073704c483b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1697276111}
+    - targetCorrespondingSourceObject: {fileID: 315825822869682091, guid: a37992c7c4d803342b175073704c483b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1697276114}
   m_SourcePrefab: {fileID: 100100000, guid: a37992c7c4d803342b175073704c483b, type: 3}
 --- !u!1001 &6490217926465063304
 PrefabInstance:
