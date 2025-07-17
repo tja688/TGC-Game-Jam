@@ -123,6 +123,28 @@ MonoBehaviour:
     spritePortrait: {fileID: 0}
     alternatePortraits: []
     spritePortraits: []
+  - id: 10
+    fields:
+    - title: Name
+      value: EricaMom
+      type: 0
+      typeString: 
+    - title: Pictures
+      value: '[]'
+      type: 3
+      typeString: CustomFieldType_Files
+    - title: Description
+      value: "\u9910\u5385\u5BF9\u8BDD"
+      type: 0
+      typeString: CustomFieldType_Text
+    - title: IsPlayer
+      value: False
+      type: 2
+      typeString: CustomFieldType_Boolean
+    portrait: {fileID: 0}
+    spritePortrait: {fileID: 0}
+    alternatePortraits: []
+    spritePortraits: []
   - id: 5
     fields:
     - title: Name
@@ -157,72 +179,6 @@ MonoBehaviour:
       typeString: CustomFieldType_Files
     - title: Description
       value: "\u4E3B\u89D2"
-      type: 0
-      typeString: CustomFieldType_Text
-    - title: IsPlayer
-      value: False
-      type: 2
-      typeString: CustomFieldType_Boolean
-    portrait: {fileID: 0}
-    spritePortrait: {fileID: 0}
-    alternatePortraits: []
-    spritePortraits: []
-  - id: 8
-    fields:
-    - title: Name
-      value: BoluEmail
-      type: 0
-      typeString: 
-    - title: Pictures
-      value: '[]'
-      type: 3
-      typeString: CustomFieldType_Files
-    - title: Description
-      value: 
-      type: 0
-      typeString: CustomFieldType_Text
-    - title: IsPlayer
-      value: False
-      type: 2
-      typeString: CustomFieldType_Boolean
-    portrait: {fileID: 0}
-    spritePortrait: {fileID: 0}
-    alternatePortraits: []
-    spritePortraits: []
-  - id: 9
-    fields:
-    - title: Name
-      value: RellaEmail
-      type: 0
-      typeString: 
-    - title: Pictures
-      value: '[]'
-      type: 3
-      typeString: CustomFieldType_Files
-    - title: Description
-      value: 
-      type: 0
-      typeString: CustomFieldType_Text
-    - title: IsPlayer
-      value: False
-      type: 2
-      typeString: CustomFieldType_Boolean
-    portrait: {fileID: 0}
-    spritePortrait: {fileID: 0}
-    alternatePortraits: []
-    spritePortraits: []
-  - id: 10
-    fields:
-    - title: Name
-      value: EricaEmail
-      type: 0
-      typeString: 
-    - title: Pictures
-      value: '[]'
-      type: 3
-      typeString: CustomFieldType_Files
-    - title: Description
-      value: 
       type: 0
       typeString: CustomFieldType_Text
     - title: IsPlayer
@@ -2401,7 +2357,7 @@ MonoBehaviour:
           m_Calls: []
       canvasRect:
         serializedVersion: 2
-        x: 210
+        x: 210.81299
         y: 70
         width: 160
         height: 30
@@ -2829,7 +2785,7 @@ MonoBehaviour:
       conditionPriority: 2
       outgoingLinks: []
       conditionsString: 
-      userScript: 
+      userScript: Variable["GoOutConfirm"] = true
       onExecute:
         m_PersistentCalls:
           m_Calls: []
@@ -2841,7 +2797,7 @@ MonoBehaviour:
         height: 30
     entryGroups: []
     canvasScrollPosition: {x: 0, y: 0}
-    canvasZoom: 0.7000003
+    canvasZoom: 0.8200002
   - id: 10
     fields:
     - title: Title
@@ -3552,7 +3508,7 @@ MonoBehaviour:
         type: 0
         typeString: 
       - title: Sequence
-        value: 
+        value: "MyCameraShot(\u8001\u5987\u4EBARella, 1)"
         type: 0
         typeString: 
       conversationID: 13
@@ -4728,7 +4684,7 @@ MonoBehaviour:
         type: 0
         typeString: 
       - title: Actor
-        value: 2
+        value: 10
         type: 5
         typeString: CustomFieldType_Actor
       - title: Conversant
@@ -4893,7 +4849,7 @@ MonoBehaviour:
         type: 0
         typeString: 
       - title: Actor
-        value: 2
+        value: 10
         type: 5
         typeString: CustomFieldType_Actor
       - title: Conversant
@@ -5734,7 +5690,7 @@ MonoBehaviour:
         type: 0
         typeString: 
       - title: Sequence
-        value: 
+        value: "AutoMove(\u5F71\u50CF\u5E97\u6295\u9012\u70B9)"
         type: 0
         typeString: 
       conversationID: 16
@@ -6212,7 +6168,7 @@ MonoBehaviour:
         type: 0
         typeString: 
       - title: Sequence
-        value: 
+        value: "AutoMove(\u8001\u5976\u5976\u6295\u9012\u70B9)"
         type: 0
         typeString: 
       conversationID: 17
@@ -6224,7 +6180,7 @@ MonoBehaviour:
       conditionPriority: 2
       outgoingLinks: []
       conditionsString: Variable["RellaEmail"] == false
-      userScript: 
+      userScript: Variable["RellaEmail"] = true
       onExecute:
         m_PersistentCalls:
           m_Calls: []
@@ -6586,7 +6542,7 @@ MonoBehaviour:
         type: 0
         typeString: 
       - title: Sequence
-        value: 
+        value: "AutoMove(\u9910\u5385\u6295\u9012\u70B9)"
         type: 0
         typeString: 
       conversationID: 18
@@ -6598,13 +6554,13 @@ MonoBehaviour:
       conditionPriority: 2
       outgoingLinks: []
       conditionsString: Variable["EricaEmail"] == false
-      userScript: 
+      userScript: Variable["EricaEmail"] = true
       onExecute:
         m_PersistentCalls:
           m_Calls: []
       canvasRect:
         serializedVersion: 2
-        x: 29.333328
+        x: 29.999992
         y: 224.66666
         width: 160
         height: 30
@@ -7316,7 +7272,7 @@ MonoBehaviour:
       canvasRect:
         serializedVersion: 2
         x: 476.66656
-        y: 230
+        y: 229.33331
         width: 160
         height: 30
     - id: 4
@@ -7375,8 +7331,7 @@ MonoBehaviour:
         destinationDialogueID: 3
         isConnector: 0
         priority: 2
-      conditionsString: Variable["BoluEmail"] == true and (Variable["RellaEmail"]
-        == true) and (Variable["EricaEmail"] == true)
+      conditionsString: 
       userScript: Variable["FinishDayJob"] = true
       onExecute:
         m_PersistentCalls:

@@ -1,27 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using PixelCrushers.DialogueSystem;
 using UnityEngine;
 
 public class NPCErica : ItemBase
 {
-    private bool day4Talk = false;
+
+    [ConversationPopup] public string conversationTitle;
 
     public override void Interact(GameObject instigator)
     {
-        switch (GameVariables.Day)
-        {
-            case 4:
-                if (day4Talk) return;
-                PlayerDialogue.Instance.Day4Girl();
-                BackpackManager.Instance.RetrieveItem("Letter4-1");
-                
-                MessageTipManager.ShowMessage("Letter has been delivered");
-                GameVariables.Day4EventCount++;
-
-                day4Talk = true;
-                break;
-
-            
-        }
+        DialogueManager.StartConversation(conversationTitle);
     }
 }

@@ -1,55 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PixelCrushers.DialogueSystem;
 
 public class NPCRella : ItemBase
 {
-    
-    private bool day1Talk = false;
-    private bool day2Talk = false;
-    private bool day3Talk = false;
-    private bool day5Talk = false;
+    [ConversationPopup]
+    public string conversationTitle;
 
     public override void Interact(GameObject instigator)
     {
-        switch (GameVariables.Day)
-        {
-            case 1:
-                if (day1Talk) return;
-                PlayerDialogue.Instance.Day1Grandma();
-                day1Talk = true;
-                break;
-            case 2:
-                if (day2Talk) return;
-                PlayerDialogue.Instance.Day2Grandma();
-                BackpackManager.Instance.RetrieveItem("Letter2-3");
-                MessageTipManager.ShowMessage("Letter has been delivered");
-                GameVariables.Day2HasTalkToGrandma = true;
-                GameVariables.Day2EventCount++;
-
-                day2Talk = true;
-                break;
-            case 3:
-                if (day3Talk) return;
-                PlayerDialogue.Instance.Day3ToGrandma1();
-                BackpackManager.Instance.RetrieveItem("Letter3-2");
-                MessageTipManager.ShowMessage("Letter has been delivered");
-                GameVariables.Day3EventCount++;
-
-                day3Talk = true;
-                break;
-
-            case 5:
-                
-                if (day5Talk) return;
-                PlayerDialogue.Instance.Day5();
-
-                GameVariables.Day5EventCount++;
-
-                day5Talk = true;
-                break;
-
-        }
+        DialogueManager.StartConversation(conversationTitle);
     }
 
 }
