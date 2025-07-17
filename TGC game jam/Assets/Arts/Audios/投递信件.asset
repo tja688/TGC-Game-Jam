@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d31b723d397291b42ab7fc53086ea5ab, type: 3}
-  m_Name: "\u5F00\u95E8"
+  m_Name: "\u6295\u9012\u4FE1\u4EF6"
   m_EditorClassIdentifier: 
-  clip: {fileID: 8300000, guid: f73400998cad00f4c8e83f49d4e68b22, type: 3}
+  clip: {fileID: 8300000, guid: 80703ac53ad6dd44294a414e70036aad, type: 3}
   volume: 0.5
   pitch: 1
   loop: 0

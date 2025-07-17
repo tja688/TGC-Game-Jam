@@ -10,6 +10,7 @@ public class PlayerMove : MonoBehaviour
     private static readonly int SpeedAnimHash = Animator.StringToHash("Speed");
     private static readonly int WakeUpAnimHash = Animator.StringToHash("WakeUp"); // 新增：起床动画Trigger
     private static readonly int SleepAnimHash = Animator.StringToHash("Sleep");   // 新增：入眠动画Trigger
+    private static readonly int SendLetterAnimHash = Animator.StringToHash("SendLetter");   // 新增：入眠动画Trigger
 
     public static GameObject CurrentPlayer { get; private set; }
     public static bool CanPlayerMove { get; set; }
@@ -32,6 +33,10 @@ public class PlayerMove : MonoBehaviour
     private float lastValidInputY = -1f; // 默认朝向下方
 
     private Vector2 movementVelocityForFixedUpdate;
+
+    private bool isUnderSystemControl = false;
+    
+    public SoundEffect sendLetterSound;
 
     private void Awake()
     {
@@ -65,6 +70,10 @@ public class PlayerMove : MonoBehaviour
 
     private void Update()
     {
+        
+        // 如果正由系统自动控制，则跳过玩家输入的所有逻辑
+        if (isUnderSystemControl) return;
+
         var inputVector = Vector2.zero;
 
         if (CanPlayerMove && inputActions != null) // 确保 inputActions 也不是 null
@@ -168,9 +177,64 @@ public class PlayerMove : MonoBehaviour
         animator.SetFloat(VerticalAnimHash, direction.y);
         animator.SetFloat(SpeedAnimHash, speed);
     }
+    
+    // 位于 PlayerMove.cs 中
+
+    /// <summary>
+    /// 异步方法，自动将玩家移动到指定位置，并在到达后播放动画。
+    /// </summary>
+    /// <param name="targetPosition">目标世界坐标</param>
+    /// <param name="proximityThreshold">判断为“到达”的距离阈值</param>
+    public async UniTask AutoMoveToPosition(Vector2 targetPosition, float proximityThreshold = 0.1f)
+    {
+        // 夺取控制权
+        isUnderSystemControl = true;
+        
+        try
+        {
+            // 循环直到玩家接近目标点
+            while (Vector2.Distance(transform.position, targetPosition) > proximityThreshold)
+            {
+                Vector2 currentPosition = transform.position;
+                Vector2 direction = (targetPosition - currentPosition).normalized;
+
+                UpdateAnimatorParameters(direction, 1f);
+                movementVelocityForFixedUpdate = direction * moveSpeed;
+                IsWalking = true;
+                lastValidInputX = direction.x;
+                lastValidInputY = direction.y;
+
+                await UniTask.Yield(PlayerLoopTiming.Update);
+            }
+        }
+        finally
+        {
+            // 1. 停止物理移动
+            movementVelocityForFixedUpdate = Vector2.zero;
+            IsWalking = false;
+        
+            // 2. 确保动画过渡到与最终朝向一致的Idle状态，防止滑动感
+            var lastDirection = new Vector2(lastValidInputX, lastValidInputY).normalized;
+            UpdateAnimatorParameters(lastDirection, 0f);
+        
+            // 3. 触发投信动画
+            animator.SetTrigger(SendLetterAnimHash);
+
+            // 4. 【核心修改】异步等待2秒，让动画有时间播放
+            await UniTask.WaitForSeconds(2f, cancellationToken: this.GetCancellationTokenOnDestroy());
+        
+            // 5. 等待结束后，再归还玩家的输入控制权
+            isUnderSystemControl = false;
+        }
+    }
 
     public void EnablePlayerMovement() => CanPlayerMove = true;
     public void DisablePlayerMovement() => CanPlayerMove = false;
+
+    public void PlaySendLetterSound()
+    {
+        AudioManager.Instance.Play(sendLetterSound);
+    }
     
     private void OnDestroy()
     {

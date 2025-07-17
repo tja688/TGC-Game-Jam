@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using PixelCrushers.DialogueSystem;
 
-public class GrandmaEmail : ItemBase
+public class OtherEmail : ItemBase
 {
     [ConversationPopup]
     public string conversationTitle;
@@ -13,7 +13,6 @@ public class GrandmaEmail : ItemBase
         AudioManager.Instance.Play(grabSound);
 
         DialogueManager.StartConversation(conversationTitle);
-
     }
 
 }
