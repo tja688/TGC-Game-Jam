@@ -1591,8 +1591,8 @@ MonoBehaviour:
         type: 0
         typeString: 
       - title: Sequence
-        value: "Zoom2D(\u70B9\u4F4D1, 1, easeInOut);\nDelay(2);\nZoom2D(\u70B9\u4F4D2,
-          1, easeInOut);\nDelay(2);\nZoom2D(default, 1, easeInOut)@{{end}}"
+        value: "MyCamera(\u70B9\u4F4D1, 1);\nDelay(1);\nMyCamera(\u6B63\u5F0F\u7248\u4E3B\u89D2,
+          1)@{{end}}"
         type: 0
         typeString: 
       conversationID: 6
@@ -1610,7 +1610,7 @@ MonoBehaviour:
           m_Calls: []
       canvasRect:
         serializedVersion: 2
-        x: 158
+        x: 158.66666
         y: 219.33334
         width: 160
         height: 30
