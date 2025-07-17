@@ -156,5 +156,16 @@ public class BackpackManager : MonoBehaviour
         Debug.LogWarning($"Item with name '{itemName}' not found in backpack to destroy.");
         return false;
     }
+    
+    /// <summary>
+    /// 获取背包中当前所有物品游戏对象的列表副本。
+    /// 这是为外部系统（如清理脚本）提供的一个安全的数据访问接口。
+    /// </summary>
+    /// <returns>一个包含背包内所有GameObject引用的新列表。</returns>
+    public List<GameObject> GetCurrentItemObjects()
+    {
+        // 返回一个列表的副本，防止外部直接修改原始列表，保证了背包数据的安全
+        return new List<GameObject>(itemsInBackpack);
+    }
 
 }

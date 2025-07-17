@@ -1,89 +1,64 @@
-// BackpackCleanupManager.cs
+// BackpackCleanupManager.cs (最终版)
 using UnityEngine;
-using System.Text.RegularExpressions; // 可以选用正则，但此处用简单字符串处理更高效
+using System.Collections.Generic;
 
 /// <summary>
 /// 负责在天数变化时自动清理背包中过期物品的管理器。
+/// 此版本直接操作BackpackManager中的GameObject列表，确保可靠性。
 /// </summary>
 public class BackpackCleanupManager : MonoBehaviour
 {
-    private void Start()
+    private void OnEnable()
     {
-        // 在对象启用时，订阅GameVariables中的OnDayChanged事件
-        // 这样，每当GameVariables中的天数变化时，我们的CleanupExpiredLetters方法就会被自动调用
-        GameVariables.OnDayChanged += CleanupExpiredLetters;
-        Debug.Log("BackpackCleanupManager 已启动并订阅每日清理事件。");
+        GameVariables.OnDayChanged += CleanupAllLetters;
+        Debug.Log("BackpackCleanupManager (最终版) 已启动并订阅每日清理事件。");
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
-        // 在对象禁用或销毁时，取消订阅，这是一个好习惯，可以防止内存泄漏
-        GameVariables.OnDayChanged -= CleanupExpiredLetters;
-        Debug.Log("BackpackCleanupManager 已停止并取消订阅每日清理事件。");
+        GameVariables.OnDayChanged -= CleanupAllLetters;
+        Debug.Log("BackpackCleanupManager (最终版) 已停止并取消订阅每日清理事件。");
     }
 
     /// <summary>
-    /// 清理背包中所有已过期的信件。
+    /// 清理背包中所有名字包含"Letter"的物品。
     /// </summary>
-    private void CleanupExpiredLetters()
+    private void CleanupAllLetters()
     {
         int currentDay = GameVariables.Day;
-        Debug.Log($"新的一天开始了 (Day {currentDay})，开始检查并清理过期的信件...");
+        Debug.Log($"新的一天开始了 (Day {currentDay})，开始直接清理所有信件类物品...");
 
-        var itemNamesInBackpack = BackpackManager.Instance.ItemNamesInBackpack;
-
-        // 【重要】创建一个临时列表来存储需要销毁的物品名称
-        // 这是因为不能在遍历一个列表的同时修改它（BackpackManager.DestroyItem会修改原始列表）
-        var itemsToDestroy = new System.Collections.Generic.List<string>();
-
-        foreach (string originalItemName in itemNamesInBackpack)
+        // 1. 直接从BackpackManager获取当前所有物品的GameObject列表副本
+        List<GameObject> currentItems = BackpackManager.Instance.GetCurrentItemObjects();
+        
+        // 2. 遍历这个列表，找出所有需要被销毁的信件
+        foreach (GameObject itemObject in currentItems)
         {
-            // --- 新增的逻辑：清理名称 ---
-            string cleanName = originalItemName;
-            if (cleanName.EndsWith("(Clone)"))
-            {
-                cleanName = cleanName.Substring(0, cleanName.Length - 7); // 7是"(Clone)"的长度
-            }
-            // --- 修改结束 ---
+            // 安全检查，防止列表里有空对象
+            if (itemObject == null) continue;
 
-            // 使用清理后的 cleanName 进行后续所有判断
-            if (cleanName.StartsWith("Letter") && cleanName.Length > 6 && cleanName[6] == '-')
+            // 3. 核心判断：直接检查游戏对象的名字(包括(Clone)后缀)是否包含"Letter"
+            //    这完全符合你的要求：“只要沾边就删”
+            if (itemObject.name.Contains("Letter"))
             {
-                char dayChar = cleanName[5];
+                Debug.Log($"发现信件类物品: '{itemObject.name}'。准备销毁。");
 
-                if (int.TryParse(dayChar.ToString(), out int letterEffectiveDay))
+                // 4. 获取该物品的IStorable接口，以取得其在背包系统内的正式名称
+                IStorable storable = itemObject.GetComponent<IStorable>();
+                if (storable != null)
                 {
-                    if (currentDay > letterEffectiveDay)
-                    {
-                        Debug.Log($"信件 '{originalItemName}' 已过期 (有效天数: {letterEffectiveDay}, 当前天数: {currentDay})。计划将其移除。");
-                        
-                        // 不要在这里直接删除，而是添加到待删除列表
-                        itemsToDestroy.Add(originalItemName);
-                    }
+                    // 5. 调用BackpackManager标准的DestroyItem方法来销毁它
+                    //    这样可以确保背包的两个内部列表（物品对象和物品名字）都得到正确清理
+                    BackpackManager.Instance.DestroyItem(storable.ItemName);
                 }
                 else
                 {
-                    Debug.LogWarning($"无法从物品名称 '{cleanName}' 中解析出有效的天数。");
+                    // 如果物品没有IStorable接口，但名字又像信件，这里只做记录，并不会删除
+                    Debug.LogWarning($"物品 '{itemObject.name}' 名字像信件，但它没有实现IStorable接口，无法通过背包系统销毁。");
                 }
             }
         }
         
-        // --- 新增的逻辑：统一执行销毁 ---
-        // 遍历待删除列表，执行真正的销毁操作
-        foreach (string itemNameToDestroy in itemsToDestroy)
-        {
-            BackpackManager.Instance.DestroyItem(itemNameToDestroy);
-        }
-        // --- 修改结束 ---
-
-        if (itemsToDestroy.Count > 0)
-        {
-            Debug.Log($"总共清理了 {itemsToDestroy.Count} 个过期信件。");
-        }
-        else
-        {
-            Debug.Log("没有发现需要清理的过期信件。");
-        }
+        Debug.Log("信件清理流程执行完毕。");
     }
-    
 }
