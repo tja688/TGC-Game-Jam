@@ -1,3 +1,4 @@
+using PixelCrushers.DialogueSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement; // 必须引用此命名空间来操作场景
 
@@ -37,7 +38,9 @@ public class LevelManager : MonoBehaviour
 
         // 获取当前激活的场景
         Scene currentScene = SceneManager.GetActiveScene();
-
+        
+        DialogueManager.ResetDatabase(DatabaseResetOptions.RevertToDefault);
+        
         // 重新加载该场景
         SceneManager.LoadScene(currentScene.buildIndex);
 
