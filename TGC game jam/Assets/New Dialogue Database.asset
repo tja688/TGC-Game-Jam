@@ -15442,8 +15442,7 @@ MonoBehaviour:
         type: 0
         typeString: 
       - title: Sequence
-        value: "AutoSleep(\u5145\u7535\u4F4D\u7F6E2); Delay(1)->Message(DialogueDone); 
-          AnimatorPlayWait(\u673A\u5668\u4EBA\u8FDB\u5165\u4F11\u7720)@Message(DialogueDone)->Message(AnimatorDone);\_\nTriggerEvent()@Message(AnimatorDone)"
+        value: "AutoSleep(\u5145\u7535\u4F4D\u7F6E2)"
         type: 0
         typeString: 
       - title: Response Menu Sequence
@@ -15461,7 +15460,7 @@ MonoBehaviour:
       - originConversationID: 26
         originDialogueID: 2
         destinationConversationID: 26
-        destinationDialogueID: 3
+        destinationDialogueID: 7
         isConnector: 0
         priority: 2
       conditionsString: 
@@ -15472,7 +15471,7 @@ MonoBehaviour:
       canvasRect:
         serializedVersion: 2
         x: 264.66663
-        y: 380.66666
+        y: 380
         width: 160
         height: 30
     - id: 3
@@ -15550,8 +15549,8 @@ MonoBehaviour:
           m_Calls: []
       canvasRect:
         serializedVersion: 2
-        x: 694.6666
-        y: 364.6667
+        x: 851.33325
+        y: 294.00003
         width: 160
         height: 30
     - id: 4
@@ -15611,8 +15610,8 @@ MonoBehaviour:
           m_Calls: []
       canvasRect:
         serializedVersion: 2
-        x: 707.33325
-        y: 509.33334
+        x: 876.66656
+        y: 441.99997
         width: 160
         height: 30
     - id: 5
@@ -15652,7 +15651,13 @@ MonoBehaviour:
       delaySimStatus: 0
       falseConditionAction: Block
       conditionPriority: 2
-      outgoingLinks: []
+      outgoingLinks:
+      - originConversationID: 26
+        originDialogueID: 5
+        destinationConversationID: 26
+        destinationDialogueID: 9
+        isConnector: 0
+        priority: 2
       conditionsString: Variable["Day"] ~= 5
       userScript: 
       onExecute:
@@ -15660,8 +15665,8 @@ MonoBehaviour:
           m_Calls: []
       canvasRect:
         serializedVersion: 2
-        x: 791.99994
-        y: 636.6667
+        x: 684.6666
+        y: 583.3334
         width: 160
         height: 30
     - id: 6
@@ -15713,8 +15718,169 @@ MonoBehaviour:
         y: 578.00006
         width: 160
         height: 30
+    - id: 7
+      fields:
+      - title: Title
+        value: 
+        type: 0
+        typeString: 
+      - title: Description
+        value: 
+        type: 0
+        typeString: 
+      - title: Actor
+        value: 6
+        type: 5
+        typeString: CustomFieldType_Actor
+      - title: Conversant
+        value: -1
+        type: 5
+        typeString: CustomFieldType_Actor
+      - title: Menu Text
+        value: 
+        type: 0
+        typeString: 
+      - title: Dialogue Text
+        value: "... \n"
+        type: 0
+        typeString: 
+      - title: Sequence
+        value: "AnimatorPlay(\u673A\u5668\u4EBA\u8FDB\u5165\u4F11\u7720)"
+        type: 0
+        typeString: 
+      conversationID: 26
+      isRoot: 0
+      isGroup: 0
+      nodeColor: 
+      delaySimStatus: 0
+      falseConditionAction: Block
+      conditionPriority: 2
+      outgoingLinks:
+      - originConversationID: 26
+        originDialogueID: 7
+        destinationConversationID: 26
+        destinationDialogueID: 8
+        isConnector: 0
+        priority: 2
+      conditionsString: 
+      userScript: 
+      onExecute:
+        m_PersistentCalls:
+          m_Calls: []
+      canvasRect:
+        serializedVersion: 2
+        x: 475.99997
+        y: 186.00006
+        width: 160
+        height: 30
+    - id: 8
+      fields:
+      - title: Title
+        value: 
+        type: 0
+        typeString: 
+      - title: Description
+        value: 
+        type: 0
+        typeString: 
+      - title: Actor
+        value: 6
+        type: 5
+        typeString: CustomFieldType_Actor
+      - title: Conversant
+        value: 6
+        type: 5
+        typeString: CustomFieldType_Actor
+      - title: Menu Text
+        value: 
+        type: 0
+        typeString: 
+      - title: Dialogue Text
+        value: '...
+
+'
+        type: 0
+        typeString: 
+      - title: Sequence
+        value: TriggerEvent()
+        type: 0
+        typeString: 
+      conversationID: 26
+      isRoot: 0
+      isGroup: 0
+      nodeColor: 
+      delaySimStatus: 0
+      falseConditionAction: Block
+      conditionPriority: 2
+      outgoingLinks:
+      - originConversationID: 26
+        originDialogueID: 8
+        destinationConversationID: 26
+        destinationDialogueID: 3
+        isConnector: 0
+        priority: 2
+      conditionsString: 
+      userScript: 
+      onExecute:
+        m_PersistentCalls:
+          m_Calls: []
+      canvasRect:
+        serializedVersion: 2
+        x: 719.33325
+        y: 137.33337
+        width: 160
+        height: 30
+    - id: 9
+      fields:
+      - title: Title
+        value: 
+        type: 0
+        typeString: 
+      - title: Description
+        value: 
+        type: 0
+        typeString: 
+      - title: Actor
+        value: 6
+        type: 5
+        typeString: CustomFieldType_Actor
+      - title: Conversant
+        value: 6
+        type: 5
+        typeString: CustomFieldType_Actor
+      - title: Menu Text
+        value: 
+        type: 0
+        typeString: 
+      - title: Dialogue Text
+        value: Let's find out which letters should be delivered today
+        type: 0
+        typeString: 
+      - title: Sequence
+        value: 
+        type: 0
+        typeString: 
+      conversationID: 26
+      isRoot: 0
+      isGroup: 0
+      nodeColor: 
+      delaySimStatus: 0
+      falseConditionAction: Block
+      conditionPriority: 2
+      outgoingLinks: []
+      conditionsString: 
+      userScript: 
+      onExecute:
+        m_PersistentCalls:
+          m_Calls: []
+      canvasRect:
+        serializedVersion: 2
+        x: 890.6667
+        y: 692.66675
+        width: 160
+        height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 92.166626, y: 158}
+    canvasScrollPosition: {x: 0, y: 0}
     canvasZoom: 1
   - id: 27
     fields:

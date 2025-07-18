@@ -37,6 +37,8 @@ public class RubbishItem : ItemBase
     public static event Action OnFindAllLetters;
     
     private bool isFindAllLetters = false;
+    
+    private int findNumber = 0;
 
     
     protected override void Start()
@@ -51,6 +53,7 @@ public class RubbishItem : ItemBase
     {
         isFindAllLetters = false;
         portalController.DeactivatePortal();
+        findNumber = 0;
     }
 
     protected void OnDestroy()
@@ -60,6 +63,7 @@ public class RubbishItem : ItemBase
     
     public override void Interact(GameObject player)
     {
+        
         DialogueManager.StartConversation(conversationTitle);
         
         AudioManager.Instance.Play(grabSound);
