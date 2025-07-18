@@ -1791,7 +1791,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.027364492, y: -0.1505023}
@@ -3755,7 +3755,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 740713786}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7349d00e9866b5249b53da0f81b41e0e, type: 3}
   m_Name: 
@@ -4929,7 +4929,7 @@ Transform:
   m_GameObject: {fileID: 976928810}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.05, y: -5.35, z: 0}
+  m_LocalPosition: {x: 4.3, y: -4.65, z: 0}
   m_LocalScale: {x: 2.35, y: 1.5083, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5047,7 +5047,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.2656678, y: 0.029150635}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -5058,7 +5058,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.4686644, y: 1.7812085}
   m_EdgeRadius: 0
 --- !u!114 &976928814
 MonoBehaviour:
@@ -6345,6 +6345,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1284682132}
+  - component: {fileID: 1284682134}
+  - component: {fileID: 1284682133}
   m_Layer: 0
   m_Name: bolushow
   m_TagString: Untagged
@@ -6367,6 +6369,84 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1925978134}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1284682133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1284682131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a64578247383140469c45370654a984a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actor: Bolu
+  persistentDataName: 
+  portrait: {fileID: 0}
+  spritePortrait: {fileID: 0}
+  barkUISettings:
+    barkUI: {fileID: 0}
+    barkUIOffset: {x: 0, y: 2, z: 0}
+  standardDialogueUISettings:
+    subtitlePanelNumber: 2
+    customSubtitlePanel: {fileID: 5299478515297995129, guid: 7cd0cdc8c34e7db439e74c9a703da0d6, type: 3}
+    customSubtitlePanelOffset: {x: 0, y: 4, z: 0}
+    menuPanelNumber: 0
+    customMenuPanel: {fileID: 0}
+    customMenuPanelOffset: {x: 0, y: 0, z: 0}
+    useMenuPanelFor: 0
+    portraitAnimatorController: {fileID: 0}
+    setSubtitleColor: 0
+    applyColorToPrependedName: 0
+    prependActorNameSeparator: ': '
+    prependActorNameFormat: '{0}{1}'
+    subtitleColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!61 &1284682134
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1284682131}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!1 &1303790402
 GameObject:
   m_ObjectHideFlags: 0
@@ -7810,39 +7890,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1981362300004482785, guid: 56a7841f34ec25d41b5054699d5bc18a, type: 3}
   m_PrefabInstance: {fileID: 3053505311493256931}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1572457821
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1110046721}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a64578247383140469c45370654a984a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  actor: Bolu
-  persistentDataName: 
-  portrait: {fileID: 0}
-  spritePortrait: {fileID: 0}
-  barkUISettings:
-    barkUI: {fileID: 0}
-    barkUIOffset: {x: 0, y: 2, z: 0}
-  standardDialogueUISettings:
-    subtitlePanelNumber: 2
-    customSubtitlePanel: {fileID: 5299478515297995129, guid: 7cd0cdc8c34e7db439e74c9a703da0d6, type: 3}
-    customSubtitlePanelOffset: {x: 0, y: 4, z: 0}
-    menuPanelNumber: 0
-    customMenuPanel: {fileID: 0}
-    customMenuPanelOffset: {x: 0, y: 0, z: 0}
-    useMenuPanelFor: 0
-    portraitAnimatorController: {fileID: 0}
-    setSubtitleColor: 0
-    applyColorToPrependedName: 0
-    prependActorNameSeparator: ': '
-    prependActorNameFormat: '{0}{1}'
-    subtitleColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &1610681679
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8781,6 +8828,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1743921751 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6084842891634414929, guid: 4adc0e67592edb241ae5278f0f1d9ca2, type: 3}
+  m_PrefabInstance: {fileID: 4447547237513445573}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1743921754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1743921751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1bc383093f369c4a9d63cacafb4c75a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1762395693 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6414777624156440962, guid: f500212fbb6b3aa46b1104f46a2ebfb6, type: 3}
@@ -11354,10 +11418,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4918640797091599722, guid: 56a7841f34ec25d41b5054699d5bc18a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1572457821}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56a7841f34ec25d41b5054699d5bc18a, type: 3}
 --- !u!1001 &3152760118469454686
 PrefabInstance:
@@ -11660,7 +11721,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6084842891634414929, guid: 4adc0e67592edb241ae5278f0f1d9ca2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1743921754}
   m_SourcePrefab: {fileID: 100100000, guid: 4adc0e67592edb241ae5278f0f1d9ca2, type: 3}
 --- !u!1001 &4724859793637519192
 PrefabInstance:
@@ -11745,6 +11809,11 @@ PrefabInstance:
     - target: {fileID: 274493119747984466, guid: 691b59b2a2da45b45b66dcc2690e06a3, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -203
+      objectReference: {fileID: 0}
+    - target: {fileID: 592795419590217472, guid: 691b59b2a2da45b45b66dcc2690e06a3, type: 3}
+      propertyPath: m_text
+      value: Remember to read more about the content of the letters to understand
+        the past of this area.
       objectReference: {fileID: 0}
     - target: {fileID: 592795419590217472, guid: 691b59b2a2da45b45b66dcc2690e06a3, type: 3}
       propertyPath: m_fontSize
@@ -11999,6 +12068,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3502397807097536708, guid: 691b59b2a2da45b45b66dcc2690e06a3, type: 3}
+      propertyPath: m_text
+      value: Press E to initiate a conversation or pick up an item.
+      objectReference: {fileID: 0}
+    - target: {fileID: 3502397807097536708, guid: 691b59b2a2da45b45b66dcc2690e06a3, type: 3}
       propertyPath: m_fontSize
       value: 30
       objectReference: {fileID: 0}
@@ -12239,6 +12312,12 @@ PrefabInstance:
       value: -34.164986
       objectReference: {fileID: 0}
     - target: {fileID: 5027823158446531407, guid: 691b59b2a2da45b45b66dcc2690e06a3, type: 3}
+      propertyPath: m_text
+      value: 'Press W\A\S\D to move.
+
+'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5027823158446531407, guid: 691b59b2a2da45b45b66dcc2690e06a3, type: 3}
       propertyPath: m_fontSize
       value: 30
       objectReference: {fileID: 0}
@@ -12369,6 +12448,10 @@ PrefabInstance:
     - target: {fileID: 5721463074761513719, guid: 691b59b2a2da45b45b66dcc2690e06a3, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822377282265216322, guid: 691b59b2a2da45b45b66dcc2690e06a3, type: 3}
+      propertyPath: m_text
+      value: Click the left mouse button to fast forward or continue the conversation.
       objectReference: {fileID: 0}
     - target: {fileID: 5822377282265216322, guid: 691b59b2a2da45b45b66dcc2690e06a3, type: 3}
       propertyPath: m_fontSize
@@ -12776,7 +12859,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8924873292936407702, guid: 691b59b2a2da45b45b66dcc2690e06a3, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -300.83698
+      value: -261.1
       objectReference: {fileID: 0}
     - target: {fileID: 8961071632342424694, guid: 691b59b2a2da45b45b66dcc2690e06a3, type: 3}
       propertyPath: m_Enabled
